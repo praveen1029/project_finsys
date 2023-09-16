@@ -1,0 +1,1484 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+{% if user.is_authenticated %}
+<!-- Include jQuery -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+<style>
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+
+    .datepicker {
+        width: 13rem;
+        /* height: 3.2vh; */
+        /* display: grid; */
+        justify-items: center;
+        border: 1px solid black;
+    }
+
+
+
+    .datepicker label {
+        font-size: 1rem;
+        color: rgb(66, 66, 66);
+    }
+
+
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h6>{{cmp1.cname}}</h6>
+                    <h2 class="mb-0">GSTR-9</h2>
+                    <p id="id1"></p>
+                </center>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="card radius-15">
+        <div class="card-body">
+
+            <div class="bar">
+                <div class="left">
+                    <label style="text-align:left">Financial Year</label><br>
+                    <select class="form-control" id="FromDate" style="width: 20vw;">
+                        <option value="2017-2018">2017-2018</option>
+                        <option value="2018-2019">2018-2019</option>
+                        <option value="2019-2020">2019-2020</option>
+                        <option value="2020-2021">2020-2021</option>
+                        <option value="2021-2022">2021-2022</option>
+                        <option value="2022-2023">2022-2023</option>
+                        <option value="2023-2024">2023-2024</option>
+                    </select>
+                </div>
+
+
+                <div class="right">
+                    <button class="exportToExcel btn btn-outline-info mt-4" id="export-button"
+                        onclick="exportAsExcel()">Excel</button>
+                    <button class="btn btn_print btn-outline-info mt-4">Print</button>
+                </div>
+            </div>
+            <br>
+            <br>
+
+        </div>
+    </div>
+
+    <div class="card radius-15 " id="pdf-card">
+        <div class="card-body">
+            <div class="container-fluid">
+
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable1">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.I</th>
+                            <th colspan="2" style="text-align: center;">Basic Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">1</td>
+                            <td>Financial Year</td>
+                            <td id="year"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2</td>
+                            <td>GSTIN</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">3A</td>
+                            <td>Legal Name</td>
+                            <td>My company</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">3B</td>
+                            <td>Trade Name (if any)</td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable4">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.II</th>
+                            <th colspan="6" style="text-align: center;">Details Of Outward And Inward Supplies Declared
+                                During The Financial Year</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th colspan="2"></th>
+                            <th colspan="4" class="text-center">(Amount in Rupees in All Tables)</th>
+                        </tr>
+                        <tr class="text-center">
+                            <th></th>
+                            <th>Nature of Supplies</th>
+                            <th>Taxable Value</th>
+                            <th>Central Tax </th>
+                            <th>State Tax/ UT Tax</th>
+                            <th>Integrated Tax</th>
+                            <th>Cess</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td>4</td>
+                            <td colspan="6">Details of advances, inward and outward supplies on which tax is payable as
+                                declared in returns filed during the financial year</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td class="text-left">Supplies made to un-registered persons(B2C)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td class="text-left">Supplies made to registered persons(B2B)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td class="text-left">Zero rated supply(Export) on payment of tax (except supplies to SEZs)
+                            </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">D</td>
+                            <td class="text-left"> Supplies to SEZs on payment of tax</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">E</td>
+                            <td class="text-left">Deemed Exports</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td class="text-left"> Advances on which tax has been paid but invoice has not been issued
+                                (not cover under (A) to (E) above)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td class="text-left">Inward supplies on which tax is to be paid on reverse charge basis
+                            </td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">H</td>
+                            <td class="text-left">Sub-total (A to G above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">I</td>
+                            <td class="text-left">Credit Notes issued in respect of transactions specified in (B) to (E)
+                                above (-)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">J</td>
+                            <td class="text-left">Debit Notes issued in respect of transactions specified in (B) to (E)
+                                above (+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">K</td>
+                            <td class="text-left">Supplies/tax declared through Amendments(+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">L</td>
+                            <td class="text-left">Supplies/tax reduced through Amendments(+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">M</td>
+                            <td class="text-left">Sub-total (I to L above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">N</td>
+                            <td class="text-left">Supplies and advances on which tax is to be paid (H+M) above</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable5">
+                    <thead>
+                        <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td>5</td>
+                            <td colspan="6">Details of Outward supplies on which tax is not payable as declared in
+                                returns filed during the financial year</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td class="text-left">Zero rated supply (Export) without payment of tax</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td class="text-left">Supply to SEZs without payment of tax</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td class="text-left">Supplies on which tax is to be paid by the recipient on reverse charge
+                                basis</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">D</td>
+                            <td class="text-left">Exempted</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">E</td>
+                            <td class="text-left">Nil Rated</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td class="text-left">Non-GST supply</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td class="text-left">Sub-total (A to F above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">H</td>
+                            <td class="text-left">Credit Notes issued in respect of transactions specified in A to F
+                                above (-)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">I</td>
+                            <td class="text-left">Debit Notes issued in respect of transactions specified in A to F
+                                above (+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">J</td>
+                            <td class="text-left">Supplies declared through Amendments(+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">K</td>
+                            <td class="text-left">Supplies reduced through Amendments(+)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">L</td>
+                            <td class="text-left">Sub-Total (H to K above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">M</td>
+                            <td class="text-left">Turnover on which tax is not to be paid (G + L above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">N</td>
+                            <td class="text-left">Total Turnover (including advances) (4N + 5M - 4G above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable6">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.III</th>
+                            <th colspan="6" style="text-align: center;">Details Of ITC As Declared In Returns Filed
+                                During The Financial Year</th>
+                        </tr>
+                        <tr class="text-center">
+                            <th></th>
+                            <th>Description</th>
+                            <th style="width: 9vw;">Type</th>
+                            <th>Central Tax </th>
+                            <th>State Tax/ UT Tax</th>
+                            <th>Integrated Tax</th>
+                            <th>Cess</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <th></th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td>6</td>
+                            <td colspan="6">Details of ITC availed as declared in returns filed during the financial
+                                year</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>A</td>
+                            <td colspan="2">Total amount of input tax credit availed through FORM GSTR-3B (sum total of
+                                Table 4A of FORM GSTR-3B) </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" class="text-center">B</td>
+                            <td rowspan="3" class="text-left">Inward supplies (other than imports and inward supplies
+                                liable to reverse charge but includes service received from SEZs)</td>
+                            <td class="text-left">Inputs</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Capital Goods</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Input Services</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" class="text-center">C</td>
+                            <td rowspan="3" class="text-left">Inward supplies received from unregistered persons liable
+                                to reverse charge (other than B above) on which tax is paid & ITC availed</td>
+                            <td class="text-left">Inputs</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Capital Goods</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Input Services</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" class="text-center">D</td>
+                            <td rowspan="3" class="text-left">Inward supplies received from registered persons liable to
+                                reverse charge (other than B above) on which tax is paid and ITC availed</td>
+                            <td class="text-left">Inputs</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Capital Goods</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Input Services</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="text-center">E</td>
+                            <td rowspan="2" class="text-left">Import of goods (including suppliesfrom SEZs) </td>
+                            <td class="text-left">Inputs</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Capital Goods</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td colspan="2" class="text-left">Import of services (excluding inward supplies from SEZs)
+                            </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td colspan="2" class="text-left">Input Tax credit received from ISD</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">H</td>
+                            <td colspan="2" class="text-left">Amount of ITC reclaimed (other than B above) under the
+                                provisons of Act</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">I</td>
+                            <td colspan="2" class="text-left">Sub-total (B to H above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">J</td>
+                            <td colspan="2" class="text-left">Difference (I - A above)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">K</td>
+                            <td colspan="2" class="text-left">Transition credit through TRAN-I (including revisions if
+                                any) </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">L</td>
+                            <td colspan="2" class="text-left"> Transition credit through TRAN-II</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">M</td>
+                            <td colspan="2" class="text-left">Any other ITC availed but not specified above</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">N</td>
+                            <td colspan="2" class="text-left">Sub-total (K to M above)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">O</td>
+                            <td colspan="2" class="text-left">Total ITC availed (I + N above)</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable7">
+                    <thead>
+                        <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td>7</td>
+                            <td colspan="6">Details of ITC Reversed and Ineligible ITC as declared in rerurns filed
+                                during the financial year</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td colspan="2" class="text-left">As per Rule 37</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td colspan="2" class="text-left">As per Rule 39</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td colspan="2" class="text-left">As per Rule 42</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">D</td>
+                            <td colspan="2" class="text-left">As per Rule 43</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">E</td>
+                            <td colspan="2" class="text-left">As per section 17(5)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td colspan="2" class="text-left">Reversal of TRAN-I credit</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td colspan="2" class="text-left">Reversal of TRAN-II credit</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">H</td>
+                            <td colspan="2" class="text-left">Other reversals (pl. specify)de3r</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">I</td>
+                            <td colspan="2" class="text-left">Total ITC reversed (A to H above)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">J</td>
+                            <td colspan="2" class="text-left">Net ITC Available for Utilization (6O -7I)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable8">
+                    <thead>
+                        <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td>8</td>
+                            <td colspan="6">Other ITC related information</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td colspan="2" class="text-left">ITC as per GSTR-2A (Table 3 & 5 thereof)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td colspan="2" class="text-left">ITC as per sum total of 6(B) and 6(H) above</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td colspan="2" class="text-left">ITC on inward supplies (other than imports and inward
+                                supplies liable to reverse charge but includes services received from SEZs) received
+                                during 2017-18 but availed during April to September, 2018 </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">D</td>
+                            <td colspan="2" class="text-left">Difference [A-(B+C)]</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">E</td>
+                            <td colspan="2" class="text-left">ITC available but not availed (out of D)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td colspan="2" class="text-left">ITC available but ineligible (out of D) </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td colspan="2" class="text-left">IGST paid on import of goods (as per 6(E) above)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">H</td>
+                            <td colspan="2" class="text-left">IGST credit availed on import of goods (as per 6(E) above)
+                            </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">I</td>
+                            <td colspan="2" class="text-left">Difference (G -H)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">J</td>
+                            <td colspan="2" class="text-left">ITC available but not availed on import of goods (Equal to
+                                I)</td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">K</td>
+                            <td colspan="2" class="text-left">Total ITC to be lapsed in current financial year (E+F+J)
+                            </td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable9">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.IV</th>
+                            <th colspan="7" style="text-align: center;">Details Of Tax Paid As Declared In Returns Filed
+                                During The Financial Year</th>
+                        </tr>
+                        <tr class="text-center">
+                            <th rowspan="2">9</th>
+                            <th rowspan="2">Description</th>
+                            <th rowspan="2">Tax Payable</th>
+                            <th rowspan="2">Paid through cash</th>
+                            <th colspan="4">Paid through ITC</th>
+                        </tr>
+                        <tr class="text-center">
+                            <td>Central Tax</td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Integrated Tax</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Central Tax</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">State/ UT tax</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Cess</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Interest</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Late fee</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Penalty</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="text-left">Other</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable1013">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.V</th>
+                            <th colspan="6" style="text-align: center;">Particulars Of The Transactions For The Previous
+                                FY Declared In Returns Of April To September Of Current FY Or Upto Date Of Filing Of
+                                Annual Return Of Previous FY Whichever Is Earlier
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <th></th>
+                            <th>Description</th>
+                            <th>Tax Payable</th>
+                            <td>Central Tax</td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td class="text-left">Supplies/tax declared through Amendments (+) (net of debit notes)
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td class="text-left">Supplies/tax reduced through Amendments (+) (net of credit notes)</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td class="text-left">Reversal of ITC availed during previous financial year</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td class="text-left">ITC availed for the previous financial year</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                            style="background-color: rgba(0, 0, 0, 0.2);" id="myTable14">
+                            <thead>
+                                <tr style="background-color: rgba(255, 255, 255, 0.062);">
+                                    <td style="text-align: center;">14</td>
+                                    <td colspan="3" style="text-align: center;">Differential Tax Paid On Account Of
+                                        Declaration In 10 & 11 Above
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <th></th>
+                                    <td>Description</td>
+                                    <td>Payable</td>
+                                    <td>Paid</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left">Integrated Tax</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left">Central Tax</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left">State/ UT Tax</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left">Cess</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-left">Interest</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable15">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.137);">
+                            <th style="text-align: center;">Pt.VI</th>
+                            <th colspan="8" style="text-align: center;">Other Information</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td>15</td>
+                            <td colspan="8">Particulars of Demands and Refunds</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>Details</td>
+                            <td>Central Tax </td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                            <td>Interest</td>
+                            <td>Penalty</td>
+                            <td>Late Fee/ Others</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td class="text-left">Total Refund claimed</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td class="text-left">Total Refund sanctioned</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td class="text-left">Total Refund rejected</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">D</td>
+                            <td class="text-left">Total Refund pending</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">E</td>
+                            <td class="text-left">Total demand of taxes</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">F</td>
+                            <td class="text-left">Total taxes paid in respect of E above</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">G</td>
+                            <td class="text-left">Total demands pending out of E above</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable16">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td style="text-align: center;">16</td>
+                            <td colspan="6" style="text-align: center;">Information On Supplies Received From
+                                Composition Taxpayers, Deemed Supply Under Section 143 And Goods Sent On Approval Basis
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>Details</td>
+                            <td>Taxable Value</td>
+                            <td>Central Tax </td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td class="text-left">Supplies received from composition taxpayers</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td class="text-left">Deemed supply under section 143</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">C</td>
+                            <td class="text-left">Goods sent on approval basis but not returned</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable17">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td style="text-align: center;">17</td>
+                            <td colspan="8" style="text-align: center;">HSN Wise Summary Of Outward Supplies</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td>HSN Code</td>
+                            <td>UQC</td>
+                            <td>Total Quantity</td>
+                            <td>Taxable Value</td>
+                            <td>Rate of Tax</td>
+                            <td>Central Tax </td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                        </tr>
+                        <tr class="text-center">
+
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable18">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td style="text-align: center;">18</td>
+                            <td colspan="8" style="text-align: center;">HSN Wise Summary Of Inward Supplies</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td>HSN Code</td>
+                            <td>UQC</td>
+                            <td>Total Quantity</td>
+                            <td>Taxable Value</td>
+                            <td>Rate of Tax</td>
+                            <td>Central Tax </td>
+                            <td>State Tax/ UT Tax</td>
+                            <td>Integrated Tax</td>
+                            <td>Cess</td>
+                        </tr>
+                        <tr class="text-center">
+
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable19">
+                    <thead>
+                        <tr style="background-color: rgba(255, 255, 255, 0.062);">
+                            <td style="text-align: center;">19</td>
+                            <td colspan="8" style="text-align: center;">Late Fee Payable And Paid</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>Description</td>
+                            <td>Payable</td>
+                            <td>Paid</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">A</td>
+                            <td class="text-left">Central Tax</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">B</td>
+                            <td class="text-left">State Tax</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script> -->
+<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css"> -->
+<script type="text/javascript">
+    $(function () {
+        $('.date-picker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'MM yy',
+            onClose: function (dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        console.log('print');
+
+        $(document).on('click', '.btn_print', function (event) {
+            console.log('print1');
+            event.preventDefault();
+            var printContent = document.getElementById("pdf-card").innerHTML;
+                        var originalContents = document.body.innerHTML;
+
+                        // Create a <div> container for centering
+                        var containerDiv = document.createElement("div");
+                        containerDiv.style.textAlign = "center"; // Center-align the content
+
+                        // Create the <h1> element
+                        var h1Element = document.createElement("h1");
+                        h1Element.textContent = "GSTR9 REPORT"; // Replace "Title" with your desired title text
+
+                        // Append the <h1> element to the container
+                        containerDiv.appendChild(h1Element);
+
+                        // Insert the container and the print content
+                        containerDiv.innerHTML += printContent;
+                        document.body.innerHTML = containerDiv.outerHTML;
+
+                        window.print();
+
+                        // Restore the original contents (excluding the container)
+                        document.body.innerHTML = originalContents;
+
+
+        });
+
+    });
+</script>
+<script type="text/javascript">
+ 
+    function exportAsExcel() {
+        const table1 = document.getElementById('myTable1');
+        const table2 = document.getElementById('myTable4'); 
+        const table3 = document.getElementById('myTable5'); 
+        const table4 = document.getElementById('myTable6'); 
+        const table5 = document.getElementById('myTable7'); 
+        const table6 = document.getElementById('myTable8'); 
+        const table7 = document.getElementById('myTable9'); 
+        const table8 = document.getElementById('myTable1013'); 
+        const table9 = document.getElementById('myTable14'); 
+        const table10 = document.getElementById('myTable15'); 
+        const table11 = document.getElementById('myTable16'); 
+        const table12 = document.getElementById('myTable17'); 
+        const table13 = document.getElementById('myTable18'); 
+        const table14 = document.getElementById('myTable19'); 
+        const wb = XLSX.utils.book_new();
+
+        const ws1 = XLSX.utils.table_to_sheet(table1);
+        const ws2 = XLSX.utils.table_to_sheet(table2); 
+        const ws3 = XLSX.utils.table_to_sheet(table3); 
+        const ws4 = XLSX.utils.table_to_sheet(table4); 
+        const ws5 = XLSX.utils.table_to_sheet(table5); 
+        const ws6 = XLSX.utils.table_to_sheet(table6); 
+        const ws7 = XLSX.utils.table_to_sheet(table7); 
+        const ws8 = XLSX.utils.table_to_sheet(table8); 
+        const ws9 = XLSX.utils.table_to_sheet(table9); 
+        const ws10 = XLSX.utils.table_to_sheet(table10); 
+        const ws11 = XLSX.utils.table_to_sheet(table11); 
+        const ws12 = XLSX.utils.table_to_sheet(table12); 
+        const ws13 = XLSX.utils.table_to_sheet(table13); 
+        const ws14 = XLSX.utils.table_to_sheet(table14); 
+
+        XLSX.utils.book_append_sheet(wb, ws1, '1-3'); // Add the first sheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws2, '4'); 
+        XLSX.utils.book_append_sheet(wb, ws3, '5'); 
+        XLSX.utils.book_append_sheet(wb, ws4, '6'); 
+        XLSX.utils.book_append_sheet(wb, ws5, '7'); 
+        XLSX.utils.book_append_sheet(wb, ws6, '8'); 
+        XLSX.utils.book_append_sheet(wb, ws7, '9'); 
+        XLSX.utils.book_append_sheet(wb, ws8, '10-11-12-13'); 
+        XLSX.utils.book_append_sheet(wb, ws9, '14'); 
+        XLSX.utils.book_append_sheet(wb, ws10, '15'); 
+        XLSX.utils.book_append_sheet(wb, ws11, '16'); 
+        XLSX.utils.book_append_sheet(wb, ws12, '17'); 
+        XLSX.utils.book_append_sheet(wb, ws13, '18'); 
+        XLSX.utils.book_append_sheet(wb, ws14, '19'); 
+
+        XLSX.writeFile(wb, 'tables.xlsx');
+    }
+</script>
+
+
+
+<script>
+    document.getElementById("FromDate").addEventListener("change", function () {
+        const selectedValue = this.value;
+        const dynamicCell = document.getElementById("year");
+
+        
+            dynamicCell.innerHTML = selectedValue;
+            document.getElementById("id1").innerHTML=selectedValue;
+        
+    });
+
+</script>
+
+{% endif %}
+{% endblock %}

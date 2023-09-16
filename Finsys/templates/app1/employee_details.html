@@ -1,0 +1,1076 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+<style>
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: .75em;
+        padding-right: .75em;
+    }
+
+    .card-registration .select-arrow {
+        top: 13px;
+    }
+
+    .bg-grey {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    @media (min-width: 992px) {
+        .card-registration-2 .bg-grey {
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .card-registration-2 .bg-grey {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+
+    .vl {
+        border-left: 6px solid gray;
+    }
+
+    .table-row {
+        cursor: pointer;
+    }
+
+    /* hr {
+        border: 0;
+        clear:both;
+        display:block;
+        width: 96%;               
+        background-color:#000000;
+        height: 1px;
+      } */
+    .spaced>li {
+        color: black;
+        font-size: 10px;
+    }
+
+    .table1 {
+        font-size: 10px;
+        width: 100%;
+        color: black;
+
+    }
+
+    .label-lg {
+        padding: .3em .6em .4em;
+        font-size: 12px;
+        color: black;
+        line-height: 1.1;
+        height: 24px
+    }
+
+    .widget-header {
+        background-color: #444;
+        color: white;
+        font-size: 14px;
+    }
+
+    .widget-header:after,
+    .widget-header:before {
+        content: "";
+        display: table;
+        line-height: 0
+    }
+
+    .widget-header:after {
+        clear: right
+    }
+
+    .widget-box.collapsed>.widget-header {
+        border-bottom-width: 0
+    }
+
+    .collapsed.fullscreen>.widget-header {
+        border-bottom-width: 1px
+    }
+
+    .collapsed>.widget-body {
+        display: none
+    }
+
+    .widget-header-flat {
+        background: #F7F7F7
+    }
+
+    .widget-header-large {
+        min-height: 49px;
+        padding-left: 18px
+    }
+
+
+
+    .widget-header-small {
+        min-height: 31px;
+        padding-left: 10px
+    }
+
+    .widget-header>.widget-title {
+        line-height: 36px;
+        padding: 0;
+        margin: 0;
+        display: inline;
+        font-size: 13px;
+    }
+
+
+
+    .widget-toolbar {
+        display: inline-block;
+        padding: 0 10px;
+        line-height: 37px;
+        float: right;
+        position: relative
+    }
+
+
+
+
+
+
+
+    .widget-body {
+        background-color: #FFF
+    }
+
+    .widget-main {
+        padding: 12px
+    }
+
+    @media screen and (max-width:768px) {
+        h1 {
+            font-size: 40px !important;
+        }
+
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+<script>
+
+
+    async function generatePDF() {
+        // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
+
+        //Downloading
+        var downloading = document.getElementById("whatToPrint");
+        var doc = new jsPDF('l', 'pt');
+
+        await html2canvas(downloading, {
+            //allowTaint: true,
+            //useCORS: true,
+            // width: 600
+
+        }).then((canvas) => {
+            //Canvas (convert to PNG)
+            doc.addImage(canvas.toDataURL("image/png"), 'PNG', 100, 20, 600, 550);
+        })
+
+        doc.save("Document.pdf");
+
+        //End of downloading
+
+        // document.getElementById("downloadButton").innerHTML = "Click to download";
+    }
+
+
+</script>
+
+
+<!-- modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'loan_add_file' employee.id  %}" method="POST" enctype="multipart/form-data">
+                {%csrf_token %}
+                <div class="modal-body">
+                    <input type="file" class="form-control" name="file">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="page-content ">
+
+
+    <div id="overview">
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center>
+
+                        <h2 class="mb-0">{{ employee.employee.title }}. {{ employee.employee.firstname }}
+                            {{employee.employee.lastname }}</h2>
+
+                    </center>
+                    <hr>
+                    <div class="btn-group" style="float: left; ">
+
+
+                        <a style="padding: 10px; cursor: pointer;" onclick="Overview()"> Overview</a>
+
+                        <a style="padding: 10px; cursor: pointer;" onclick="Statment()"> Statement</a>
+                    </div>
+                    <div class="btn-group" style="float: right; ">
+
+
+
+                        <div>
+                            <center>
+
+                                <a href="{% url 'editloan' employee.id %}"
+                                    class=" fa fa-pencil btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">
+                                    Edit
+                                </a>&nbsp;&nbsp;&nbsp;
+                                {% if employee.status == "Active" %}
+                                <a href="{% url 'inactive_loan' employee.id  %}"
+                                    class="fa fa-check btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">Activate</a> &nbsp;&nbsp;&nbsp;
+                                {% else %}
+                                <a href="{% url 'active_loan' employee.id  %}"
+                                    class=" fa fa-exclamation-triangle  btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">Inactivate</a> &nbsp;&nbsp;&nbsp;
+                                {% endif %}
+
+                                <a href="{% url 'deleteloan' employee.id %}"
+                                    class=" fa fa-trash btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button"> Delete</a>
+
+                                <button type="button"
+                                    class="btn btn-outline-info rounded-pill text-grey mt-3 mb-3 ml-3   fa fa-paperclip"
+                                    style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
+
+                                    Attach file
+                                </button>
+                                <!-- <a data-toggle="modal"
+                                    class=" fa fa-download btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    data-target="#commentModal"> Download</a> -->
+
+
+
+
+                            </center>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+            <div class="card-body p-0">
+
+                <div id="details">
+                    <div class="row g-0">
+
+                        <div class="col-lg-8">
+                            <div class="p-5">
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h1 class="fw-bold mb-0 text-black">{{ employee.employee.title }}.
+                                        {{employee.employee.firstname }} {{ employee.employee.lastname }}</h1>
+                                    <img src="{{ employee.employee.image.url }}"
+                                        style="width: 15%; height: 97px; border-radius: 50px">
+                                </div>
+
+                                <hr class="my-4">
+
+
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <div class="row">
+                                            <div class="col mt-3">
+                                                <h2 class="mb-0 text-center">Loan Details</h2>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>Loan Status </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.status }}</b></label>
+
+                                        </div>
+
+                                    </div>
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title ">
+                                                <h6><b>Loan Amount </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.LoanAmount }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5  mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>Loan Date </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.LoanDate }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>Expery Date</b> </h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.ExperyDate }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+
+                                    {% if employee.action == 1 %}
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>MonthlyCuting (%) </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.MonthlyCut_percentage }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>MonthlyCuting (INR) </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.MonthlyCut_Amount }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    {% else %}
+                                    <div class="row">
+                                        <div class="col-md-4 ml-5 mr-5 mt-3">
+                                            <label for="title">
+                                                <h6><b>MonthlyCuting (INR) </b></h6>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4 ml-5 mt-3">
+                                            <label for="title"><b>: {{ employee.MonthlyCut_Amount }}</b></label>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    {% endif %}
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-lg-4 bg-grey">
+                            <div class="p-5">
+
+                                <h3 class="fw-bold mb-2 mt-2 pt-1">Employee Details</h3>
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Status</h6>
+                                    {{ employee.employee.status }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Designation</h6>
+                                    {{ employee.employee.designation }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Employee No:</h6>
+                                    {{ employee.employee.employeeno }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Function</h6>
+                                    {{ employee.employee.function }}
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Date Of Joining</h6>
+                                    {{ employee.employee.joindate }}
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Contact</h6>
+                                    {{ employee.employee.mobile }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Email</h6>
+                                    {{ employee.employee.email }}
+                                </div>
+                                {% if employee.salarydetails == "Yes"%}
+                                <h3 class="fw-bold mb-2 mt-2 pt-1">Salary Details</h3>
+                                <hr class="my-4">
+
+
+
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Employee Type</h6>
+                                    {{ employee.employee.employees }}
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Salary Effective From</h6>
+                                    {{ employee.employee.effectivefrom }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Pay Head</h6>
+                                    {{ employee.employee.payhead }}
+                                </div>
+                                {% if employee.employees == "Timebased"%}
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Hours</h6>
+                                    {{ employee.employee.hours }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Rate</h6>
+                                    {{ employee.employee.rate }}
+                                </div>
+                                {% endif %}
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Amount</h6>
+                                    {{ employee.employee.amount }}
+                                </div>
+
+                                {% endif %}
+
+
+                                <!-- <h3 class="fw-bold mb-2 mt-2 pt-1"> Bank Account Details</h3>
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Transaction Type</h6>
+                                    {{ employee.employee.transactiontype }}
+                                </div>
+    
+                                {% if employee.bankdetails == "Yes"%}
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">A/C No:</h6>
+                                    {{ employee.employee.acno }}
+                                </div>
+    
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">IFSC Code</h6>
+                                    {{ employee.employee.ifsccode }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Bank Name</h6>
+                                    {{ employee.employee.bankname }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Branch Name</h6>
+                                    {{ employee.employee.branchname }}
+                                </div>
+    
+                                {% endif %}
+                                {% if employee.bankdetails == "Unknown"%}
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">Bank Details</h6>
+                                    {{ employee.employee.bankdetails }}
+                                </div>
+                                {% endif %}
+    
+                                {% if employee.istds == "Yes"%}
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">TDS Type</h6>
+                                    {{ employee.employee.tdstype }}
+                                </div>
+                                <div class="d-flex justify-content-between mb-4">
+                                    <h6 class="">TDS Amount</h6>
+                                    {{ employee.employee.tds }}
+                                </div>
+                                {% endif %}
+     -->
+
+
+
+
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="statment" style="display: none; ">
+        <div class="card radius-15 ">
+            <div class="card-body">
+                <div class="card-title">
+                    <center>
+
+                        <h2 class="mb-0">{{ employee.employee.title }}. {{ employee.employee.firstname }}
+                            {{employee.employee.lastname }}</h2>
+
+                    </center>
+                    <hr>
+                    <div class="btn-group" style="float: left; ">
+
+
+                        <a style="padding: 10px; cursor: pointer;" onclick="Overview()"> Overview</a>
+
+                        <a style="padding: 10px; cursor: pointer;" onclick="Statment()"> Statement</a>
+                    </div>
+                    <div class="btn-group" style="float: right; ">
+
+
+
+                        <div>
+                            <center>
+
+                                <a href="{% url 'editloan' employee.id %}"
+                                    class=" fa fa-pencil btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">
+                                    Edit
+                                </a>&nbsp;&nbsp;&nbsp;
+                                {% if employee.status == "Active" %}
+                                <a href="{% url 'inactive_loan' employee.id  %}"
+                                    class="fa fa-check btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">Activate</a> &nbsp;&nbsp;&nbsp;
+                                {% else %}
+                                <a href="{% url 'active_loan' employee.id  %}"
+                                    class=" fa fa-exclamation-triangle  btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button">Inactivate</a> &nbsp;&nbsp;&nbsp;
+                                {% endif %}
+
+                                <a href="{% url 'deleteloan' employee.id %}"
+                                    class=" fa fa-trash btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                    role="button"> Delete</a>
+
+                                <button type="button"
+                                    class="btn btn-outline-info rounded-pill text-grey mt-3 mb-3 ml-2   fa fa-paperclip"
+                                    style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">
+
+                                    Attach file
+                                </button>
+                                <a class="btn btn-outline-info rounded-pill text-grey mt-3 mb-3  ml-2 fa fa-download"
+                                href="javascript:generatePDF()" id="downloadButton">
+                                Download</a>
+                                <!-- <a data-toggle="modal"
+                                class=" fa fa-download btn btn-outline-info rounded-pill text-grey mt-3 mb-3"
+                                data-target="#commentModal"> Download</a> -->
+
+
+
+
+                            </center>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid">
+
+
+
+            <div class="py-5">
+
+
+                <div class="row hidden-md-up" style="margin-top: 15px;">
+                    <div class="col-md-7" style="margin: auto;">
+                        <div class="card">
+                            
+
+                            <div id="whatToPrint">
+                                <div class="card-block">
+                                    <div class="card-body">
+                                        <div class="container bootdey">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-sm-offset-1" style="padding:20px;">
+                                                    <div class="widget-box">
+                                                        <div class="widget-header widget-header-large">
+                                                            <center>
+                                                                <h3 class="widget-title mt-5 mb-3">
+                                                                    STATEMENT OF LOAN<br></h3>
+                                                            </center>
+
+
+
+                                                        </div>
+
+                                                        <div class="widget-body">
+                                                            <div class="widget-main padding-24">
+                                                                <div class="row" style="padding:20px;">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="col-6 ml-3 mt-3">
+                                                                            <div style="width:20%;">
+                                                                                <img src="{{cmp1.cimg.url}}"
+                                                                                    class="rounded-pill"
+                                                                                    style="width: 60%;  border-radius: 50px">
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                        <div class="col-6 ml-3">
+                                                                            <p style="font-size:10px;color:black;">
+                                                                                {{cmp1.city}} <br>
+                                                                                {{cmp1.pincode}}<br>
+                                                                                {{cmp1.state}},India <br>
+                                                                                {{cmp1.cemail}}
+                                                                                <br>
+                                                                                {{cmp1.pincode}}<br>
+                                                                            </p>
+
+                                                                        </div>
+                                                                        <hr>
+                                                                    </div><!-- /.col -->
+
+
+                                                                </div><!-- /.row -->
+
+                                                                <div class="row col-12">
+                                                                    <div class="col-6 ml-5" style="margin-left: 20px;">
+                                                                        <p style="font-size:10px;color:black;">
+                                                                            To,<br>{{employee.employee.firstname}}
+                                                                            {{employee.employee.lastname}}<br>
+                                                                            {{employee.employee.street}},{{employee.employee.city}}<br>
+                                                                            {{employee.employee.state}},{{employee.employee.country}}<br>
+                                                                            {{employee.employee.pincode }}<br>
+                                                                            {{employee.employee.email}}
+                                                                            <br>
+                                                                            {{employee.employee.phone}}<br>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row col-12">
+                                                                    <table id="logic"
+                                                                        class=" table-striped table-responsive"
+                                                                        style="font-size:13px;color:black; margin-left: 40px; margin-bottom: 30px; margin-top: 40px; width: 100%;">
+                                                                        <thead class="thead-dark">
+                                                                            <tr>
+                                                                                <th style="padding: 10px;font-size: 10px;"><b>Loan
+                                                                                        Date</b>
+                                                                                </th>
+                                                                                <th style="padding: 10px;font-size: 10px;"><b>Employee
+                                                                                        Name</b>
+                                                                                </th>
+                                                                                <th style="padding: 10px;font-size: 10px;"><b>Employee
+                                                                                        No</b>
+                                                                                </th>
+                                                                                <th style="padding: 10px;font-size: 10px;"><b>Email
+                                                                                        Id</b>
+                                                                                </th>
+                                                                                <th style="padding: 10px;font-size: 10px;"><b>Loan
+                                                                                        Amount</b>
+                                                                                </th>
+
+
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <tr>
+                                                                                <td style="padding: 10px;font-size: 10px;">
+                                                                                    {{employee.LoanDate}}
+                                                                                </td>
+                                                                                <td style="padding: 10px;font-size: 10px;">
+                                                                                    {{employee.employee.firstname}}
+                                                                                    {{employee.employee.lastname}}</td>
+
+                                                                                <td style="padding: 10px;font-size: 10px;">
+                                                                                    {{employee.employee.employeeno}}
+                                                                                </td>
+                                                                                <td
+                                                                                    style="padding: 10px; font-size: 10px;">
+                                                                                    {{employee.employee.email}}</td>
+                                                                                <td style="padding: 10px;font-size: 10px;">
+                                                                                    {{employee.LoanAmount}}</td>
+
+                                                                            </tr>
+
+
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+
+
+
+
+                                                                <div class="hr hr8 hr-double hr-dotted"></div>
+
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        async function generatePDF() {
+            // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
+
+            //Downloading
+            var downloading = document.getElementById("whatToPrint");
+            var doc = new jsPDF('l', 'pt');
+
+            await html2canvas(downloading, {
+                //allowTaint: true,
+                //useCORS: true,
+                // width: 600
+
+            }).then((canvas) => {
+                //Canvas (convert to PNG)
+                doc.addImage(canvas.toDataURL("image/png"), 'PNG', 100, 20, 600, 550);
+            })
+
+            doc.save("Document.pdf");
+
+            //End of downloading
+
+            // document.getElementById("downloadButton").innerHTML = "Click to download";
+        }
+        function Overview() {
+
+            document.getElementById('overview').style.display = 'block';
+
+            document.getElementById('statment').style.display = 'none';
+
+
+
+        }
+        function Statment() {
+            document.getElementById('overview').style.display = 'none';
+
+            document.getElementById('statment').style.display = 'block';
+
+
+        }
+        function dispinv() {
+
+            document.getElementById('invtable').style.display = 'block';
+
+        }
+        function dispay() {
+
+            document.getElementById('paytable').style.display = 'block';
+
+        }
+        function disest() {
+
+            document.getElementById('esttable').style.display = 'block';
+
+        }
+        function dissale() {
+
+            document.getElementById('saletable').style.display = 'block';
+
+        }
+
+    </script>
+    <script>
+
+        const tbl1 = document.querySelector('#logic');
+        const tbl2 = document.querySelector(".tab_logic");
+        tbl2.style.display = "none";
+
+
+        $(document).on('submit', '#form_post', function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "",
+                data: {
+
+                    fd: $('#fdate').val(),
+                    ld: $('#ldate').val(),
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+
+                success: function (response) {
+                    console.log(response)
+                    data = response.ct
+                    data2 = response.invoiced
+                    data3 = response.re
+                    data4 = response.sum
+                    data5 = response.df
+                    data6 = response.dl
+                    data7 = response.invitem
+                    data8 = response.st
+                    data9 = response.baldue
+                    data10 = response.opening
+
+                    data11 = response.fst
+
+
+                    $('#tab_logic tbody').append(
+
+                        `<tr>
+                    <td>${data11}</td>
+                    <td>***Opening Balance***</td>
+                    <td></td>
+                    <td>${data10}</td>
+                    <td></td>
+                    <td>${data10}</td>
+                    </tr> `
+
+
+                    )
+
+
+                    for (i = 0; i < data8.length; i++) {
+
+                        $('#tab_logic tbody').append(
+
+                            `
+                              
+                                <tr>
+                                <td>${data8[i].Date}</td>
+                                <td>${data8[i].Transactions}</td>
+                                                                            
+                                <td>
+                                    
+                                    ${data8[i].Details2} 
+                                    
+                                    </td>
+                                                                            
+                                                                            
+                                <td>
+                                
+                                ${data8[i].Amount}
+                                </td>
+                                <td>
+
+                                    ${data8[i].Payments} 
+                               
+                                
+                                </td>
+                                <td>${data8[i].Balance} 
+                                
+                                 </td>
+                                </tr>
+                                 
+                                    `
+
+                        )
+
+
+
+                    }
+
+
+
+
+                    $('#tab_logic tbody').append(`<tr>
+                        <td colspan="5">Balance Due</td>
+                        <td>${data9} </td>
+                        
+                        </tr>`)
+                    tbl1.style.display = "none";
+                    tbl2.style.display = "block";
+                    document.getElementById('invamount').value = data2
+                    document.getElementById('received').value = data3
+                    document.getElementById('due').value = data9
+                    document.getElementById('df').value = data5
+                    document.getElementById('dl').value = data6
+                    document.getElementById('open').value = data10
+
+
+
+
+                }
+
+            });
+        });
+    </script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function ($) {
+            $(".table-row").dblclick(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <script>
+
+        $('.delete').click(function (event) {
+            var form = $(this).closest("form");
+            var name = $(this).data("name");
+            event.preventDefault();
+            swal({
+                title: `Are you sure you want to delete this record?`,
+                text: "If you delete this, it will be gone forever.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        swal("Poof! Your imaginary file has been deleted!", {
+                            icon: "success",
+
+                        });
+                        form.submit();
+
+
+
+
+                    }
+                });
+        });
+
+
+    </script>
+    <script>
+        // Function to handle the search
+        function searchTable() {
+            let input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows (excluding the first row, which contains the column headers)
+            for (i = 1; i < tr.length; i++) {
+                let rowVisible = false;
+                td = tr[i].getElementsByTagName("td");
+
+                // Loop through all table cells (columns) in each row
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Show/hide the row based on the search results
+                tr[i].style.display = rowVisible ? "" : "none";
+            }
+        }
+
+        // Attach the search function to the input field's "input" event
+        document.getElementById("searchInput").addEventListener("input", searchTable);
+    </script>
+
+    {% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+    {% if user.is_authenticated %}
+
+        <style>
+            tr:hover{
+                cursor: pointer;
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            
+            .idsr:hover{
+                color:black;
+            }
+        </style>
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js" ></script>
+
+        <div class="page-content" id="test">
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="card-title">
+                        <center><h2 class="mb-0">Credit Note</h2></center>
+                        <hr>
+                        <div class="btn-group col-md-2" style="float: right;">
+                            <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
+                            style="margin-top: 8px; background-color: #2f516f;color: white;">
+                        </div>
+                        
+                        <div class="col-md-2" style="width: 40%; margin-top: 9px;">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-outline-info   text-grey fas fa-sort"
+                                        data-toggle="dropdown"> Sort by
+                                </button>
+                                <div class="dropdown-menu " style="background-color: black;">
+                                    <a class="dropdown-item" href="{% url 'credit_note' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >All</a>
+                                <a class="dropdown-item" href="{% url 'credit_num_asc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >Credit Number </a>
+                                <!-- <a class="dropdown-item  " href="{% url 'credit_num_desc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >Credit Number <icon class=" fas fa-arrow-up"></icon></a> -->
+
+                                <a class="dropdown-item " href="{% url 'credit_date_asc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center; " >Date   </a>
+                                <!-- <a class="dropdown-item " href="{% url 'credit_date_desc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >Date  </a> -->
+
+                                <a class="dropdown-item  " href="{% url 'credit_cust_asc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >
+                                        Customer </a>
+                                <!-- <a class="dropdown-item  " href="{% url 'credit_cust_desc' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" >Customer <icon class=" fas fa-arrow-up"></icon></a> -->
+                                    
+                                        
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2">
+                            <a href="{% url 'addpurchasecredit' %}" >
+                                <button id="myBtn" class="btn btn-outline-info text-grey fas fa-plus" style="margin-top: 8px;">&nbsp;Add Credit Note</button>
+                            </a>
+                        </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <table class="table table-responsive-md mt-4" id="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase">Date</th>
+                                    <th class="text-uppercase">Credit Number</th>
+                                    <th class="text-uppercase">Customer</th>
+                                    <th class="text-uppercase">Email ID</th>
+                                    <th class="text-uppercase">Tax Amount</th>
+                                    <th class="text-uppercase">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in pdebit %}
+                                    <tr  class="table-row " >
+                                        <td><a class="idsr" style="list-style: none;"  href="{% url 'viewcredit'  p.screditid %} "> {{ p.creditdate |date:'d-m-Y' }}</a></td>
+                                        <td > <a class="idsr" style="list-style: none;"  href="{% url 'viewcredit'  p.screditid %} "> CN - {{ p.credit_no }}</a></td>
+                                        <td ><a class="idsr" style="list-style: none;"  href=" {% url 'viewcredit'  p.screditid %}">{{ p.cust }}</a></td>
+                                        <td ><a class="idsr" style="list-style: none;"  href=" {% url 'viewcredit'  p.screditid %}">{{ p.email }}</a></td>
+                                        <td><a class="idsr" style="list-style: none;"  href=" {% url 'viewcredit'  p.screditid %}"> {{ p.taxamount }}</a></td>
+                                        <td><a class="idsr" style="list-style: none;"  href="{% url 'viewcredit'  p.screditid %} "> {{ p.grandtotal }}</a></td>
+                                    </tr> 
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+
+        <script>
+            var $rows = $('.table tbody tr');
+            $('#search').keyup(function() {
+                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                
+                $rows.show().filter(function() {
+                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                    return !~text.indexOf(val);
+                }).hide();
+            });
+
+            function ExportToExcel(type, fn, dl) {
+                var elt = document.getElementById('table');
+                var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+                return dl ?
+                    XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+                    XLSX.writeFile(wb, fn || ('Credit Note_' + (type || 'xlsx')));
+            }
+        </script>
+
+    {% endif %}
+{% endblock %}

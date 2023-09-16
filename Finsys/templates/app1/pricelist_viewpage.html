@@ -1,0 +1,170 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+    {% load static %}
+    <div class="page-content">
+
+        <div class="row">
+
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                
+                <div class="card radius-15" style="background-color: #243e54;">
+                    <div class="card-body">
+                        <form action="" method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                           
+                            
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="card-title mt-2">
+                                        <h3 class="mb-0 text-center" style="font-family: monospace;">{{pl.name}}</h3>
+                                    </div>
+                                </div>
+                               
+
+                                <div class="col-lg-5">
+
+                                    <a href="{% url 'pricelist_editpage' pl.id %}" class=" fa fa-pencil btn btn-outline-info text-grey mt-2 mb-3" role="button"> Edit</a>
+                                    {% if pl.is_active %}
+                                    <a href="{% url 'inactive_pricelist' pl.id %}" class=" fa fa fa-times btn btn-outline-info text-grey mt-2 mb-3" role="button"> Inactive</a>
+                                    {% else %}
+                                    <a href="{% url 'active_pricelist' pl.id %}" class=" fa fa-check btn btn-outline-info text-grey mt-2 mb-3" role="button"> Active</a>
+                                    {% endif %}
+                                    <a href="{% url 'delete_pricelist' pl.id %}" class="fa fa-trash-o btn btn-outline-info text-grey mt-2 mb-3" role="button"> Delete</a>
+                                    <a href="{% url 'pricelist' %}" class="fa fa-arrow-left btn btn-outline-info text-grey mt-2 mb-3" role="button"> Close</a>
+                                   
+                                   
+                                     
+                                </div>
+
+                            </div>
+                            <hr>
+                              
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Name</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.name}}</b></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Type</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.types}}</b></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Item Rate</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.item_rate}}</b></p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Description</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.description}}</b></p>
+                                </div>
+                            </div>
+                            
+                            
+                            {% if items %}
+                            <hr>
+                            <div class="row mb-3">
+                                <label class="col-sm-12 mb-5 text-center" style="font-size: large;"><b>Customized item rates</b></label>
+                                <div class="col-sm-2"></div>
+                                <div class="table-responsive col-sm-8">
+                                    <table class="table  table-striped" style="background-color: #2f516f;color: white;font-size: large;">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Details</th>
+                                                <th>Standard Rate(INR)</th>
+                                                <th>Custom Rate(INR)</th>
+                                            </tr>
+                                        </thead>
+                                        {% for i in items %}
+                                        <tbody>
+                                            <tr>
+                                                <td>{{i.itemname}}</td>
+                                                <td>{{i.itemrate}}</td>
+                                                <td><b>{{i.customrate}}</b></td>
+
+                                            </tr>
+                                        </tbody>
+                                        {% endfor %}
+                                    </table>
+
+                                </div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                            {% else %}
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Percentage</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.percentage}}%  {{pl.upordown}}</b></p>
+                                </div>
+                            </div>
+                        
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Round off to</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.roundoffto}}</b></p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <label class="col-sm-2" style="font-size: large;">Currency</label>
+                                <p ><b>:</b></p>
+                                <div class="col-sm-5">
+                                  <p style="font-size: large;"><b>{{pl.currency}}</b></p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+
+                            
+                                
+
+                            
+                                
+                            
+                                
+                        
+                                
+        
+                                                           
+                            
+                            
+                        </form>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col-lg-1"></div>
+
+           
+        </div>
+       
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,479 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+
+
+{% load static %}
+{% if user.is_authenticated %}
+ 
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+    body {
+        background: #f2f2f2;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #7690da;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #9DBFAF;
+    }
+
+    .searchTerm:focus {
+        color: #7690da;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #7690da;
+        background: #7690da;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /*Resize the wrap to see the search bar change!*/
+    .wrap {
+        width: 40%;
+        /* position: absolute;
+  top: 50%;
+  left: 50%; */
+        /* transform: translate(-50%, -50%); */
+    }
+
+    .table-row {
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h2 class="mb-0">CHEQUES</h2>
+                </center>
+                <hr>
+                <div class="btn-group col-md-2" style="float: right;">
+                    <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_print"
+                        role="button">Print</a>
+
+                </div>
+                <div class="btn-group col-md-2" style="float: right;">
+
+                    <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+                </div>
+
+                
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="row">
+
+
+                <!-- <div class="col-md-4">
+                            <div class="wrap" style="width: 60%; margin-top: 8px;">
+                               
+                                <div class="search">
+                                    
+                                   <input type="text" id="searchfild" class="searchTerm" name="search">
+                                   <button type="submit" class="searchButton">
+                                     <i class="fa fa-search"></i>
+                                  </button>
+                                </div>
+                                
+                              
+                             </div>
+                             
+                        </div> -->
+
+                <div class="col-md-4">
+                    <div class="wrap" style="margin-top: 8px;">
+                        <div class="search">
+
+                            <input type="text" class="form-control btn-outline-info" placeholder="Search"
+                                style="background-color: #2f516f;color: white;width: 250px;" name="search"
+                                id="searchInput">
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control btn btn-outline-info dropdown-toggle text-grey" id="types"
+                        aria-label=".form-select-lg example" style="width: 40%; margin-top: 8px;" name="types"
+                        onchange="types(this)">
+
+                        <option value="" selected>All Types</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Purchase">Purchase</option>
+                        <option value="Payment In">Payment In</option>
+                        <option value="Payment Out">Payment Out</option>
+                        <option value="Expense">Expense</option>
+                        <option value="Credit Note">Credit Note</option>
+                        <option value="Debit Note">Debit Note</option>
+                        <option value="Sales Order">Sales Order</option>
+                        <option value="Purchase Order">Purchase Order</option>
+                    </select>
+                </div>
+                <!-- Add Cash Modal -->
+<div class="modal fade" id="chqfilterModal" tabindex="-1" role="dialog" aria-labelledby="chqfilterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #243e54;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chqfilterModal">FILTER BY</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                    <div class="form-group">
+                        <label for="filter">Filter</label>
+                        <select class="form-control" name="filter" id="filterBy">
+                        <option value="">All</option>
+                        <option value="Name">Name</option>
+                        <option value="Reference No:">Reference No:</option>
+                        <option value="Date">Date</option>
+                        <option value="Amount">Amount</option>
+                        <option value="Status">Status</option>
+                        <option value="Action">Action</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equalto"></label>
+                        <select class="form-control" name="equalto" id="equalto">
+                        <option value="">Equal to</option>
+                        </select>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="">Type your Exact Search Key</label>
+                        <input type="text" class="form-control" id="searchkey" name="desc">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>
+                        <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyFilter(this)">Apply</button>
+                    </div> 
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<div class="col">
+    <div class="dropdown">
+        <button type="button" class="btn btn-outline-info text-grey" style="width: 40%; margin-top: 8px;" data-toggle="modal" data-target="#chqfilterModal">
+           Filter
+        </button>
+    </div>
+</div>
+               
+ 
+
+            </div>
+            <div class="container-fluid">
+
+                <table class="table table-responsive-md mt-4" id="tbl_exporttable_to_xls">
+                    <thead>
+                        <tr>
+                            <th>TYPE</th>
+                            <th>NAME</th>
+                            <th>REF. NO:</th>
+                            <th>DATE</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                           
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for chq in sales %}
+                        <tr class="table-row " data-href="">
+                           
+                            <td>Sales</td>
+                            <td>{{ chq.customer }}</td>
+                            <td>{{ chq.referno }}</td>
+                            <td>{{ chq.paymdate }}</td>
+                            <td>{{ chq.amtreceived }}</td>
+                            <td>{{ chq.depto }}</td>
+                            <td>{{ chq.cheque_action }}</td>
+                           
+                        </tr>
+                        {% endfor %}
+                        {% for chq in purchase %}
+                        <tr class="table-row " data-href="">
+                           
+                            <td>Purchase</td>
+                            <td>{{ chq.vendor }}</td>
+                            <td>{{ chq.reference }}</td>
+                            <td>{{ chq.paymentdate }}</td>
+                            <td>{{ chq.paymentamount }}</td>
+                            <td>{{ chq.depositeto }}</td>
+                            <td>{{ chq.cheque_action }}</td>
+                           
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('Cheque.' + (type || 'xlsx')));
+    }
+</script>
+<script>
+    // Function to handle the search
+    function searchTable() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+
+    // Attach the search function to the input field's "input" event
+    document.getElementById("searchInput").addEventListener("input", searchTable);
+</script>
+ 
+
+<script> 
+    // Function to handle the filter search
+    function types() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("types");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+
+</script>
+
+<script>
+    function ApplyFilter() {
+         
+         
+        Equalto = document.getElementById("equalto");
+
+        let input, filter, table, tr, td, i, j, txtValue,filterBy;
+        input = document.getElementById("searchkey");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+        filterBy = document.getElementById("filterBy").value; 
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+               
+
+                if(filter != "" && filterBy=='Name' && j==1)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Reference No:' && j==2)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Date' && j==3)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Amount' && j==4)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Status' && j==5)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Action' && j==6)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+
+                if(filterBy=='')
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+
+    function clearFilter(){ 
+    document.getElementById("filterBy").value = "";
+    document.getElementById("searchkey").value = ""; 
+    let input, filter, table, tr, td, i, j;
+    table = document.getElementById("tbl_exporttable_to_xls");
+    tr = table.getElementsByTagName("tr"); 
+    
+    for (i = 1; i < tr.length; i++) {
+            tr[i].style.display =  "";
+        } 
+
+    // Close the modal
+    var modal = button.closest('.modal');
+    if (modal) {
+        $(modal).modal('hide');
+    } 
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+      
+
+        $(document).on('click', '.btn_print', function (event) {
+           
+            event.preventDefault();
+            var element = document.getElementById('tbl_exporttable_to_xls');  
+            element.style.color = 'black';
+            element.style.backgroundColor = '#243e54';
+            var opt =
+            {
+                margin: 1,
+                filename: 'cheque' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait', }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+ 
+ });
+</script>
+ 
+
+{% endif %}
+{% endblock %}

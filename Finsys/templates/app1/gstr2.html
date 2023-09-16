@@ -1,0 +1,213 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+{% if user.is_authenticated %}
+<!-- Include jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+
+<!-- Include jQuery.table2excel plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<style>
+    #ui-datepicker-div {
+        width: 20rem;
+        left: 632px;
+    }
+
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .datepicker {
+        margin-top: 1rem;
+        display: grid;
+        justify-items: center;
+    }
+
+    select>option {
+        background-color: rgb(212, 212, 212);
+    }
+
+    .ui-datepicker-prev {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker-next {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button {
+        color: white;
+        background: black;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button:hover {
+        color: rgb(0, 0, 0);
+        background: rgb(177, 177, 177);
+    }
+
+
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bar .left {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bar .left input {
+        height: 5vh;
+    }
+</style>
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h6>{{cmp1.cname}}</h6>
+                    <h2 class="mb-0">GSTR-2 REPORT</h2>
+                    <div class="display">
+                        <div id="d1" style="display: inline-block;"></div>
+                        <div id="d2" style="display: inline-block;"></div>
+                    </div>
+                </center>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="card radius-15">
+        <div class="card-body">
+
+            <div class="bar">
+                <div class=" left">
+                    <div class="px-2">
+                        <label style="text-align:left ">From</label><br>
+                        <input name="FromDate" class="inputdate form-control" id="in1" type="date">
+                    </div>
+                    <div class="px-2">
+                        <label style="text-align:left ">To</label><br>
+                        <input name="ToDate" class="inputdate form-control" id="in2" type="date">
+                    </div>
+
+                </div>
+                <div class="right">
+                    <button class="btn btn_print btn-outline-info">Print</button>
+                    <button class=" btn btn-outline-info" id="export-button" onclick="exportAsExcel()">Excel</button>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function ($) {
+                    console.log('print');
+
+                    $(document).on('click', '.btn_print', function (event) {
+                        console.log('print1');
+                        event.preventDefault();
+                        var printContent = document.getElementById("pdf-card").innerHTML;
+                        var originalContents = document.body.innerHTML;
+
+                        // Create a <div> container for centering
+                        var containerDiv = document.createElement("div");
+                        containerDiv.style.textAlign = "center"; // Center-align the content
+
+                        // Create the <h1> element
+                        var h1Element = document.createElement("h1");
+                        h1Element.textContent = "GSTR2 REPORT"; // Replace "Title" with your desired title text
+
+                        // Append the <h1> element to the container
+                        containerDiv.appendChild(h1Element);
+
+                        // Insert the container and the print content
+                        containerDiv.innerHTML += printContent;
+                        document.body.innerHTML = containerDiv.outerHTML;
+
+                        window.print();
+
+                        // Restore the original contents (excluding the container)
+                        document.body.innerHTML = originalContents;
+
+
+                    });
+
+                });
+            </script>
+            <script type="text/javascript">
+                function exportAsExcel() {
+                    const table = document.getElementById('myTable'); // Replace 'myTable' with your table's ID
+                    const wb = XLSX.utils.table_to_book(table);
+
+                    XLSX.writeFile(wb, 'gstr2.xlsx');
+                }
+            </script>
+            <br>
+            <br>
+
+        </div>
+    </div>
+
+    <div class="card radius-15 " id="pdf-card">
+        <div class="card-body">
+            <div class="container-fluid">
+
+                <table class="table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable">
+                    <thead>
+                        <tr>
+                            <th colspan="5" style="text-align: center;">Bill Details</th>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center;">GSTIN/UIN</th>
+                            <th style="text-align: center;">Party Name </th>
+                            <th style="text-align: center;">No.</th>
+                            <th style="text-align: center;">Date</th>
+                            <th style="text-align: center;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <br>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+
+<script>
+    var fromDate;
+    $('#in1').on('change', function () {
+        fromDate = $(this).val();
+        $('#in2').prop('min', function () {
+            return fromDate
+        })
+        var tdate = new Date(fromDate)
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("d1").innerHTML = tdate.toLocaleDateString(undefined, options);
+    })
+    var toDate;
+    $('#in2').on('change', function () {
+        toDate = $(this).val();
+        $('#in1').prop('max', function () {
+            return toDate
+        })
+        var tdate = new Date(toDate)
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("d2").innerHTML = "  To  " + tdate.toLocaleDateString(undefined, options);
+    })
+
+
+</script>
+{% endif %}
+{% endblock %}

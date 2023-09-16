@@ -1,0 +1,157 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <h2>Edit Account Holder</h2>
+    <form method="post" >
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Bank Account Holder Form</h3>
+                {% for field in bank_account_holder_form %}
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Bank Account Form</h3>
+                {% for field in bank_account_form %}
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Bank Configuration Form</h3>
+                {% for field in bank_configuration_form %}
+                    <div class="form-group row">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            {{ field }} {{ field.label }}
+                        {% else %}
+                            <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                            <div class="col-sm-8">
+                                {{ field }}
+                                
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Mailing Address Form</h3>
+                {% for field in mailing_address_form %}
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Tax Registration Form</h2> 
+                {% for field in banking_details_form %}
+                    <div class="form-group row">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            {{ field }} {{ field.label }}
+                        {% else %}
+                            {% if field.name == 'gstin_un' %}
+                                <label class="col-sm-4 col-form-label" id="id_gstin_un_label">{{ field.label }}</label>
+                            {% else %}
+                                <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                            {% endif %}
+                            <div class="col-sm-8">
+                                {{ field }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <h3>Opening Balance Form</h3>
+                {% for field in opening_balance_form %}
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="termsCheckbox" name="terms" required>
+                <label class="form-check-label" for="termsCheckbox">Agree to terms and conditions</label>
+            </div>
+            <input type="submit" value="Save" class="btn btn-outline-info text-grey rounded-pill btn-lg">
+        </div>
+        
+    </form>
+
+    {# Add custom styles to change the background color of select elements #}
+    <style>
+        .black-select {
+            background-color: white;
+            color: black;
+        }
+
+        .black-select option:hover {
+            background-color: white;
+        }
+    </style>
+    <!-- JavaScript code to handle the change event for the registration_type field -->
+<script>
+   // Get references to the registration type and GST number fields
+let registrationTypeField = document.querySelector('#id_registration_type');
+let gstNumberField = document.querySelector('#id_gstin_un');
+
+// Get reference to the label for the GST number field
+let gstNumberLabel = document.querySelector('#id_gstin_un_label');
+
+// Function to hide or show the GST number field and its label based on the selected registration type
+function toggleGstNumberField() {
+    let registrationType = registrationTypeField.value;
+    if (registrationType === 'consumer' || registrationType === 'unregistered') {
+        gstNumberField.style.display = 'none';
+        gstNumberLabel.style.display = 'none';
+        gstNumberField.required = false; // Remove the required attribute
+    } else {
+        gstNumberField.style.display = '';
+        gstNumberLabel.style.display = '';
+        gstNumberField.required = true; // Add the required attribute back
+    }
+}
+
+// Call the toggle function when the page loads
+toggleGstNumberField();
+
+// Add an event listener to the registration type field to call the toggle function when its value changes
+registrationTypeField.addEventListener('change', toggleGstNumberField);
+
+</script>
+
+
+</div> 
+{% endblock %}
+
+

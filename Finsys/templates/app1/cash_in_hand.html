@@ -1,0 +1,342 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="page-content">
+    <div class="card radius-15 h-20">
+        <div class="row">
+            <div class="col-md-12">
+                <center><h2 class="mt-3">CASH</h2></center>
+                
+                <hr style="width:95%">
+            </div>
+        </div>
+    </div>
+   
+   
+<div class="card radius-15">
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col form-inline d-flex mr-2">
+                   <p class="form-inline d-flex mt-2 " style="font-size: large;"> cash :<h3 class="form-inline">{{cmp1.cash}}</h3> </p>
+                </div>
+                <div class="col"></div>
+                <div class="col-md-5">
+                    <div class="search-bar">
+                        <div class="input-group">
+                            <div class="input-group-prepend search-arrow-back">
+                                <button class="btn btn-search-back" type="button"><i class="bx bx-arrow-back"></i></button>
+                            </div>
+                            <input class="form-control" type="search" id="searchInput" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-search" type="button"><i class="lni lni-search-alt"></i></button>
+                            </div>
+                           
+                    
+                                </div>
+                            </div>
+                          </div>
+                          <div class="dropdown">
+                            <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
+                                    data-toggle="dropdown">Filter by
+                            </button>
+                            <div class="dropdown-menu" style="background-color: black;">
+    <a class="dropdown-item" href="javascript:void(0);" onclick="sortTable(0, 'asc')"
+       style="height: 40px; font-size: 15px; color: white;">Name Ascending</a>
+    <a class="dropdown-item" href="javascript:void(0);" onclick="sortTable(0, 'desc')"
+       style="height: 40px; font-size: 15px; color: white;">Name Descending</a>
+</div>
+
+                        </div>
+    
+                  <div class="col">
+                    <button type="button" class="btn btn-outline-info  text-grey"><a href="{% url 'cash_statement' %}">STATEMENT</a>
+            </button>
+                    
+                  </div>
+                 
+                  
+                
+            <div class="col">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline-info text-grey" data-toggle="modal" data-target="#addBankModal">
+                        Add Cash
+                    </button>
+                </div>
+            </div>
+            
+            
+                  </div>
+                </div>
+              </div>
+            <div class="table-responsive">
+                <table class="table table-responsive-md table-hover mt-4" id="tabletobe">
+                    <thead>
+                        <th >TYPE</th>
+                        <th >NAME</th>
+                        <th>DATE</th>
+                        <th >DESCRIPTION</th>
+                        <th >BALANCE</th>
+                        <th>ACTION</th>
+                    </thead>
+                    <tbody>
+                   
+               {% for a in bnk %}
+                        <tr>
+                            {% if a.type != 'OPENING BAL' %}
+                            {% if a.cash_adjust == 'ADD CASH' %}
+                                <td>  {{a.cash_adjust }}</td>
+                                {% elif a.cash_adjust == 'REDUCE CASH' %}
+                                <td> {{a.cash_adjust }}</td>
+                            {% endif %}
+                            <td>{{a.bank_type}}</td>
+                            <td>{{a.cash_date}}</td>
+                            <td>{{a.cash_description}}</td>
+                            {% if a.cash_adjust == 'ADD CASH' %}
+                            <td>+ {{a.cash_cash}}</td>
+                            {% elif a.cash_adjust == 'REDUCE CASH' %}
+                            <td>-{{a.cash_cash}}</td>
+                            {% endif %}
+                            {% if a.bank_type == '' %}
+                            <td>
+                                <div class="dropdown">
+                                    <i class="fa fa-ellipsis-v" style="font-size:24px" data-toggle="dropdown"></i>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item edit-item" href="#" data-toggle="modal" data-target="#editModal{{ a.id }}">Edit</a>
+
+                                        <a class="dropdown-item delete-item" href="#" data-toggle="modal" data-target="#deleteModal{{ a.id }}">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                            {% else %}
+                            <td>
+                                <div class="dropdown">
+                                    <i class="fa fa-ellipsis-v" style="font-size:24px" data-toggle="dropdown"></i>
+                                    <div class="dropdown-menu">
+
+                                        <a class="dropdown-item delete-item" href="#" data-toggle="modal" data-target="#deleteModal{{ a.id }}">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                            {% endif %}
+                {% endif %}
+                        </tr>
+    
+   
+<script>
+
+
+    $(document).ready(function () {
+        $(".edit-item").on("click", function () {
+            $("#editModal").modal("show");
+        });
+    });
+</script>
+
+                        <div class="modal fade" id="deleteModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this item?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <a href="{% url 'delet_bnk' a.id %}" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                        <div class="modal fade " id="editModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="bankToBankTransferModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content" style="background-color: #213b52;">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addBankModalLabel">CASH ADJUST</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="{% url 'edit_add_cash' a.id  %}">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="amount">Adjustment</label>
+                                                <select class="form-control" name="cashadj" id="">
+                                                    <option value="{{a.cash_adjust}}">{{a.cash_adjust}}</option>
+                                                    <option value="ADD CASH">Add Cash</option>
+                                                    <option value="REDUCE CASH">Reduce Cash</option>
+                                                </select>
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label for="amount">Amount</label>
+                                                <input type="number" class="form-control" value="{{a.cash_cash}}" id="" name="amount">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="amount">Adj Date </label>
+                                                <input type="date" class="form-control" value="{{a.cash_date|date:'Y-m-d' }}" id="" name="date">
+                                            </div>
+                        
+                                            <div class="form-group">
+                                                <label for="amount">Description</label>
+                                                <input type="text" class="form-control" value="{{a.cash_description}}" id="" name="desc">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="reset" class="btn btn-secondary " value="Reset">
+
+                                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Add Cash</button>
+                                            </div>
+                                        </form>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                            
+                     {% endfor %}
+                        
+                  
+                  
+                   
+                  
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add Cash Modal -->
+<div class="modal fade" id="addBankModal" tabindex="-1" role="dialog" aria-labelledby="addBankModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBankModalLabel">Add Cash</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your form elements for adding cash here -->
+                <!-- For example: -->
+                <form method="post" action="{% url 'add_cash' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="amount">Adjustment</label>
+                        <select class="form-control" name="cashadj" id="">
+                            <option value="ADD CASH">Add Cash</option>
+                            <option value="REDUCE CASH">Reduce Cash</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="" name="amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Adj Date </label>
+                        <input type="date" class="form-control" id="" name="date">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Description</label>
+                        <input type="text" class="form-control" id="" name="desc">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Cash</button>
+                    </div>
+                </form>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+   function sortTable(n, sortOrder) {
+    var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+    table = document.getElementById("tabletobe");
+
+    if (!table) {
+        console.error("Table not found.");
+        return;
+    }
+
+    rows = table.getElementsByTagName("TR");
+    switching = true;
+
+    while (switching) {
+        switching = false;
+
+        // Start loop from index 1 to skip the header row
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+
+            if (x && y) { // Check if x and y are defined
+                var xValue = x.innerHTML.toLowerCase();
+                var yValue = y.innerHTML.toLowerCase();
+
+                if ((sortOrder === "asc" && xValue > yValue) ||
+                    (sortOrder === "desc" && xValue < yValue)) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount === 0 && sortOrder === "asc") {
+                sortOrder = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('#tabletobe tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const searchText = this.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            let foundMatch = false;
+            const cells = row.querySelectorAll('td');
+
+            cells.forEach(cell => {
+                const cellText = cell.textContent.toLowerCase();
+                if (cellText.includes(searchText)) {
+                    foundMatch = true;
+                }
+            });
+
+            row.style.display = foundMatch ? 'table-row' : 'none';
+        });
+    });
+</script>
+
+{% endblock %}

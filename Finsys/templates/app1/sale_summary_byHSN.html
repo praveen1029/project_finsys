@@ -1,0 +1,692 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+
+
+{% load static %}
+{% if user.is_authenticated %}
+ 
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+    body {
+        background: #f2f2f2;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #7690da;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #9DBFAF;
+    }
+
+    .searchTerm:focus {
+        color: #7690da;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #7690da;
+        background: #7690da;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /*Resize the wrap to see the search bar change!*/
+    .wrap {
+        width: 40%;
+        /* position: absolute;
+  top: 50%;
+  left: 50%; */
+        /* transform: translate(-50%, -50%); */
+    }
+
+    .table-row {
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h2 class="mb-0">SALE SUMMARY BY HSN</h2>
+                </center>
+                <hr>
+                <div class="btn-group col-md-2" style="float: right;">
+                    <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_print"
+                        role="button">Print</a>
+
+                </div>
+                <div class="btn-group col-md-2" style="float: right;">
+
+                    <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+
+                    
+                </div>
+
+                <div class="form-group">
+                    <label for="Between">From</label> &nbsp;
+                    <input type="date" id="fromdate">   &nbsp; 
+                    <label for="To">To</label>  &nbsp;
+                    <input type="date"  id="todate">  &nbsp;
+        
+                    <!-- <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>  &nbsp;
+                    <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button> -->
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="row">
+
+
+                <!-- <div class="col-md-4">
+                            <div class="wrap" style="width: 60%; margin-top: 8px;">
+                               
+                                <div class="search">
+                                    
+                                   <input type="text" id="searchfild" class="searchTerm" name="search">
+                                   <button type="submit" class="searchButton">
+                                     <i class="fa fa-search"></i>
+                                  </button>
+                                </div>
+                                
+                              
+                             </div>
+                             
+                        </div> -->
+
+                <div class="col-md-4">
+                    <div class="wrap" style="margin-top: 8px;">
+                        <div class="search">
+
+                            <input type="text" class="form-control btn-outline-info" placeholder="Search"
+                                style="background-color: #2f516f;color: white;width: 250px;" name="search"
+                                id="searchInput">
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                   
+                </div>
+
+                 <!-- Add Date Modal -->
+                 <!-- <div class="modal fade" id="datefilterModal" tabindex="-1" role="dialog" aria-labelledby="datefilterModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="background-color: #243e54;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="datefilterModal">FILTER BY DATE</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body"> 
+                                    <div class="form-group">
+                                        <label for="Between">From</label> &nbsp;
+                                        <input type="date" id="fromdate">   &nbsp; 
+                                        <label for="To">To</label>  &nbsp;
+                                        <input type="date"  id="todate"> 
+                                    </div>
+
+                                   
+                                   
+                                   
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>
+                                        <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button>
+                                    </div> 
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div> -->
+                
+                <!-- <div class="col">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-outline-info text-grey" style="width: 80%; margin-top: 8px;" data-toggle="modal" data-target="#datefilterModal">
+                           Filter By Date
+                        </button>
+                    </div>
+                </div> -->
+                <!-- Add filter Modal -->
+<div class="modal fade" id="transfilterModal" tabindex="-1" role="dialog" aria-labelledby="transfilterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #243e54;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transfilterModal">FILTER BY</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                    <div class="form-group">
+                        <label for="filter">Filter</label>
+                        <select class="form-control" name="filter" id="filterBy">
+                        <option value="">All</option>
+                        <option value="HSN">HSN</option>
+                        <option value="Total Value">Total Value</option>
+                        <option value="Taxable Value">Taxable Value</option>
+                        <option value="IGST Amount">IGST Amount</option>
+                        <option value="CGST Amount">CGST Amount</option>
+                        <option value="SGST Amount">SGST Amount</option>
+                        <option value="Add CESS">Add CESS</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equalto"></label>
+                        <select class="form-control" name="equalto" id="equalto">
+                        <option value="">Equal to</option>
+                        </select>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="">Type your Exact Search Key</label>
+                        <input type="text" class="form-control" id="searchkey" name="desc">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>
+                        <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyFilter(this)">Apply</button>
+                    </div> 
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<div class="col">
+    <div class="dropdown">
+        <button type="button" class="btn btn-outline-info text-grey" style="width: 40%; margin-top: 8px;" data-toggle="modal" data-target="#transfilterModal">
+           Filter
+        </button>
+    </div>
+</div>
+
+               
+               
+ 
+
+            </div>
+            <div class="container-fluid">
+
+                <table class="table table-responsive-md mt-4" id="tbl_exporttable_to_xls">
+                    <thead>
+                        <tr>
+                            <th>Sl.No.</th> 
+                            <th>HSN</th>
+                            <th>TOTAL VALUE</th>
+                            <th>TAXABLE VALUE</th>
+                            <th>IGST AMOUNT</th>
+                            <th>CGST AMOUNT</th>
+                            <th>SGST AMOUNT</th>
+                            <th>ADD CESS</th>
+                            
+                           
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                </table>
+                <div>
+                <div style="float: left;">Total : <span id="total">1000</span></div>
+                <div style="float: right;">Total Item : <span id="count">1000</span></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('alltransactions.' + (type || 'xlsx')));
+    }
+</script>
+<script>
+    // Function to handle the search
+    function searchTable() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+        var grandtotal = 0.0;
+        var count = 0;
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+
+                        txtValue = td[2].textContent || td[2].innerText;
+                        grandtotal = grandtotal+parseFloat(txtValue);
+                        count = count+1;
+
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+
+        document.getElementById('total').innerHTML = grandtotal;
+        document.getElementById('count').innerHTML = count;
+    }
+
+    // Attach the search function to the input field's "input" event
+    document.getElementById("searchInput").addEventListener("input", searchTable);
+</script>
+ 
+
+<script> 
+    // Function to handle the filter search
+    function types() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("types");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+
+        var grandtotal = 0.0;
+        var count = 0;
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        
+                        txtValue = td[2].textContent || td[2].innerText;
+                        grandtotal = grandtotal+parseFloat(txtValue);
+                        count = count+1;
+
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+        document.getElementById('total').innerHTML = grandtotal;
+        document.getElementById('count').innerHTML = count;
+    }
+
+</script>
+
+<script>
+    function ApplyFilter() {
+       
+         
+        Equalto = document.getElementById("equalto");
+
+        let input, filter, table, tr, td, i, j, txtValue,filterBy;
+        input = document.getElementById("searchkey");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+        filterBy = document.getElementById("filterBy").value; 
+        var grandtotal = 0.0;
+        var count = 0;
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) { 
+               
+                if(filter != "" && filterBy=='HSN' && j==1)
+                {
+                    if (td[j]) { 
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Total Value' && j==2)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Taxable Value' && j==3)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='IGST Amount' && j==4)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='CGST Amount' && j==5)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='SGST Amount' && j==6)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                
+
+
+                if(filterBy=='')
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            
+                            txtValue = td[2].textContent || td[2].innerText;
+                            grandtotal = grandtotal+parseFloat(txtValue);
+                            count = count+1;
+
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+        document.getElementById('total').innerHTML = grandtotal;
+        document.getElementById('count').innerHTML = count;
+    }
+</script>
+<script>
+    function ApplyDateFilter() {
+        
+
+    var fromDate = document.getElementById('fromdate').value;
+    var toDate = document.getElementById('todate').value;
+     
+    var recinv = '{{recinv}}'; 
+        var str = recinv.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
+        var jsonObj = $.parseJSON(str);
+
+        var UniqueNames= $.unique(jsonObj.map(function (d) { return d.hsn;}));
+        var final =[]
+        var grandtotal = 0.0;
+        UniqueNames.forEach(function(item) {
+            var filtered = jsonObj.filter(a => a.hsn == item);
+            var grtotal = 0.0
+            var sbtotal = 0.0
+            var igst = 0.0
+            var cgst = 0.0
+            var sgst = 0.0
+            filtered.forEach(function(item) { 
+                 
+                    var from = new Date(fromDate);
+                    var to = new Date(toDate);
+
+                    var startdate = new Date(item.startdate);
+                    var enddate = new Date(item.enddate);
+
+                    if(startdate >= from && enddate <= to)
+                    {
+                        grtotal = grtotal + parseFloat(item.grandtotal);
+                        sbtotal = sbtotal + parseFloat(item.subtotal); 
+                        igst = igst + parseFloat(item.IGST); 
+                        cgst = cgst + parseFloat(item.CGST); 
+                        sgst = sgst + parseFloat(item.SGST); 
+
+                        grtotal = isNaN(grtotal) ? 0.0 : grtotal;
+                        sbtotal = isNaN(sbtotal) ? 0.0 : sbtotal;
+                        igst = isNaN(igst) ? 0.0 : igst;
+                        cgst = isNaN(cgst) ? 0.0 : cgst;
+                        sgst = isNaN(sgst) ? 0.0 : sgst;
+
+                    }
+                    
+            });
+            if(grtotal != 0.0){
+                grandtotal=grandtotal+grtotal;
+                let row = '{"hsn":'+item+', "grandtotal": '+grtotal+', "subtotal":'+sbtotal+', "IGST": '+igst+', "CGST": '+cgst+', "SGST": '+sgst+',"CESS":0.0}';
+                final.push($.parseJSON(row))
+            }
+         });
+         $("#tbl_exporttable_to_xls tbody").empty();
+         $.each(final, function (index, data) {
+            var newRow = $("<tr>");
+            newRow.append("<td>"+(parseFloat(index)+1)+"</td>");
+            newRow.append("<td>"+data.hsn+"</td>");
+            newRow.append("<td>"+data.grandtotal.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.subtotal.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.IGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.CGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.SGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.CESS.toFixed(2)+"</td>"); 
+            $("#tbl_exporttable_to_xls tbody").append(newRow);
+         }) 
+
+         document.getElementById('total').innerHTML = grandtotal.toFixed(2);
+         document.getElementById('count').innerHTML = final.length;
+       
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+      
+
+        $(document).on('click', '.btn_print', function (event) {
+           
+            event.preventDefault();
+            var element = document.getElementById('tbl_exporttable_to_xls');  
+            element.style.color = 'black';
+            element.style.backgroundColor = '#243e54';
+            var opt =
+            {
+                margin: 1,
+                filename: 'alltransactions' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait', }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+ 
+ });
+
+
+</script>
+
+<script>
+    $(document).ready(function ($) {
+        
+        TableDataBind()
+    });
+
+    function clearFilter(){ 
+    document.getElementById("filterBy").value = "";
+    document.getElementById("searchkey").value = "";
+    
+    document.getElementById('fromdate').value = "";
+    document.getElementById('todate').value = "";
+
+    TableDataBind()
+
+    // Close the modal
+    var modal = button.closest('.modal');
+    if (modal) {
+        $(modal).modal('hide');
+    } 
+}
+
+function TableDataBind(){
+    var recinv = '{{recinv}}'; 
+        var str = recinv.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
+        var jsonObj = $.parseJSON(str);
+        var grandtotal = 0.0;
+        var UniqueNames= $.unique(jsonObj.map(function (d) { return d.hsn;}));
+        var final =[]
+        UniqueNames.forEach(function(item) {
+            var filtered = jsonObj.filter(a => a.hsn == item);
+            var grtotal = 0.0
+            var sbtotal = 0.0
+            var igst = 0.0
+            var cgst = 0.0
+            var sgst = 0.0
+            filtered.forEach(function(item) { 
+                    grtotal = grtotal + parseFloat(item.grandtotal);
+                    sbtotal = sbtotal + parseFloat(item.subtotal); 
+                    igst = igst + parseFloat(item.IGST); 
+                    cgst = cgst + parseFloat(item.CGST); 
+                    sgst = sgst + parseFloat(item.SGST); 
+
+                    grtotal = isNaN(grtotal) ? 0.0 : grtotal;
+                    sbtotal = isNaN(sbtotal) ? 0.0 : sbtotal;
+                    igst = isNaN(igst) ? 0.0 : igst;
+                    cgst = isNaN(cgst) ? 0.0 : cgst;
+                    sgst = isNaN(sgst) ? 0.0 : sgst;
+            });
+            grandtotal=grandtotal+grtotal;
+            let row = '{"hsn":'+item+', "grandtotal": '+grtotal+', "subtotal":'+sbtotal+', "IGST": '+igst+', "CGST": '+cgst+', "SGST": '+sgst+',"CESS":0.0}';
+            final.push($.parseJSON(row))
+         });
+         $("#tbl_exporttable_to_xls tbody").empty();
+         $.each(final, function (index, data) {
+            var newRow = $("<tr>");
+            newRow.append("<td>"+(parseFloat(index)+1)+"</td>");
+            newRow.append("<td>"+data.hsn+"</td>");
+            newRow.append("<td>"+data.grandtotal.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.subtotal.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.IGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.CGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.SGST.toFixed(2)+"</td>");
+            newRow.append("<td>"+data.CESS.toFixed(2)+"</td>"); 
+            $("#tbl_exporttable_to_xls tbody").append(newRow);
+         })
+
+         document.getElementById('total').innerHTML = grandtotal.toFixed(2);
+         document.getElementById('count').innerHTML = final.length;
+}
+    
+</script>
+<script>
+    const fromDateInput = document.getElementById("fromdate");
+    const toDateInput = document.getElementById("todate"); 
+    fromDateInput.addEventListener("change", ApplyDateFilter);
+    toDateInput.addEventListener("change", ApplyDateFilter);
+</script>
+ 
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,406 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+{% load static %}
+{% load mathfilters %}
+{% if user.is_authenticated %}
+<!-- Include jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include jQuery.table2excel plugin -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.0/dist/jquery.table2excel.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<style>
+    #ui-datepicker-div {
+        width: 20rem;
+        left: 632px;
+    }
+
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .datepicker {
+        margin-top: 1rem;
+        display: grid;
+        justify-items: center;
+    }
+
+    select>option {
+        background-color: rgb(212, 212, 212);
+    }
+
+    .ui-datepicker-prev {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker-next {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button {
+        color: white;
+        background: black;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button:hover {
+        color: rgb(0, 0, 0);
+        background: rgb(177, 177, 177);
+    }
+
+
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bar .left {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bar .left input {
+        height: 5vh;
+    }
+
+    .nav .active {
+        border-bottom: 3px solid rgb(255, 255, 255);
+    }
+
+    .nav li a {
+        text-decoration: none;
+    }
+
+
+</style>
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h6>{{cmp1.cname}}</h6>
+                    <h2 class="mb-0">GSTR-1 Report</h2>
+                    <div class="display">
+                        <div id="d1" style="display: inline-block;"></div>
+                        <div id="d2" style="display: inline-block;"></div>
+                    </div>
+
+                </center>
+                <hr>
+            </div>
+        </div>
+    </div>
+
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="bar">
+                <div class=" left">
+                    <div class="px-2">
+                        <label style="text-align:left ">From</label><br>
+                        <input name="FromDate" class="inputdate form-control" id="in1" type="date">
+                    </div>
+                    <div class="px-2">
+                        <label style="text-align:left ">To</label><br>
+                        <input name="ToDate" class="inputdate form-control" id="in2" type="date">
+                    </div>
+
+                </div>
+                <div class="right">
+                    <button class="btn btn_print btn-outline-info" onclick="printDivs()">Print</button>
+                    <button class=" btn btn-outline-info" id="export-button" onclick="exportAsExcel()">Excel</button>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    <script>
+                        var activatedTabId = 1;
+                        $(document).ready(function () {
+                            $('ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                                // Get the ID of the activated tab
+                                activatedTabId = $(event.target).attr('href').substring(1);
+                                console.log('Activated tab ID:', activatedTabId);
+                            });
+                        });
+                        function printDivs() {
+                            $(document).ready(function () {
+                                $('ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+                                    // Get the ID of the activated tab
+                                    activatedTabId = $(event.target).attr('href').substring(1);
+                                    console.log('Activated tab ID:', activatedTabId);
+                                });
+                            });
+                            var id = activatedTabId
+                            var printContent = document.getElementById(id).innerHTML;
+
+                            var originalContents = document.body.innerHTML;
+                            var containerDiv = document.createElement("div");
+                            containerDiv.style.textAlign = "center";
+                            var h1Element = document.createElement("h2");
+                            var h2Element = document.createElement("h1");
+                            h2Element.textContent ="GSTR1 REPORT"
+                            if (id == '1') {
+                                h1Element.textContent = "Sale";
+                            }
+                            else {
+                                h1Element.textContent = "Sale Return";
+                            }
+                            // Replace "Title" with your desired title text
+
+                            // Insert the <h1> element before the print content
+                            containerDiv.appendChild(h2Element);
+                            // document.body.innerHTML = h1Element.outerHTML + printContent;
+                            containerDiv.innerHTML =containerDiv.outerHTML +  h1Element.outerHTML+printContent;
+                            document.body.innerHTML =  containerDiv.outerHTML;
+                            // document.body.innerHTML = printContent;
+
+                            window.print();
+
+                            document.body.innerHTML = originalContents;
+                            // activatedTabId=1;
+                        }
+
+                    </script>
+                    <!-- <script type="text/javascript">
+                        $(document).ready(function ($) {
+                            console.log('print');
+
+                            $(document).on('click', '.btn_print', function (event) {
+                                console.log('print1');
+                                event.preventDefault();
+                                var div1 = document.getElementById("1").innerHTML;
+                                var div2 = document.getElementById("2").innerHTML;
+                                var printContent = div1 + div2;
+                                var originalContents = document.body.innerHTML;
+
+                                document.body.innerHTML = printContent;
+
+                                window.print();
+
+                                document.body.innerHTML = originalContents;
+
+                            });
+
+                        });
+                    </script> -->
+                    <script>
+                        function exportAsExcel() {
+                            const table = document.getElementById('myTable'); // Replace 'myTable' with your table's ID
+                            const wb = XLSX.utils.table_to_book(table);
+
+                            XLSX.writeFile(wb, 'gstr1.xlsx');
+                        }
+
+
+                    </script>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card radius-15 " id="pdf-card" style="overflow: auto;">
+        <div class="card-body" id="exTab2">
+
+            <ul class="nav nav-tabs row">
+                <li class="active col-6 text-center">
+                    <a href="#1" data-toggle="tab">Sale</a>
+                </li>
+                <li class="col-6 text-center"><a href="#2" data-toggle="tab">Sale Return</a>
+                </li>
+            </ul>
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="1" data-title="Sale">
+
+                    <table class="table table-responsive-md mt-4 table-hover table-bordered" id="myTable"
+                        style="background-color: rgba(0, 0, 0, 0.2);">
+                        <thead>
+                            <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.137);">
+
+                                <th colspan="5" style="text-align: center;">Invoice Details</th>
+                                <th rowspan="2" style="text-align: center;">Tax Rate</th>
+                                <th rowspan="2" style="text-align: center;">Cess Rate</th>
+                                <th rowspan="2" style="text-align: center;">Taxable Value</th>
+                                <th colspan="4" style="text-align: center;">Amount</th>
+                                <th rowspan="2" style="text-align: center;">Place Of Supply(Name Of State)</th>
+                            </tr>
+                            <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.137);">
+                                <th style="text-align: center;">GSTIN/UIN</th>
+                                <th style="text-align: center;">Party Name</th>
+                                <th style="text-align: center;">Invoice No</th>
+                                <th style="text-align: center;">Date</th>
+                                <th style="text-align: center;">Value</th>
+
+                                <th style="text-align: center;">Integrated Tax</th>
+                                <th style="text-align: center;">Central Tax</th>
+                                <th style="text-align: center;">State/UT Tax</th>
+                                <th style="text-align: center;">Cess</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in sale %}
+                            <tr class="text-center">
+                                <td>{{i.gstin}}</td>
+                                <td>{{i.customername}}</td>
+                                <td>{{i.invoiceno}}</td>
+                                <td>{{i.invoicedate}}</td>
+                                <td>{{i.grandtotal}}</td>
+                                <td>{{i.IGST}}</td>
+                                <td>0</td>
+                                <td>{{i.subtotal}}</td>
+                                <td>{{i.IGST}}</td>
+                                <td>{{i.CGST}}</td>
+                                <td>{{i.SGST}}</td>
+                                <td>0</td>
+                                <td>{{i.placosupply}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <br>
+
+
+                </div>
+                <div class="tab-pane" id="2" data-title="Sale return">
+                    <div class="container-fluid">
+                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                            style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
+                            <thead>
+                                <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.137);">
+
+                                    <th colspan="7" style="text-align: center;">Cr. Note Details</th>
+                                    <th rowspan="2" style="text-align: center;">Tax Rate</th>
+                                    <th rowspan="2" style="text-align: center;">Cess Rate</th>
+                                    <th rowspan="2" style="text-align: center;">Taxable Value</th>
+                                    <th colspan="4" style="text-align: center;">Amount</th>
+                                    <th rowspan="2" style="text-align: center;">Place Of Supply(Name Of State)
+                                    </th>
+                                </tr>
+                                <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.137);">
+                                    <th rowspan="2" style="text-align: center;">GSTIN/UIN</th>
+                                    <th style="text-align: center;">Party Name</th>
+                                    <th style="text-align: center;">Invoice No</th>
+                                    <th style="text-align: center;">Invoice Date</th>
+                                    <th style="text-align: center;">Note No.</th>
+                                    <th style="text-align: center;">Note Date</th>
+                                    <th style="text-align: center;">Value</th>
+
+                                    <th style="text-align: center;">Integrated Tax</th>
+                                    <th style="text-align: center;">Central Tax</th>
+                                    <th style="text-align: center;">State/UT Tax</th>
+                                    <th style="text-align: center;">Cess</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in cn %}
+                                <tr class="text-center">
+                                    <td>{{i.gstin}}</td>
+                                    <td>{{i.customer}}</td>
+                                    <td>Nill</td>
+                                    <td>Nill</td>
+                                    <td>{{i.credit_no}}</td>
+                                    <td>{{i.creditdate}}</td>
+                                    <td>{{i.grandtotal}}</td>
+                                    <td>{{i.taxamount}}</td>
+                                    <td>0</td>
+                                    <td>{{i.subtotal}}</td>
+                                    {% if i.supply == cmp1.state %}
+                                    <td>0</td>
+                                    <td>{{ i.taxamount|div:2 }}</td>
+                                    <td>{{ i.taxamount|div:2 }}</td>
+                                    {% else %}
+                                    <td>{{i.taxamount}}</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    {% endif %}
+
+
+
+                                    <td>0</td>
+                                    <td id="sply">{{i.supply}}</td>
+                                </tr>
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+<script>
+    var table = document.getElementById("myTable");
+
+    var fromDate;
+    $('#in1').on('change', function () {
+        fromDate = $(this).val();
+        $('#in2').prop('min', function () {
+            return fromDate
+        })
+        var startDate = new Date(document.getElementById("in1").value);
+        // var endDate = document.getElementById("in2").value;
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 2; i < rows.length; i++) {
+            var row = rows[i];
+            var dateCell = row.cells[3];
+            var rowDate = new Date(dateCell.textContent);
+
+            if (rowDate >= startDate) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        }
+        var tdate = new Date(fromDate)
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("d1").innerHTML = tdate.toLocaleDateString(undefined, options);
+    })
+    var toDate;
+    $('#in2').on('change', function () {
+        toDate = $(this).val();
+        $('#in1').prop('max', function () {
+            return toDate
+        })
+        var endDate = new Date(document.getElementById("in2").value);
+        var rows = table.getElementsByTagName("tr");
+
+        for (var i = 2; i < rows.length; i++) {
+            var row = rows[i];
+            var dateCell = row.cells[3];
+            var rowDate = new Date(dateCell.textContent);
+
+            if (rowDate <= endDate) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        }
+        var tdate = new Date(toDate)
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById("d2").innerHTML = "  To  " + tdate.toLocaleDateString(undefined, options);
+    })
+
+
+</script>
+{% endif %}
+{% endblock %}

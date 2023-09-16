@@ -1,0 +1,163 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+    {% load static %}
+    {% if user.is_authenticated %}
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+    <style>
+        tr:hover{
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        .search {
+            width: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        .searchTerm {
+            width: 100%;
+            border: 3px solid #7690da;
+            border-right: none;
+            padding: 5px;
+            height: 36px;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            color: #9DBFAF;
+        
+        }
+
+        .searchTerm:focus{
+            color:#7690da;  
+        }
+
+        .searchButton {
+            width: 40px;
+            height: 36px;
+            border: 1px solid #7690da;
+            background:#7690da;
+            text-align: center;
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .table-row{
+            cursor:pointer;
+        }
+    </style>
+
+    <div class="page-content content">
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center><h2 class="mb-0">RECURRING EXPENSES</h2></center>
+                    <hr>
+                    <div class="btn-group col-md-2" style="float: right;">
+                        <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="d-flex">
+                            <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
+                            style="margin-top: 8px; background-color: #2f516f;color: white;">
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-3"></div>
+                    <div class="btn-group col-md-2">
+                        <a class="btn btn-outline-info btn-light text-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            role="button">Filter By
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'recurexpenses' %}">All</a>
+                            <a class="dropdown-item" href="{% url 'expence_custasc' %}">Customer A-Z</a>
+                            <a class="dropdown-item" href="{% url 'expence_custdesc' %}">Customer Z-A</a>
+                            <a class="dropdown-item" href="{% url 'expence_vendorasc' %}">Vendor A-Z</a>
+                            <a class="dropdown-item" href="{% url 'expence_vendordesc' %}">Vendor Z-A</a>
+                            <a class="dropdown-item" href="{% url 'expence_goods' %}">Goods</a>
+                            <a class="dropdown-item" href="{% url 'expence_services' %}">Services</a>
+                        </div>
+                        <a href="{% url 'addrecurexpenses' %}" class="btn btn-outline-info btn-light text-light fa fa-plus" role="button">&nbsp;New</a>   
+                    </div>
+                </div>
+
+
+                <div class="container-fluid">
+                    <table class="table table-responsive-md mt-4" id="table">
+                        <thead>
+                        <tr>
+                            <th>Profile Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Expense Account</th>
+                            <th>Expense Type</th>
+                            <th>Vendor</th>
+                            <th>Customer</th>
+                            <th>Paid Through</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for e in rec_expnc %}
+                        <tr onclick="window.location='viewrecurexpense/{{ e.recur_expenseid }}';">
+                            <td>{{ e.profile_name }}</td>
+                            <th>{{ e.start_date | date:'d-m-Y' }}</th>
+                            <th>{{ e.end_date | date:'d-m-Y' }}</th>
+                            <td>{{ e.expenseaccount }}</td>
+                            <td>{{ e.expensetype }}</td>
+                            <td class="text-capitalize">{{ e.vendor }}</td>
+                            <td class="text-capitalize">{{ e.customer }}</td>
+                            <td>{{ e.paidthrough }}</td>
+                            <td>{{ e.amount }}</td>
+                            <td class="text-right">
+                                <a href="{% url 'deleterecurexpense' e.recur_expenseid %}" 
+                                   data-toggle="tooltip" data-placement="top" title="Delete Recurring Expense">
+                                        <i class="gg-trash text-center text-danger"></i>
+                                </a>
+                            </td>
+                        
+                        </tr> 
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+                var $rows = $('#table  tr');
+                $('#search').keyup(function() {
+                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                    
+                    $rows.show().filter(function() {
+                        console.log(val)
+                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                        console.log(text)
+                        return !~text.indexOf(val);
+                    }).hide();
+                });
+            });
+    </script>
+
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+        <script type="text/javascript">function ExportToExcel(type, fn, dl) {
+            var elt = document.getElementById('table');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ?
+                XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+                XLSX.writeFile(wb, fn || ('Recurring Expenses.' + (type || 'xlsx')));
+            }
+        </script>
+
+    {% endif %}
+{% endblock %}

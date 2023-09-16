@@ -1,0 +1,180 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+background: #f2f2f2;
+font-family: 'Open Sans', sans-serif;
+}
+
+.search {
+width: 100%;
+position: relative;
+display: flex;
+}
+
+.searchTerm {
+width: 100%;
+border: 3px solid #7690da;
+border-right: none;
+padding: 5px;
+height: 36px;
+border-radius: 5px 0 0 5px;
+outline: none;
+color: #9DBFAF;
+}
+
+.searchTerm:focus{
+color:#7690da;
+}
+
+.searchButton {
+width: 40px;
+height: 36px;
+border: 1px solid #7690da;
+background:#7690da;
+text-align: center;
+color: #fff;
+border-radius: 0 5px 5px 0;
+cursor: pointer;
+font-size: 20px;
+}
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+width: 40%;
+/* position: absolute;
+top: 50%;
+left: 50%; */
+/* transform: translate(-50%, -50%); */
+}
+.table-row{
+    cursor:pointer;
+}
+
+
+
+  </style>
+  
+    <div class="page-content">
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center><h2 class="mb-0">Bank Account Holders</h2></center>
+                    <hr>
+                    <div class="btn-group col-md-2" style="float: right;">
+                        
+                        <a href="{% url 'export_bank_accounts' %}" onclick="ExportToExcel('xlsx')" class="btn btn-outline-info text-grey fa fa-file-excel" style="margin-top: 8px; width: 50%; font-size: 14px;" role="button">Export To Excel</a>
+                        </div>
+
+                        
+                       
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="row">
+
+                    
+                    <!-- <div class="col-md-4">
+                        <div class="wrap" style="width: 60%; margin-top: 8px;">
+                           
+                            <div class="search">
+                                
+                               <input type="text" id="searchfild" class="searchTerm" name="search">
+                               <button type="submit" class="searchButton">
+                                 <i class="fa fa-search"></i>
+                              </button>
+                            </div>
+                            
+                          
+                         </div>
+                         
+                    </div> -->
+                    
+                    <div class="container">
+                        <div class="row">
+                            
+                            <div class="col-md-4">
+                                <div class="wrap" style="width: 100%; margin-top: 8px;">
+                                    <div class="search">
+                                        <input type="text" id="search" class="searchTerm" name="search" style="background-color: #2f516f; color: white;">
+                                        <button type="button" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="width: 100%; margin-top: 8px;">
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-outline-info dropdown-toggle text-grey" data-toggle="dropdown" style="width: 50%; font-size: 14px; font-family: 'Your Desired Font', sans-serif;">
+                                        Filter by
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="{% url 'bank_account_list' %}" style="font-size: 14px;">All</a>
+                                        <a class="dropdown-item" href="{% url 'bank_account_list' %}?status=active" style="font-size: 14px;">Active</a>
+                                        <a class="dropdown-item" href="{% url 'bank_account_list' %}?status=inactive" style="font-size: 14px;">Inactive</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'bank_account_holder_create' %}" id="myBtn"  class="btn btn-outline-info text-grey fa fa-plus" style="margin-top: 8px; width: 50%; font-size: 14px;" role="button">New</a>
+                            </div>
+                        </div>
+                        
+                    
+                    
+                        <div class="table-responsive">
+                        <table class="table table-striped" >
+                            <thead>
+                                <tr>
+                                    <th>Holder Name</th>
+                                    <th>Account Number</th>
+                                    <th>IFSC Code</th>
+                                    <th>Bank Name</th>
+                                    <th>Branch Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-results-table">
+                                {% for account in accounts %}
+                                    <tr>
+                                        <td><a href="{% url 'bank_account_holder_detail' account.pk %}">{{ account.holder_name }}</a></td>
+                                        <td><a href="{% url 'bank_account_holder_detail' account.pk %}">{{ account.account_number }}</a></td>
+                                        <td><a href="{% url 'bank_account_holder_detail' account.pk %}">{{ account.ifsc_code }}</a></td>
+                                        <td><a href="{% url 'bank_account_holder_detail' account.pk %}">{{ account.get_bank_name_display }}</a></td>
+                                        <td><a href="{% url 'bank_account_holder_detail' account.pk %}">{{ account.branch_name }}</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                        
+
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            $(document).ready(function() {
+                                var $rows = $('#search-results-table tr'); // Select all rows within the tbody
+                                $('#search').keyup(function() {
+                                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                                    $rows.show().filter(function() {
+                                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                                        return !~text.indexOf(val);
+                                    }).hide();
+                                });
+                            });
+                        </script>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            function ExportToExcel(type) {
+                                var elt = document.getElementById('tbl_exporttable_to_xls');
+                                var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+                                var blob = new Blob([XLSX.write(wb, { bookType: type, bookSST: true, type: 'binary' })], { type: "application/octet-stream" });
+                                saveAs(blob, "ExportedData." + type);
+                            }
+                        </script>
+{% endblock %}

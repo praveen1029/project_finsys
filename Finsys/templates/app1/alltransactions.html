@@ -1,0 +1,734 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+
+
+{% load static %}
+{% if user.is_authenticated %}
+ 
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+    body {
+        background: #f2f2f2;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #7690da;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #9DBFAF;
+    }
+
+    .searchTerm:focus {
+        color: #7690da;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #7690da;
+        background: #7690da;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    /*Resize the wrap to see the search bar change!*/
+    .wrap {
+        width: 40%;
+        /* position: absolute;
+  top: 50%;
+  left: 50%; */
+        /* transform: translate(-50%, -50%); */
+    }
+
+    .table-row {
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="page-content">
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center>
+                    <h2 class="mb-0">ALL TRANSACTIONS</h2>
+                </center>
+                <hr>
+                <div class="btn-group col-md-2" style="float: right;">
+                    <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_print"
+                        role="button">Print</a>
+
+                </div>
+                <div class="btn-group col-md-2" style="float: right;">
+
+                    <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+                </div>
+
+                <div class="form-group">
+                    <label for="Between">From</label> &nbsp;
+                    <input type="date" id="fromdate">   &nbsp; 
+                    <label for="To">To</label>  &nbsp;
+                    <input type="date"  id="todate">  &nbsp;
+        
+                    <!-- <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>  &nbsp;
+                    <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button> -->
+                </div>
+            </div>
+
+                
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="row">
+
+
+                <!-- <div class="col-md-4">
+                            <div class="wrap" style="width: 60%; margin-top: 8px;">
+                               
+                                <div class="search">
+                                    
+                                   <input type="text" id="searchfild" class="searchTerm" name="search">
+                                   <button type="submit" class="searchButton">
+                                     <i class="fa fa-search"></i>
+                                  </button>
+                                </div>
+                                
+                              
+                             </div>
+                             
+                        </div> -->
+
+                <div class="col-md-4">
+                    <div class="wrap" style="margin-top: 8px;">
+                        <div class="search">
+
+                            <input type="text" class="form-control btn-outline-info" placeholder="Search"
+                                style="background-color: #2f516f;color: white;width: 250px;" name="search"
+                                id="searchInput">
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control btn btn-outline-info dropdown-toggle text-grey" id="types"
+                        aria-label=".form-select-lg example" style="width: 40%; margin-top: 8px;" name="types"
+                        onchange="types(this)">
+
+                        <option value="" selected>All Types</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Purchase">Purchase</option>
+                        <option value="Credit Note">Credit Note</option>
+                        <option value="Debit Note">Debit Note</option>
+                        <option value="Sales Order">Sales Order</option>
+                        <option value="Purchase Order">Purchase Order</option>
+                        <option value="Estimate">Estimate</option>
+                        <option value="Delivery Challan">Delivery Challan</option>
+                        <option value="Payment Received">Payment Received</option>
+                        <option value="Retainer Invoices">Retainer Invoices</option>
+                        <option value="Invoice">Invoice</option>
+                        <option value="Bill">Bill</option>
+                        <option value="Expense">Expense</option>
+                        <option value="Payment">Payment</option>
+                        <option value="Manual Journal">Manual Journal</option>
+                    </select>
+                </div>
+
+                 <!-- Add Date Modal -->
+                 <!-- <div class="modal fade" id="datefilterModal" tabindex="-1" role="dialog" aria-labelledby="datefilterModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="background-color: #243e54;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="datefilterModal">FILTER BY DATE</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body"> 
+                                    <div class="form-group">
+                                        <label for="Between">From</label> &nbsp;
+                                        <input type="date" id="fromdate">   &nbsp; 
+                                        <label for="To">To</label>  &nbsp;
+                                        <input type="date"  id="todate"> 
+                                    </div>
+
+                                   
+                                   
+                                   
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>
+                                        <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button>
+                                    </div> 
+                            </div> 
+                           
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-outline-info text-grey" style="width: 80%; margin-top: 8px;" data-toggle="modal" data-target="#datefilterModal">
+                           Filter By Date
+                        </button>
+                    </div>
+                </div> -->
+                <!-- Add filter Modal -->
+<div class="modal fade" id="transfilterModal" tabindex="-1" role="dialog" aria-labelledby="transfilterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #243e54;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transfilterModal">FILTER BY</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> 
+                    <div class="form-group">
+                        <label for="filter">Filter</label>
+                        <select class="form-control" name="filter" id="filterBy">
+                        <option value="">All</option>
+                        <option value="Party Name">Party Name</option>
+                        <option value="Total">Total</option>
+                        <option value="Received">Received</option>
+                        <option value="Balance">Balance</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="equalto"></label>
+                        <select class="form-control" name="equalto" id="equalto">
+                        <option value="">Equal to</option>
+                        </select>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="">Type your Exact Search Key</label>
+                        <input type="text" class="form-control" id="searchkey" name="desc">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>
+                        <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyFilter(this)">Apply</button>
+                    </div> 
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<div class="col">
+    <div class="dropdown">
+        <button type="button" class="btn btn-outline-info text-grey" style="width: 40%; margin-top: 8px;" data-toggle="modal" data-target="#transfilterModal">
+           Filter
+        </button>
+    </div>
+</div>
+
+               
+               
+ 
+
+            </div>
+            <div class="container-fluid">
+
+                <table class="table table-responsive-md mt-4" id="tbl_exporttable_to_xls">
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>PARTY NAME</th>
+                            <th>TYPE</th>
+                            <th>TOTAL</th>
+                            <th>RECEIVED</th>
+                            <th>BALANCE</th>
+                            
+                           
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trans in sales %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Sales</td>
+                            <td>{{ trans.amtcredit }}</td>
+                            <td>{{ trans.amtreceived }}</td>
+                            <td>{{ trans.balance }}</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in purchase %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymentdate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>Purchase</td>
+                            <td>{{ trans.paymentamount }}</td>
+                            <td>{{ trans.amtreceived }}</td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in estimates %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.estimatedate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Estimate</td>
+                            <td>{{ trans.estimatetotal }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in deliverychallan %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.challan_date | date:'Y-m-d' }}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Delivery Challan</td>
+                            <td>{{ trans.grand }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in paymentreceived %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymdate | date:'Y-m-d'}}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Payment Received</td>
+                            <td>{{ trans.amtapply }}</td>
+                            <td>{{ trans.amtreceived }}</td>
+                            <td>{{ trans.balance }}</td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in retainerinvoices %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.invoice_date | date:'Y-m-d'}}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Retainer Invoice</td>
+                            <td>{{ trans.total_amount }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in invoices %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.invoicedate  | date:'Y-m-d'}}</td>
+                            <td>{{ trans.customername }}</td>
+                            <td>Invoice</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.amtrecvd }}</td>
+                            <td>{{ trans.baldue }}</td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in bill %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date | date:'Y-m-d'}}</td>
+                            <td>{{ trans.contact_name }}</td>
+                            <td>Bill</td>
+                            <td>{{ trans.grand_total }}</td>
+                            <td>{{ trans.amtrecvd }}</td>
+                            <td>{{ trans.balance_due }}</td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in payments %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymentdate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>Payment</td>
+                            <td>{{ trans.paymentamount }}</td>
+                            <td>{{ trans.amtreceived }}</td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in manualjournal %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date }}</td>
+                            <td></td>
+                            <td>Manual Journal</td>
+                            <td>{{ trans.total_cre }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in creditnote %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.creditdate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>Credit Note</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in debitnote %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.debitdate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>Debit Note</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in salesorders %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.saledate | date:'Y-m-d' }}</td>
+                            <td>{{ trans.salename }}</td>
+                            <td>Sales Order</td>
+                            <td>{{ trans.salestotal }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in purchaseorders %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date | date:'Y-m-d' }}</td>
+                            <td>{{ trans.vendor_name }}</td>
+                            <td>Purchase Orders</td>
+                            <td>{{ trans.grand_total }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in expenses %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date | date:'Y-m-d'}}</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>Expenses</td>
+                            <td>{{ trans.amount }}</td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                        {% endfor %}
+
+
+
+                
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('alltransactions.' + (type || 'xlsx')));
+    }
+</script>
+<script>
+    // Function to handle the search
+    function searchTable() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+
+    // Attach the search function to the input field's "input" event
+    document.getElementById("searchInput").addEventListener("input", searchTable);
+</script>
+ 
+
+<script> 
+    // Function to handle the filter search
+    function types() {
+        let input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("types");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+
+</script>
+
+<script>
+    function ApplyFilter() {
+       
+         
+        Equalto = document.getElementById("equalto");
+
+        let input, filter, table, tr, td, i, j, txtValue,filterBy;
+        input = document.getElementById("searchkey");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("tbl_exporttable_to_xls");
+        tr = table.getElementsByTagName("tr");
+        filterBy = document.getElementById("filterBy").value; 
+        // Loop through all table rows (excluding the first row, which contains the column headers)
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+               
+
+                if(filter != "" && filterBy=='Party Name' && j==1)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+               
+
+                if(filter != "" && filterBy=='Total' && j==3)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Received' && j==4)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(filter != "" && filterBy=='Balance' && j==5)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase() == filter.toLowerCase()) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+
+                if(filterBy=='')
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+</script>
+<script>
+    function ApplyDateFilter() { 
+    var fromDate = document.getElementById('fromdate').value;
+    var toDate = document.getElementById('todate').value;
+    let input, filter, table, tr, td, i, j;
+    table = document.getElementById("tbl_exporttable_to_xls");
+    tr = table.getElementsByTagName("tr");
+     
+    for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+               
+
+                if(j==0)
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        var check = new Date(txtValue)
+                        var from = new Date(fromDate);
+                        var to = new Date(toDate);
+                        if(check >= from && check <= to){
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+
+                
+                if(filterBy=='')
+                {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+
+
+    // Close the modal
+    var modal = button.closest('.modal');
+    if (modal) {
+        $(modal).modal('hide');
+    } 
+}
+
+function clearFilter(){ 
+    document.getElementById("filterBy").value = "";
+    document.getElementById("searchkey").value = "";
+    
+    document.getElementById('fromdate').value = "";
+    document.getElementById('todate').value = "";
+    let input, filter, table, tr, td, i, j;
+    table = document.getElementById("tbl_exporttable_to_xls");
+    tr = table.getElementsByTagName("tr"); 
+    
+    for (i = 1; i < tr.length; i++) {
+            tr[i].style.display =  "";
+        } 
+
+    // Close the modal
+    var modal = button.closest('.modal');
+    if (modal) {
+        $(modal).modal('hide');
+    } 
+}
+ 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+      
+
+        $(document).on('click', '.btn_print', function (event) {
+           
+            event.preventDefault();
+            var element = document.getElementById('tbl_exporttable_to_xls');  
+            element.style.color = 'black';
+            element.style.backgroundColor = '#243e54';
+            var opt =
+            {
+                margin: 1,
+                filename: 'alltransactions' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait', }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+ 
+ });
+</script>
+<script>
+    const fromDateInput = document.getElementById("fromdate");
+    const toDateInput = document.getElementById("todate"); 
+    fromDateInput.addEventListener("change", ApplyDateFilter);
+    toDateInput.addEventListener("change", ApplyDateFilter);
+</script>
+
+{% endif %}
+{% endblock %}
