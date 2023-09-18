@@ -1284,7 +1284,7 @@ class stockadjust(models.Model):
     reason = models.CharField(max_length=100, default='')
     description = models.CharField(max_length=100, default='',null=True,blank=True)
     attach = models.FileField(upload_to="", default='') 
-    status = models.CharField(max_length=100, default='DRAFT') 
+    status = models.CharField(max_length=100, default='Draft') 
 
 
     item1 = models.CharField(max_length=100,null=True)

@@ -38,10 +38,9 @@
                      
                         <label for="validationCustom01"
                         style="color: white;">Mode of Adjustment</label>
-                 <select name="mode" class="form-control" 
-                           required>
-                           <option selected disabled value="">Choose...</option>
-                         <option value="Quandity">Quandity Adjustment</option>
+                        <select name="mode" id="adjust" class="form-control" required onchange="changehead(this.value)">
+                           <option selected disabled value=""selected hidden>Choose...</option>
+                         <option value="Quantity">Quantity Adjustment</option>
                      <option value="Value">Value Adjustment</option></select>
                     </div>
                     
@@ -112,14 +111,14 @@
                   <tr id>
                     <th  class="text-center" >#</th>
                     <th class="text-center" >Item details</th>
-                    <th class="text-center">Quandity Available</th>
-                    <th class="text-center">New Quandity on hand</th>
-                    <th class="text-center">Quandity Adjusted</th>
+                    <th class="text-center">Quantity Available</th>
+                    <th class="text-center">New Quantity on hand</th>
+                    <th class="text-center">Quantity Adjusted</th>
                   <th></th>
                   </tr>
                 </thead>
                 <tbody id="items-table-body">
-                  <tr id="row1">
+                  <tr class="row0" id="row1">
                     <td>1</td>
                     <td style="width: 20%;">
                       <div class="d-flex">
@@ -135,7 +134,6 @@
                     <td><input type="text" id="qty_hand" name="qty_hand1" class="form-control" style="text-align:right;" required></td>
                     <td><input type="number"  id="nqty" name="new_qty1" class="form-control qty"></td>
                     <td style="border: none;">
-                      <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv()" >+</a>
                       <a role="button" class="btn btn-outline-secondary ml-1" onclick = "remove1()">-</a>
                     </td>
                   </tr>
@@ -158,7 +156,6 @@
                     <td><input type="text" id="qty_hand1" name="qty_hand2" class="form-control" style="text-align:right;" ></td>
                     <td><input type="number"  id="nqty1" name="new_qty2" class="form-control qty"></td>
                     <td style="border: none;">
-                      <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv1()" >+</a>
                       <a role="button" class="btn btn-outline-secondary ml-1" onclick = "remove2()">-</a>
                     </td>
                     
@@ -183,7 +180,6 @@
                     <td><input type="text" id="qty_hand2" name="qty_hand3" class="form-control" style="text-align:right;" ></td>
                     <td><input type="number"  id="nqty2" name="new_qty3" class="form-control qty"></td>
                     <td style="border: none;">
-                      <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv2()" >+</a>
                       <a role="button" class="btn btn-outline-secondary ml-1" onclick = "remove3()">-</a>
                     </td>
                     
@@ -207,7 +203,6 @@
                     <td><input type="text" id="qty_hand3" name="qty_hand4" class="form-control" style="text-align:right;" /></td>
                     <td><input type="number"  id="nqty3" name="new_qty4" class="form-control qty"></td>
                     <td style="border: none;">
-                      <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv3()">+</a>
                       <a role="button" class="btn btn-outline-secondary ml-1" onclick = "remove4()">-</a>
                     </td>
                   </tr>
@@ -233,6 +228,7 @@
                   </tr>
                 </tbody>
               </table>
+              <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv()" >+</a>
               
 
             </div>
@@ -250,11 +246,16 @@
         
           <div class="row">
             <div class="col-md-10 mt-3"></div>
-            <div class="col-md-2 mt-3">
-              <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left">
-                Save To Draft
+            <div class="col-md-1 mt-3">
+              <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left" name="draft">
+                Draft
               </button>
-            </div>
+          </div>
+          <div class="col-md-1 mt-3">
+            <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left" name="save">
+              Save
+            </button>
+          </div>
           </div>
           <div class="notices mt-3">
             <div class="text-muted">NOTICE:</div>
@@ -323,6 +324,7 @@
       $(document).ready(function () {
         $('#itemss').on('change', function () {
           select = $('#itemss').val();
+          adjust_val = $('#adjust').val();
           $.ajax({
             type: "GET",
             url: "{% url 'getit' %}",
@@ -330,7 +332,11 @@
           }).done(function (response) {
             var json_data = JSON.parse(response);
             for (key in json_data) {
-              document.getElementById('qty').value = json_data[key]['stock']
+              if(adjust_val=="Quantity"){
+                    document.getElementById('qty').value = json_data[key]['stock']
+                }else if(adjust_val == "Value"){
+                    document.getElementById('qty').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                }
             }
           }).fail(function () {
             alert("failed");
@@ -349,7 +355,11 @@
           }).done(function (response) {
             var json_data = JSON.parse(response);
             for (key in json_data) {
-              document.getElementById('qty1').value = json_data[key]['stock']
+              if(adjust_val=="Quantity"){
+                    document.getElementById('qty1').value = json_data[key]['stock']
+                }else if(adjust_val == "Value"){
+                    document.getElementById('qty1').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                }
             }
           }).fail(function () {
             alert("failed");
@@ -361,6 +371,7 @@
       $(document).ready(function () {
         $('#itemss2').on('change', function () {
           select = $('#itemss2').val();
+          adjust_val = $('#adjust').val();
           $.ajax({
           type: "GET",
           url: "{% url 'getit' %}",
@@ -368,7 +379,11 @@
         }).done(function (response) {
           var json_data = JSON.parse(response);
             for (key in json_data) {
-              document.getElementById('qty2').value = json_data[key]['stock']
+              if(adjust_val=="Quantity"){
+                    document.getElementById('qty2').value = json_data[key]['stock']
+                }else if(adjust_val == "Value"){
+                    document.getElementById('qty2').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                }
             }
           }).fail(function () {
             alert("failed");
@@ -380,6 +395,7 @@
     $(document).ready(function () {
       $('#itemss4').on('change', function () {
         select = $('#itemss4').val();
+        adjust_val = $('#adjust').val();
         $.ajax({
         type: "GET",
         url: "{% url 'getit' %}",
@@ -387,7 +403,11 @@
       }).done(function (response) {
         var json_data = JSON.parse(response);
           for (key in json_data) {
-            document.getElementById('qty4').value = json_data[key]['stock']
+            if(adjust_val=="Quantity"){
+                  document.getElementById('qty4').value = json_data[key]['stock']
+              }else if(adjust_val == "Value"){
+                  document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+              }
           }
         }).fail(function () {
           alert("failed");
@@ -399,6 +419,7 @@
     $(document).ready(function () {
       $('#itemss3').on('change', function () {
         select = $('#itemss3').val();
+        adjust_val = $('#adjust').val();
         $.ajax({
         type: "GET",
         url: "{% url 'getit' %}",
@@ -406,7 +427,11 @@
       }).done(function (response) {
         var json_data = JSON.parse(response);
           for (key in json_data) {
-            document.getElementById('qty3').value = json_data[key]['stock']
+            if(adjust_val=="Quantity"){
+                document.getElementById('qty4').value = json_data[key]['stock']
+            }else if(adjust_val == "Value"){
+                document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+            }
           }
         }).fail(function () {
           alert("failed");
@@ -470,34 +495,55 @@
     });
   </script>
   <script>
-    function showDiv() {
-      document.querySelector(".row1").style.display = "table-row";
-    }
-    function showDiv1() {
-      document.querySelector(".row2").style.display = "table-row";
-    }
-    function showDiv2() {
-      document.querySelector(".row3").style.display = "table-row";
-    }
-    function showDiv3() {
-      document.querySelector(".row4").style.display = "table-row";
+  function showDiv(){
+        if(document.querySelector(".row0").style.display == "table-row"){
+            if (document.querySelector(".row1").style.display == "table-row"){
+                if(document.querySelector(".row2").style.display == "table-row"){
+                    if(document.querySelector(".row3").style.display == "table-row"){
+                        if(document.querySelector(".row4").style.display != "table-row"){
+                          document.querySelector(".row4").style.display = "table-row";
+                        }
+                    }else{
+                      document.querySelector(".row3").style.display = "table-row"
+                    }
+                }else{
+                  document.querySelector(".row2").style.display = "table-row"
+                }
+            }else{
+              document.querySelector(".row1").style.display = "table-row"
+            }
+        }else{
+          document.querySelector(".row0").style.display = "table-row"
+        }
     }
   </script>
   <script>
     function remove1() {
-      $("#row1").remove();
+      $("#row1").hide();
     }
     function remove2() {
-      $("#row2").remove();
+      $("#row2").hide();
     }
     function remove3() {
-      $("#row3").remove();
+      $("#row3").hide();
     }
     function remove4() {
-      $("#row4").remove();
+      $("#row4").hide();
     }
     function remove5() {
-      $("#row5").remove();
+      $("#row5").hide();
     }
-  </script>          
+  </script>      
+  
+  <script>
+    function changehead(headvalue){
+        var tableHeader = document.querySelector("#tab_logic thead tr");
+        if(headvalue=="Quantity"){
+            tableHeader.innerHTML = "<th class='text-center'>#</th><th class='text-center'>Item details</th><th class='text-center'>Quantity Available</th><th class='text-center'>New Quantity on hand</th><th class='text-center'>Quantity Adjusted</th>";
+        }else{
+            tableHeader.innerHTML = "<th class='text-center'>#</th><th class='text-center'>Item details</th><th class='text-center'>Value Available</th><th class='text-center'>New Stock in Value</th><th class='text-center'>Adjusted Stock in Value</th>";
+        }
+    }
+</script>
+
 {% endblock %}

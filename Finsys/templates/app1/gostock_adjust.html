@@ -1,9 +1,28 @@
 {% extends 'app1/base.html' %}
-
 {% block body %}
 
-<style>
-    .description-icon {
+
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+  background: #f2f2f2;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+/*Resize the wrap to see the search bar change!*/
+.wrap{
+  width: 40%;
+  /* position: absolute;
+  top: 50%;
+  left: 50%; */
+  /* transform: translate(-50%, -50%); */
+}
+.table-row{
+        cursor:pointer;
+}
+.description-icon {
         cursor: pointer;
         text-decoration: underline;
         margin-left: 20%;
@@ -21,9 +40,6 @@
         border-radius: 1vh;
     }
 </style>
-
-
-
 <div class="page-content">
     <div class="card radius-15 h-20">
         <div class="row">
@@ -35,98 +51,66 @@
         </div>
     </div>
 
-   
-   
     <div class="card radius-15">
         <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-5" style="margin-left: -3vw;">
-                        <div class="search-bar">
-                            <div class="input-group">
-                                <!-- <div class="input-group-prepend search-arrow-back">
-                                    <button class="btn btn-search-back" type="button"><i class="bx bx-arrow-back"></i></button>
-                                </div> -->
-                                <input type="text" autocomplete="off" id="searchInput" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search" />
-                                <div class="input-group-append">
-                                    <button class="btn btn-search" type="button"><i class="lni lni-search-alt"></i></button>
-                                </div>
-                                <div class=" mt-6" id="myDIV" style="z-index:1;position:absolute; 
-                                        background-color: #213b52;width:400px;height:1px;">
-                                        
-                                            <ul id="searchList" class="one radius-15" style="background-color: #213b52;">
-                                            {% for a in stock %}
-                                            <a href="view_stockadjust/{{ a.id }}"><li>{{ a.ref_no }}</li></a>
-                                            {% endfor %}
-                                        
-                                            </ul>
-                                            </div>
-                        
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-2" style="margin-left: -3vw;">
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
-                                            data-toggle="dropdown">Sort by
-                                    </button>
-                                    <div class="dropdown-menu" style="background-color: black;">
-                                        <a class="dropdown-item" href="{% url 'gostock_adjust' %}"
-                                            style="height: 40px; font-size: 15px; color: white;" >Reason</a>
-                                        <a class="dropdown-item" href="{% url 'saf_quandity' %}"
-                                            style="height: 40px; font-size: 15px; color: white;">Reference Number</a>
-                                        
-                                    </div>
-                                </div> 
-                            </div>
-                            
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
-                                            data-toggle="dropdown">Filter by
-                                    </button>
-                                    <div class="dropdown-menu" style="background-color: black;">
-                                        <a class="dropdown-item" href="{% url 'gostock_adjust' %}"
-                                            style="height: 40px; font-size: 15px; color: white;" >All</a>
-                                        <a class="dropdown-item" href="{% url 'saf_quandity' %}"
-                                            style="height: 40px; font-size: 15px; color: white;">Draft</a>
-                                        <a class="dropdown-item" href="{% url 'saf_value' %}"
-                                            style="height: 40px; font-size: 15px; color: white;">Approved</a>
-                                        
-                                    </div>
-                                </div> 
-                            </div>
-                            
-                                                          
-                            <!--   <div class="col-md-2">
-                                <div class="dropdown">
-                                    <div class="datepicker1" id="datepicker"></div>
-                                    <div class="dropdown-menu" style="background-color: black;"></div>
-                                </div>
-                            </div> -->
-
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <a href="{% url 'stock_adjustpage' %}"><button type="button" class="btn btn-outline-info  text-grey"
-                                            >Add Adjustment
-                                    </button></a>
-                                    
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-3">
+                <!-- <div class="input-group-prepend search-arrow-back">
+                        <button class="btn btn-search-back" type="button"><i class="bx bx-arrow-back"></i></button>
+                    </div> -->
+                    <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
+                                style="margin-top: 8px; background-color: #2f516f;color: white;">
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-responsive-md table-hover mt-4" id="tabletobe">
-                        <thead>
+                <div class="col-md-2" style="width: 40%; margin-top: 8px;">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
+                                data-toggle="dropdown">Sort by
+                        </button>
+                        <div class="dropdown-menu" style="background-color: black;">
+                            <a class="dropdown-item" style="height: 40px; font-size: 15px; color: white;" onclick="sortTable(1)">Reason</a>
+                            <a class="dropdown-item" style="height: 40px; font-size: 15px; color: white;" onclick="sortTable(3)">Reference Number</a>
+                            
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-1 mx-5" style="width: 40%; margin-top: 8px;">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
+                                data-toggle="dropdown">Filter by
+                        </button>
+                        <div class="dropdown-menu" style="background-color: black;">
+                            <a class="dropdown-item" href="{% url 'gostock_adjust' %}"
+                                style="height: 40px; font-size: 15px; color: white;" >All</a>
+                            <a class="dropdown-item" href="{% url 'saf_quandity' %}"
+                                style="height: 40px; font-size: 15px; color: white;">Draft</a>
+                            <a class="dropdown-item" href="{% url 'saf_value' %}"
+                                style="height: 40px; font-size: 15px; color: white;">Approved</a>
+                            
+                        </div>
+                    </div> 
+                </div>
+                <!-- <div class="col-md-2">
+                        <div class="dropdown">
+                            <div class="datepicker1" id="datepicker"></div>
+                            <div class="dropdown-menu" style="background-color: black;"></div>
+                        </div>
+                    </div> -->
+                <div class="btn-group col-md-2">
+                    <a href="{% url 'stock_adjustpage' %}" id="myBtn" class="btn btn-outline-info text-grey fas fa-plus" style="width: 40%; margin-top: 8px;" role="button"> Add Adjustment</a>
+                </div>
+
+            </div>
+            <div class="container-fluid">
+                <table class="table table-responsive-md mt-4 table-hover" id="myTable">
+                    <thead>
                         <tr id="table-header">
                             <th>Date</th>
                             <th>Reason</th>
                             <th>Description</th>
                             <th>Reference No</th>
                             <th>Type</th>
+                            <th>Status</th>
                             <th>Created By</th>
                             <th>Created Time</th>
                         </tr>
@@ -142,6 +126,7 @@
                                     </td>
                                     <td>{{ a.ref_no }}</td>
                                     <td>{{ a.mode }}</td>
+                                    <td>{{ a.status }}</td>
                                     <td>{{ user.first_name }}</td>
                                     <!-- <td>{{ a.tax_rate }}</td> -->
                                     
@@ -167,15 +152,29 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
-                    </table>
-                </div>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-                  
-                
+<script>
+
+    $(document).ready(function() {
+        var $rows = $('.table tbody tr');
+        $('#search').keyup(function() {
+            var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+            $rows.show().filter(function() {
+                console.log($rows.show())
+
+                var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                console.log(text)
+                return !~text.indexOf(val);
+            }).hide();
+        });
+    });
+</script>
+
 <script>
     jQuery(document).ready(function($) {
         $(".clickable-row").click(function() {
@@ -184,43 +183,55 @@
     });
 </script>
 
-
 <script>
+    // JavaScript code
+    document.addEventListener('DOMContentLoaded', function() {
+        const descriptionIcons = document.querySelectorAll('.description-icon');
 
-    $(document).ready(function(){
-      $("#searchList li").hide();
-    
-      $("#searchInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        if (value !== '' ) {
-        $("#searchList li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });   
-        } else {
-          $("#searchList li").hide();   
-        }    
-      });
-    });
-    
-    </script>
+        descriptionIcons.forEach(function(icon) {
+            icon.addEventListener('mouseover', function() {
+                const descriptionText = this.nextElementSibling; // Get the description text
+                descriptionText.style.display = 'block';
+            });
 
-    <script>
-        // JavaScript code
-        document.addEventListener('DOMContentLoaded', function() {
-            const descriptionIcons = document.querySelectorAll('.description-icon');
-
-            descriptionIcons.forEach(function(icon) {
-                icon.addEventListener('mouseover', function() {
-                    const descriptionText = this.nextElementSibling; // Get the description text
-                    descriptionText.style.display = 'block';
-                });
-
-                icon.addEventListener('mouseout', function() {
-                    const descriptionText = this.nextElementSibling; // Get the description text
-                    descriptionText.style.display = 'none';
-                });
+            icon.addEventListener('mouseout', function() {
+                const descriptionText = this.nextElementSibling; // Get the description text
+                descriptionText.style.display = 'none';
             });
         });
-    </script>
+    });
+</script>
 
+<script>
+    // Function to sort the table by the selected column
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("myTable");
+        switching = true;
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+
+
+</script>
+ 
 {% endblock %}

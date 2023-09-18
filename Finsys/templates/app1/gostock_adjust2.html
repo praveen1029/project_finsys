@@ -1,194 +1,134 @@
 {% extends 'app1/base.html' %}
-
 {% block body %}
-
-<style>
-    .description-icon {
-        cursor: pointer;
-        text-decoration: underline;
-        margin-left: 20%;
+{% load static %}
+<style type="text/css">
+    form div{
+        width: 100%;
     }
 
-    .description-text {
-        margin-left: 2%;
-        display: none;
-        position: absolute;
-        background: black;
-        padding: 5px;
-        border: 1px solid #ddd;
-        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-        z-index: 1;
-        border-radius: 1vh;
+
+    .top .right1{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        background-color: rgba(128, 128, 128, 0.09);
+        padding: 30px;
+        
     }
+    
+    .card {
+        z-index: 0;
+        border: none;
+        border-radius: 0.5rem;
+        position: relative
+    }
+
 </style>
 
 
-
+{% for a in stock %}
 <div class="page-content">
-    <div class="card radius-15 h-20">
-        <div class="row">
-            <div class="col-md-12">
-                <center><h2 class="mt-3">ALL STOCK ADJUSTMENTS</h2></center>
-                
-                <hr style="width:95%">
-            </div>
-        </div>
-    </div>
-
-   
-   
     <div class="card radius-15">
         <div class="card-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-5" style="margin-left: -3vw;" >
-                        <div class="search-bar" >
-                            <div class="input-group" >
-                                <input type="text"  autocomplete="off" id="searchInput" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search" />
-                                <div class="input-group-append" >
-                                    <button class="btn btn-search" type="button"><i class="lni lni-search-alt"></i></button>
-                                </div>
-                                <div class=" mt-5" id="myDIV" style="z-index:1;position:absolute; 
-                                        background-color: #213b52;width:400px;height:1px;">
-                                        
-                                            <ul id="searchList" class="one radius-15" style="background-color: #213b52;">
-                                            {% for a in stock %}
-                                                <a href="view_stockadjust/{{ a.id }}"><li>{{ a.ref_no }}</li></a>
-                                            {% endfor %}
-                                        
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+            <div class="row">
+                <div class="col-12 col-lg-12 col-xl-12">
+                    <div class="card" style="background-color: #2a4964;">
+                        <div class="row no-gutters">
+                            <div class="col-md-12 mt-4 mb-4">
+                                <center>
+                                    <h5 class="card-title"><h3 style="text-transform:Uppercase;">STOCK ADJUSTMENT VIEW</h3></h5>
+                                </center>
+                                <hr style="width: 97%; margin-left: 3vh; margin-right: 2vh;">
+                            </div> 
+                            <div class="col-md-1" style="margin-top: -2vh; margin-left: 2vh;">
+                                <h6>Overview</h6>
                             </div>
-                            
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
-                                            data-toggle="dropdown">filter by
-                                    </button>
-                                    <div class="dropdown-menu" style="background-color: black;">
-                                        <a class="dropdown-item" href="{% url 'gostock_adjust' %}"
-                                            style="height: 40px; font-size: 15px; color: white;" >All</a>
-                                        <a class="dropdown-item" href="{% url 'saf_quandity' %}"
-                                            style="height: 40px; font-size: 15px; color: white;">Quandity</a>
-                                        <a class="dropdown-item" href="{% url 'saf_value' %}"
-                                            style="height: 40px; font-size: 15px; color: white;">Value</a>
-                                    </div>
-                                </div> 
+                            <div class="col-md-1" style="margin-top: -2vh; " >
+                                <h6>Statement</h6>
                             </div>
-                                
-                            <!-- <div class="col-md-2">
-                                <div class="dropdown">
-                                    <div class="datepicker1" id="datepicker"></div>
-                                    <div class="dropdown-menu" style="background-color: black;"></div>
-                                </div>
-                            </div> -->
-
-                            <div class="col-md-2">
-                                <div class="dropdown">
-                                    <a href="{% url 'stock_adjustpage' %}"><button type="button" class="btn btn-outline-info  text-grey"
-                                            >Add Adjustment
-                                    </button></a>
-                                </div>
+                            {% if a.status == "Draft" %}
+                                <div class="col-md-6"></div>
+                            {% else %}
+                                <div class="col-md-7"></div>
+                            {% endif %}
+                            <div class="col-md-1 mr-3 ml-5" style="margin-top: -2vh; margin-bottom: 2vh;">
+                                <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left" name="draft" style="font-size: small;">
+                                    <i class="fa fa-edit" style="font-size:medium;"> &nbsp;Edit</i>
+                                </button>
                             </div>
+                            <div class="col-md-1" style="margin-top: -2vh; margin-bottom: 2vh;">
+                                <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left" name="draft" style="font-size: small;">
+                                    <i class="fa fa-trash-o" style="font-size: medium;">&nbsp;Delete</i>
+                                </button>
+                            </div>
+                            {% if a.status == "Draft" %}
+                            <div class="col-md-1 ml-3" style="margin-top: -2vh; margin-bottom: 2vh;">
+                                <button type="submit" class="btn btn-outline-info rounded-pill w-100 text-grey pull-left" name="draft" style="font-size: small;">
+                                    <i class="fa fa-exchange" aria-hidden="true" style="font-size: medium;"> Convert</i>
+                                </button>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <form action="#" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
 
-
-    <div class="card radius-15">
-    <div class="card-body">
-        <div class="container-fluid">
-            <div class="row ">
-                <div class="col-md-5 bg-info">
-                    <div class="input-group" >
-                        <input type="text"  autocomplete="off" id="searchInput" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search" />
-                        <div class="input-group-append" >
-                            <button class="btn btn-search" type="button"><i class="lni lni-search-alt"></i></button>
+                <div class="card" style="background-color: #2d4458;">
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Date</label>
                         </div>
-                        <div class=" mt-5" id="myDIV" style="z-index:1;position:absolute; 
-                                background-color: #213b52;width:400px;height:1px;">
-                                
-                                    <ul id="searchList" class="one radius-15" style="background-color: #213b52;">
-                                    {% for a in stock %}
-                                        <a href="view_stockadjust/{{ a.id }}"><li>{{ a.ref_no }}</li></a>
-                                    {% endfor %}
-                                
-                                    </ul>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Reason</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Description</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Reference Number</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Mode of Adjustment</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Status</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Account</label>
+                        </div>
+                    </div>
+                    <div class="row" >
+                        <div class="col-md-3" style="margin: auto;">
+                            <label for="">Created By</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" style="margin: auto;">
+                            <a href="{% url 'goitem' %}" class="btn btn-outline-info rounded-pill w-100 text-light">
+                            BACK</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 bg-dark">
-<h1>orld</h1>
-                </div>
-                <div class="col-md-2 bg-success">
-<h1>orld</h1>
-                </div>
-                <div class="col-md-2 bg-danger">
-<h1>orld</h1>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
-</div>
-                  
-                
-<script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            window.location = $(this).data("href");
-        });
-    });
-</script>
 
 
-<script>
-
-    $(document).ready(function(){
-      $("#searchList li").hide();
-    
-      $("#searchInput").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        if (value !== '' ) {
-        $("#searchList li").filter(function() {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });   
-        } else {
-          $("#searchList li").hide();   
-        }    
-      });
-    });
-    
-       
-       
-     </script>
-
-<script>
-    // JavaScript code
-    document.addEventListener('DOMContentLoaded', function() {
-        const descriptionIcons = document.querySelectorAll('.description-icon');
-
-        descriptionIcons.forEach(function(icon) {
-            icon.addEventListener('mouseover', function() {
-                const descriptionText = this.nextElementSibling; // Get the description text
-                descriptionText.style.display = 'block';
-            });
-
-            icon.addEventListener('mouseout', function() {
-                const descriptionText = this.nextElementSibling; // Get the description text
-                descriptionText.style.display = 'none';
-            });
-        });
-    });
-</script>
-
-
-
+{% endfor %}
 {% endblock %}

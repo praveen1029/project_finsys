@@ -31492,16 +31492,20 @@ def gostock_adjust(request):
 def gostock_adjust1(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1)
-        context = {'cmp1':cmp1,'stock':stock}
+        acc = accounts1.objects.filter(cid=cmp1)
+        item = itemtable.objects.filter(cid=cmp1)
+        reason = stockreason.objects.filter(cid=cmp1)
+        context = {'cmp1':cmp1,'acc':acc,'item':item,'reason':reason}
         return render(request, 'app1/gostock_adjust1.html',context)  
     except:
-        return redirect('gostock_adjust1')        
+        return redirect('gostock_adjust')             
+ 
+      
     
 def gostock_adjust2(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1)
+        stock = stockadjust.objects.filter(cid=cmp1,id=2)
         context = {'cmp1':cmp1,'stock':stock}
         return render(request, 'app1/gostock_adjust2.html',context)  
     except:
@@ -31511,7 +31515,7 @@ def gostock_adjust2(request):
 def saf_quandity(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1,mode="Quandity")
+        stock = stockadjust.objects.filter(cid=cmp1,status="Draft")
         context = {'cmp1':cmp1,'stock':stock}
         return render(request, 'app1/gostock_adjust.html',context)  
     except:
@@ -31521,7 +31525,7 @@ def saf_quandity(request):
 def saf_value(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1,mode="Value")
+        stock = stockadjust.objects.filter(cid=cmp1,status="Approved")
         context = {'cmp1':cmp1,'stock':stock}
         return render(request, 'app1/gostock_adjust.html',context)  
     except:
@@ -31620,10 +31624,16 @@ def create_stock_adjustment(request):
             sqty5 = request.POST['qty5']
             sqtyh5 = request.POST['qty_hand5']
             snqty5 = request.POST['new_qty5']
+
+            if 'draft' in request.POST:
+                status = "Draft"
+            elif 'save' in request.POST:
+                status = "Approved"
             
             stock = stockadjust(mode=smode,ref_no=sreference,date=sadte,
                                 account=saccount,reason=sreason,
                                 description=sdescription,
+                                status = status,
                                 attach=sattach,
                                 item1=sitem1,
                                 qty1=sqty1,
@@ -31677,7 +31687,7 @@ def create_stock_adjustment(request):
             
             messages.success(request, 'Stock adjusted successfully')
             
-            return redirect('stock_adjustpage')
+            return redirect('gostock_adjust')
         return render(request,'app1/add_stock_adjust.html')
 
 
