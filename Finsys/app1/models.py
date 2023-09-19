@@ -1311,6 +1311,8 @@ class stockadjust(models.Model):
     qty5 = models.CharField(max_length=100,null=True)
     qty_hand5 = models.CharField(max_length=100, default='')
     new_qty5 = models.CharField(max_length=100, default='')
+    
+    comment = models.CharField(max_length=500,default='')
 
 
 

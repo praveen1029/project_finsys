@@ -31505,11 +31505,33 @@ def gostock_adjust1(request):
 def gostock_adjust2(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1,id=2)
+        stock = stockadjust.objects.filter(cid=cmp1,id=3)
         context = {'cmp1':cmp1,'stock':stock}
         return render(request, 'app1/gostock_adjust2.html',context)  
     except:
-        return redirect('gostock_adjust2')        
+        return redirect('gostock_adjust2')    
+
+@login_required(login_url='regcomp')
+def approve_stock_adjust(request,pk):    
+    try:
+        stock = stockadjust.objects.get(id=pk)
+        stock.status = "Approved"
+        stock.save()
+        return redirect('view_stockadjust',pk)
+    except:
+        return redirect('view_stockadjust',pk)
+
+@login_required(login_url='regcomp')
+def create_comment(request,pk):
+    try:
+        if request.method == 'POST':
+            stock = stockadjust.objects.get(id=pk)
+            stock.comment = request.POST['comment']
+            stock.save()
+            return redirect('view_stockadjust',pk)
+        return render('view_stockadjust',pk)
+    except:
+        return redirect('view_stockadjust',pk)
 
 @login_required(login_url='regcomp')
 def saf_quandity(request):
@@ -31723,8 +31745,15 @@ def update_stock_adjustment(request,id):
             stock.date = request.POST.get('date')
             stock.account = request.POST.get('account')
             stock.reason = request.POST.get('reason')
-            stock.description = request.POST.get('desc')
+            if request.POST.get('desc') != "":
+                stock.description = request.POST.get('desc')
+                
             stock.attach = request.FILES.get('file')
+
+            if 'draft' in request.POST:
+                stock.status = "Draft"
+            elif 'save' in request.POST:
+                stock.status = "Approved"
 
             stock.item1 = request.POST.get('item1')
             stock.qty1 = request.POST.get('qty1')
@@ -31751,9 +31780,13 @@ def update_stock_adjustment(request,id):
             stock.qty_hand5 = request.POST.get('qty_hand5')
             stock.new_qty5 = request.POST.get('new_qty5')
             
-            item = itemtable.objects.get(name=stock.item1)
-            item.stock = stock.qty_hand1
-            item.save()  
+            try:
+                item = itemtable.objects.get(name=stock.item1)
+                item.stock = stock.qty_hand1
+                item.save()  
+            except itemtable.DoesNotExist:
+                item = None
+
             try:
                 item1 = itemtable.objects.get(name=stock.item2)
                 item1.stock = stock.qty_hand2
