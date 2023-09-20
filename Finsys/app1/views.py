@@ -31780,12 +31780,10 @@ def update_stock_adjustment(request,id):
             stock.qty_hand5 = request.POST.get('qty_hand5')
             stock.new_qty5 = request.POST.get('new_qty5')
             
-            try:
-                item = itemtable.objects.get(name=stock.item1)
-                item.stock = stock.qty_hand1
-                item.save()  
-            except itemtable.DoesNotExist:
-                item = None
+            item = itemtable.objects.get(name=stock.item1)
+            item.stock = stock.qty_hand1
+            item.save()  
+
 
             try:
                 item1 = itemtable.objects.get(name=stock.item2)
