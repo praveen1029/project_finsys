@@ -31498,15 +31498,18 @@ def gostock_adjust1(request):
         context = {'cmp1':cmp1,'acc':acc,'item':item,'reason':reason}
         return render(request, 'app1/gostock_adjust1.html',context)  
     except:
-        return redirect('gostock_adjust')             
+        return redirect('gostock_adjust1')             
  
       
     
 def gostock_adjust2(request):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(cid=cmp1,id=3)
-        context = {'cmp1':cmp1,'stock':stock}
+        stock = stockadjust.objects.filter(id=3)
+        acc = accounts1.objects.filter(cid=cmp1)
+        item = itemtable.objects.filter(cid=cmp1)
+        reason = stockreason.objects.filter(cid=cmp1)
+        context = {'cmp1':cmp1,'acc':acc,'item':item,'reason':reason,'stock':stock}
         return render(request, 'app1/gostock_adjust2.html',context)  
     except:
         return redirect('gostock_adjust2')    
@@ -31760,26 +31763,30 @@ def update_stock_adjustment(request,id):
             stock.qty_hand1 = request.POST.get('qty_hand1')
             stock.new_qty1 = request.POST.get('new_qty1')
 
-            stock.item2 = request.POST.get('item2')
-            stock.qty2 = request.POST.get('qty2')
-            stock.qty_hand2 = request.POST.get('qty_hand2')
-            stock.new_qty2 = request.POST.get('new_qty2')
+            if request.POST.get('item2') != " " :
+                stock.item2 = request.POST.get('item2')
+                stock.qty2 = request.POST.get('qty2')
+                stock.qty_hand2 = request.POST.get('qty_hand2')
+                stock.new_qty2 = request.POST.get('new_qty2')
 
-            stock.item3 = request.POST.get('item3')
-            stock.qty3 = request.POST.get('qty3')
-            stock.qty_hand3 = request.POST.get('qty_hand3')
-            stock.new_qty3 = request.POST.get('new_qty3')
+            if request.POST.get('item3') != " " :
+                stock.item3 = request.POST.get('item3')
+                stock.qty3 = request.POST.get('qty3')
+                stock.qty_hand3 = request.POST.get('qty_hand3')
+                stock.new_qty3 = request.POST.get('new_qty3')
 
-            stock.item4 = request.POST.get('item4')
-            stock.qty4 = request.POST.get('qty4')
-            stock.qty_hand4 = request.POST.get('qty_hand4')
-            stock.new_qty4 = request.POST.get('new_qty4')
+            if request.POST.get('item4') != " " :
+                stock.item4 = request.POST.get('item4')
+                stock.qty4 = request.POST.get('qty4')
+                stock.qty_hand4 = request.POST.get('qty_hand4')
+                stock.new_qty4 = request.POST.get('new_qty4')
 
-            stock.item5 = request.POST.get('item5')
-            stock.qty5 = request.POST.get('qty5')
-            stock.qty_hand5 = request.POST.get('qty_hand5')
-            stock.new_qty5 = request.POST.get('new_qty5')
-            
+            if request.POST.get('item5') != " " :
+                stock.item5 = request.POST.get('item5')
+                stock.qty5 = request.POST.get('qty5')
+                stock.qty_hand5 = request.POST.get('qty_hand5')
+                stock.new_qty5 = request.POST.get('new_qty5')
+
             item = itemtable.objects.get(name=stock.item1)
             item.stock = stock.qty_hand1
             item.save()  
@@ -31813,7 +31820,7 @@ def update_stock_adjustment(request,id):
             
             messages.success(request, 'Stock Updated successfully')
             
-            return redirect('gostock_adjust')
+            return redirect('view_stockadjust',id)
         return render(request,'app1/edit_stockadjust.html')             
 
 @login_required(login_url='regcomp')

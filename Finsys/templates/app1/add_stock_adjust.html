@@ -228,7 +228,7 @@
                   </tr>
                 </tbody>
               </table>
-              <a class="btn btn-outline-secondary ml-1" role="button" id="addrow" onclick="showDiv()" >+</a>
+              <a class="btn btn-outline-secondary ml-1" role="button" id="addbtn"  onclick="showDiv()" >+</a>
               
 
             </div>
@@ -502,6 +502,7 @@
                     if(document.querySelector(".row3").style.display == "table-row"){
                         if(document.querySelector(".row4").style.display != "table-row"){
                           document.querySelector(".row4").style.display = "table-row";
+                          $("#addbtn").hide()
                         }
                     }else{
                       document.querySelector(".row3").style.display = "table-row"
@@ -520,18 +521,23 @@
   <script>
     function remove1() {
       $("#row1").hide();
+      $("#addbtn").show()
     }
     function remove2() {
       $("#row2").hide();
+      $("#addbtn").show()
     }
     function remove3() {
       $("#row3").hide();
+      $("#addbtn").show()
     }
     function remove4() {
       $("#row4").hide();
+      $("#addbtn").show()
     }
     function remove5() {
       $("#row5").hide();
+      $("#addbtn").show()
     }
   </script>      
   
