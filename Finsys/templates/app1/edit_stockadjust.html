@@ -42,7 +42,7 @@
                      
                         <label for="validationCustom01"
                         style="color: white;">Mode of Adjustment</label>
-                        <select name="mode" id="adjust" class="form-control" style="background-color: #2a4964; color: white;" required>
+                        <select name="mode" id="adjust" class="form-control" style="background-color: #2a4964; color: white;" required onchange="changehead(this.value)">
                            <option selected  value="{{ a.mode }}" hidden>{{ a.mode }} Adjustment </option>
                          <option value="Quantity">Quantity Adjustment</option>
                      <option value="Value">Value Adjustment</option></select>
@@ -104,7 +104,7 @@
           <div class="row">
             <div class="col-md-3 mt-3">
               <label class="col-form-label">Description</label>
-             <textarea name="desc" rows="5" class="form-control" value="{{ a.description }}"  ></textarea>
+             <textarea name="desc" rows="5" class="form-control" placeholder="{{ a.description }}"  ></textarea>
             </div>
             <div class="col-md-3 mt-3"></div>
             <div class="col-md-3 mt-3"></div>
@@ -114,14 +114,25 @@
             <div class="col-md-12 table-responsive-md mt-3">
               <table class="table table-bordered table-hover mt-3" id="tab_logic">
                 <thead>
+                  {% if a.mode == "Quantity" %}
                   <tr id>
                     <th  class="text-center" >#</th>
                     <th class="text-center" >Item details</th>
-                    <th class="text-center">Quandity Available</th>
-                    <th class="text-center">New Quandity on hand</th>
-                    <th class="text-center">Quandity Adjusted</th>
+                    <th class="text-center">Quantity Available</th>
+                    <th class="text-center">New Quantity on hand</th>
+                    <th class="text-center">Quantity Adjusted</th>
                   <th></th>
                   </tr>
+                  {% else %}
+                  <tr id>
+                    <th  class="text-center" >#</th>
+                    <th class="text-center" >Item details</th>
+                    <th class="text-center">Value Available</th>
+                    <th class="text-center">New Stock in Value</th>
+                    <th class="text-center">Adjusted Stock in Value</th>
+                  <th></th>
+                  </tr>
+                  {% endif %}
                 </thead>
                 <tbody id="items-table-body">
                   <tr class="row0" id="row1">
@@ -129,7 +140,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item1" id="itemss" class="form-control" style="background-color: #2f516f; color: white; " required>
-                        <option value="{{ a.item1 }}" selected  >{{ a.item1 }}</option>
+                        <option value="{{ a.item1 }}" selected  hidden>{{ a.item1 }}</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -151,7 +162,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item2" id="itemss1" class="form-control" style="background-color: #2f516f; color: white; " >
-                        <option value=" " selected >{{ a.item2 }}</option>
+                        <option value="{{ a.item2 }}" selected hidden>{{ a.item2 }}</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -171,7 +182,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item2" id="itemss1" class="form-control" style="background-color: #2f516f; color: white; " >
-                        <option value=" " selected >{{ a.item2 }}</option>
+                        <option value=" " selected hidden>None</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -194,7 +205,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item3" id="itemss2" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item3 }}</option>
+                        <option value="{{ a.item3 }}" selected hidden>{{ a.item3 }}</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -215,7 +226,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item3" id="itemss2" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item3 }}</option>
+                        <option value=" " selected hidden>None</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -237,7 +248,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item4" id="itemss3" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item4 }}</option>
+                        <option value="{{ a.item4 }}" selected hidden>{{ a.item4 }}</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -258,7 +269,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item4" id="itemss3" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item4 }}</option>
+                        <option value=" " selected hidden>None</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -282,7 +293,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item5" id="itemss4" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item5 }}</option>
+                        <option value="{{ a.item5 }}" selected hidden>{{ a.item5 }}</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -303,7 +314,7 @@
                     <td style="width: 20%;">
                       <div class="d-flex">
                         <select name="item5" id="itemss4" class="form-control" style="background-color: #2f516f; color: white; ">
-                        <option value=" " selected >{{ a.item5 }}</option>
+                        <option value=" " selected hidden>None</option>
                         {% for i in item %}
                         <option value="{{ i.name  }}">{{ i.name  }} </option>
                         {% endfor %}
@@ -413,6 +424,189 @@
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
+<script>
+  function selectrow1(){
+    onhand = $("#qty_hand").val();
+    onvalue = $("#qty").val();
+    if(onhand !=''){
+      document.getElementById("nqty").value = onhand-onvalue
+    }
+  }
+  function selectrow2(){
+    onhand = $("#qty_hand1").val();
+    onvalue = $("#qty1").val();
+    if(onhand !=''){
+      document.getElementById("nqty1").value = onhand-onvalue
+    }
+  }
+  function selectrow3(){
+    onhand = $("#qty_hand2").val();
+    onvalue = $("#qty2").val();
+    if(onhand !=''){
+      document.getElementById("nqty2").value = onhand-onvalue
+    }
+  }
+  function selectrow4(){
+    onhand = $("#qty_hand3").val();
+    onvalue = $("#qty3").val();
+    if(onhand !=''){
+      document.getElementById("nqty3").value = onhand-onvalue
+    }
+  }
+  function selectrow5(){
+    onhand = $("#qty_hand4").val();
+    onvalue = $("#qty4").val();
+    if(onhand !=''){
+      document.getElementById("nqty4").value = onhand-onvalue
+    }
+  }
+</script>
+
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty').value = json_data[key]['stock']
+                      selectrow1()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow1()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss1').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty1').value = json_data[key]['stock']
+                      selectrow2()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty1').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow2()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss2').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty2').value = json_data[key]['stock']
+                      selectrow3()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty2').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow3()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss3').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty3').value = json_data[key]['stock']
+                      selectrow4()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty3').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow4()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss4').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty4').value = json_data[key]['stock']
+                      selectrow5()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow5()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
 
 
             <script>
@@ -429,8 +623,10 @@
                             for (key in json_data) {
                               if(adjust_val=="Quantity"){
                                   document.getElementById('qty').value = json_data[key]['stock']
+                                  selectrow1()
                               }else if(adjust_val == "Value"){
                                   document.getElementById('qty').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                                  selectrow1()
                               }
                                
                             }
@@ -454,8 +650,10 @@
                           for (key in json_data) {
                             if(adjust_val=="Quantity"){
                                   document.getElementById('qty1').value = json_data[key]['stock']
+                                  selectrow2()
                               }else if(adjust_val == "Value"){
                                   document.getElementById('qty1').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                                  selectrow2()
                               }
                              
                           }
@@ -479,8 +677,10 @@
                         for (key in json_data) {
                           if(adjust_val=="Quantity"){
                                   document.getElementById('qty2').value = json_data[key]['stock']
+                                  selectrow3()
                               }else if(adjust_val == "Value"){
                                   document.getElementById('qty2').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                                  selectrow3()
                               }
                            
                         }
@@ -504,8 +704,10 @@
                       for (key in json_data) {
                         if(adjust_val=="Quantity"){
                                   document.getElementById('qty4').value = json_data[key]['stock']
+                                  selectrow5()
                               }else if(adjust_val == "Value"){
                                   document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                                  selectrow5()
                               }
                          
                       }
@@ -528,10 +730,12 @@
                     var json_data = JSON.parse(response);
                     for (key in json_data) {
                       if(adjust_val=="Quantity"){
-                                  document.getElementById('qty3').value = json_data[key]['stock']
-                              }else if(adjust_val == "Value"){
-                                  document.getElementById('qty3').value = json_data[key]['stock'] * json_data[key]['sales_cost']
-                              }
+                          document.getElementById('qty3').value = json_data[key]['stock']
+                          selectrow4()
+                      }else if(adjust_val == "Value"){
+                          document.getElementById('qty3').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                          selectrow4()
+                      }
                        
                     }
                 }).fail(function () {
@@ -659,4 +863,15 @@
       pro_opt.value=null;
     }
   </script>  
+
+<script>
+  function changehead(headvalue){
+      var tableHeader = document.querySelector("#tab_logic thead tr");
+      if(headvalue=="Quantity"){
+          tableHeader.innerHTML = "<th class='text-center'>#</th><th class='text-center'>Item details</th><th class='text-center'>Quantity Available</th><th class='text-center'>New Quantity on hand</th><th class='text-center'>Quantity Adjusted</th>";
+      }else{
+          tableHeader.innerHTML = "<th class='text-center'>#</th><th class='text-center'>Item details</th><th class='text-center'>Value Available</th><th class='text-center'>New Stock in Value</th><th class='text-center'>Adjusted Stock in Value</th>";
+      }
+  }
+</script>
 {% endblock %}

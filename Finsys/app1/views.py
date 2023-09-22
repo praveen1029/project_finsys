@@ -31798,24 +31798,28 @@ def update_stock_adjustment(request,id):
                 item1.save() 
             except itemtable.DoesNotExist:
                 item1 = None
+
             try:
                 item2 = itemtable.objects.get(name=stock.item3)
                 item2.stock = stock.qty_hand3
                 item2.save() 
             except itemtable.DoesNotExist:
                 item1 = None
+
             try:        
                 item3 = itemtable.objects.get(name=stock.item4)
                 item3.stock = stock.qty_hand4
                 item3.save() 
             except itemtable.DoesNotExist:
                 item1 = None  
+
             try:      
                 item4 = itemtable.objects.get(name=stock.item5)
                 item4.stock = stock.qty_hand5
                 item4.save()  
             except itemtable.DoesNotExist:
-                item1 = None                     
+                item1 = None      
+
             stock.save()
             
             messages.success(request, 'Stock Updated successfully')

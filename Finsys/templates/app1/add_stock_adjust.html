@@ -320,6 +320,190 @@
     <script>
       $('#date').val(new Date().toJSON().slice(0,10));
     </script>
+
+<script>
+  function selectrow1(){
+    onhand = $("#qty_hand").val();
+    onvalue = $("#qty").val();
+    if(onhand !=''){
+      document.getElementById("nqty").value = onhand-onvalue
+    }
+  }
+  function selectrow2(){
+    onhand = $("#qty_hand1").val();
+    onvalue = $("#qty1").val();
+    if(onhand !=''){
+      document.getElementById("nqty1").value = onhand-onvalue
+    }
+  }
+  function selectrow3(){
+    onhand = $("#qty_hand2").val();
+    onvalue = $("#qty2").val();
+    if(onhand !=''){
+      document.getElementById("nqty2").value = onhand-onvalue
+    }
+  }
+  function selectrow4(){
+    onhand = $("#qty_hand3").val();
+    onvalue = $("#qty3").val();
+    if(onhand !=''){
+      document.getElementById("nqty3").value = onhand-onvalue
+    }
+  }
+  function selectrow5(){
+    onhand = $("#qty_hand4").val();
+    onvalue = $("#qty4").val();
+    if(onhand !=''){
+      document.getElementById("nqty4").value = onhand-onvalue
+    }
+  }
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty').value = json_data[key]['stock']
+                      selectrow1()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow1()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss1').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty1').value = json_data[key]['stock']
+                      selectrow2()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty1').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow2()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss2').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty2').value = json_data[key]['stock']
+                      selectrow3()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty2').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow3()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss3').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty3').value = json_data[key]['stock']
+                      selectrow4()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty3').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow4()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+<script>
+  $(document).ready(function(){
+    $('#adjust').on('change',function(){
+      select = $('#itemss4').val();
+      adjust_val = $('#adjust').val();
+      if((select!=' ') && (select != null)){
+        $.ajax({
+                type: "GET",
+                url: "{% url 'getit' %}",
+                data: {id: select}
+            }).done(function (response) {
+                var json_data = JSON.parse(response);
+                for (key in json_data) {
+                  if(adjust_val=="Quantity"){
+                      document.getElementById('qty4').value = json_data[key]['stock']
+                      selectrow5()
+                  }else if(adjust_val == "Value"){
+                      document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                      selectrow5()
+                  }
+                    
+                }
+            }).fail(function () {
+                alert("failed");
+            })
+      }
+    })
+  })
+</script>
+
     <script>
       $(document).ready(function () {
         $('#itemss').on('change', function () {
@@ -334,8 +518,10 @@
             for (key in json_data) {
               if(adjust_val=="Quantity"){
                     document.getElementById('qty').value = json_data[key]['stock']
+                    selectrow1()
                 }else if(adjust_val == "Value"){
                     document.getElementById('qty').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                    selectrow1()
                 }
             }
           }).fail(function () {
@@ -357,8 +543,10 @@
             for (key in json_data) {
               if(adjust_val=="Quantity"){
                     document.getElementById('qty1').value = json_data[key]['stock']
+                    selectrow2()
                 }else if(adjust_val == "Value"){
                     document.getElementById('qty1').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                    selectrow2()
                 }
             }
           }).fail(function () {
@@ -381,8 +569,10 @@
             for (key in json_data) {
               if(adjust_val=="Quantity"){
                     document.getElementById('qty2').value = json_data[key]['stock']
+                    selectrow3()
                 }else if(adjust_val == "Value"){
                     document.getElementById('qty2').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                    selectrow3()
                 }
             }
           }).fail(function () {
@@ -405,8 +595,10 @@
           for (key in json_data) {
             if(adjust_val=="Quantity"){
                   document.getElementById('qty4').value = json_data[key]['stock']
+                  selectrow5()
               }else if(adjust_val == "Value"){
                   document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                  selectrow5()
               }
           }
         }).fail(function () {
@@ -429,8 +621,10 @@
           for (key in json_data) {
             if(adjust_val=="Quantity"){
                 document.getElementById('qty4').value = json_data[key]['stock']
+                selectrow4()
             }else if(adjust_val == "Value"){
                 document.getElementById('qty4').value = json_data[key]['stock'] * json_data[key]['sales_cost']
+                selectrow4()
             }
           }
         }).fail(function () {

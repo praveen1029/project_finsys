@@ -67,6 +67,7 @@ body{
                                 data-toggle="dropdown">Sort by
                         </button>
                         <div class="dropdown-menu" style="background-color: black;">
+                            <a class="dropdown-item" href="{% url 'gostock_adjust' %}" style="height: 40px; font-size: 15px; color: white;" >All</a>
                             <a class="dropdown-item" style="height: 40px; font-size: 15px; color: white;" onclick="sortTable(1)">Reason</a>
                             <a class="dropdown-item" style="height: 40px; font-size: 15px; color: white;" onclick="sortTable(3)">Reference Number</a>
                             

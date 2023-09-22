@@ -47,7 +47,9 @@
         border-color: #1c72b4;
     }
 
-
+    table {
+  border: 1px solid rgba(0,0,0,.4);
+}
 
 </style>
 
@@ -103,76 +105,78 @@
                 <form action="#" method="post" class="needs-validation" novalidate>
                     {% csrf_token %}
                         <div class="card" style="background-color: #2d4458;"><br>
+                          <div class="card" style="background-color:#162532; width: 75%; margin: auto;"><br>
+                            <h2 style="text-align:center;color:white">STOCK ADJUSTMENT DETAILS</h2></span><br>
                             <div class="row ml-5">
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Reference Number  </label>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Reference Number  </label>
                                     <p style="margin-left:75px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.ref_no}}</p><br>
                                 </div>
-                            </div>
-                            <div class="row ml-5"  >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Reason</label>
-                                    <p style="margin-left:145px;" >:</p>
+                            </div><br>
+                            <div class="row ml-2"  >
+                                <div class="col-md-6 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Reason</label>
+                                    <p style="margin-left:167px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.reason}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Description</label>
-                                    <p style="margin-left:125px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Description</label>
+                                    <p style="margin-left:140px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.description}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Date</label>
-                                    <p style="margin-left:165px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Date</label>
+                                    <p style="margin-left:190px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.date}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Mode of Adjustment</label>
-                                    <p style="margin-left:72px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Mode of Adjustment</label>
+                                    <p style="margin-left:65px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.mode}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Status</label>
-                                    <p style="margin-left:158px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Status</label>
+                                    <p style="margin-left:175px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.status}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Account</label>
-                                    <p style="margin-left:148px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Account</label>
+                                    <p style="margin-left:160px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{a.account}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
                             <div class="row ml-5" >
-                                <div class="col-md-5 d-flex" style="margin: auto;">
-                                    <label style="color: white;">Created By</label>
-                                    <p style="margin-left:130px;" >:</p>
+                                <div class="col-md-7 d-flex" style="margin: auto;">
+                                    <label style="color: white; font-size: large;">Created By</label>
+                                    <p style="margin-left:135px;" >:</p>
                                     <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                     readonly>{{user.first_name}}</p><br>
                                 </div>
-                            </div>
+                            </div><br>
 
                             {% if a.comment != "" %}
                                 <div class="row ml-5" >
-                                    <div class="col-md-5 d-flex" style="margin: auto;">
-                                        <label style="color: white;">Comment</label>
-                                        <p style="margin-left:135px;" >:</p>
+                                    <div class="col-md-7 d-flex" style="margin: auto;">
+                                        <label style="color: white; font-size: large;">Comment</label>
+                                        <p style="margin-left:150px;" >:</p>
                                         <p style="color: white;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
                                         readonly>{{a.comment}}</p><br>
                                     </div>
@@ -189,7 +193,7 @@
                                                 <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center;" class="table-head">
                                                         Item Details
                                                 </td>
-                                                {% if a.mode == quantity %}
+                                                {% if a.mode == "Quantity" %}
                                                     <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
                                                         Quandity Adjusted
                                                     </td>
@@ -329,6 +333,7 @@
                                     </table>
                                 </div>
                             </div><br>
+                          </div><br>
                             <div class="row mr-3">
                                 <div class="col-md-4" style="margin: auto;">
                                     <a href="{% url 'gostock_adjust' %}" class="btn btn-outline-info rounded-pill w-100 text-light">
@@ -424,7 +429,7 @@
                                                     <div  class=" pcs-journal-header-section">
                                                         <div></div>
                                                         <span >
-                                                            <h2 style="text-align:center;color:black">INVENTORY ADJUSTMENT</h2></span>
+                                                            <h2 style="text-align:center;color:black">STOCK ADJUSTMENT</h2></span>
                                                             <p style="border-bottom: 1px solid grey; margin-left: auto; margin-right: auto; margin-top: 2vh; width: 75%;"></p>
                                                             <br>
                                                         </span>
@@ -442,7 +447,7 @@
                                                 </div>
                                                 <div class="row ml-5"  >
                                                     <div class="col-md-2"></div>
-                                                    <div class="col-md-10 d-flex">
+                                                    <div class="col-md-8 d-flex">
                                                         <label style="color: black;">Reason</label>
                                                         <p style="margin-left:145px;" >:</p>
                                                         <p style="color: black;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
@@ -487,7 +492,7 @@
                                                 </div>
                                                 <div class="row ml-5" >
                                                     <div class="col-md-2"></div>
-                                                    <div class="col-md-10 d-flex">
+                                                    <div class="col-md-8 d-flex">
                                                         <label style="color: black;">Account</label>
                                                         <p style="margin-left:148px;" >:</p>
                                                         <p style="color: black;font-size:15px;margin-left:80px;text-transform:Uppercase;" 
@@ -526,11 +531,12 @@
                                                                     <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center; width: 50%;" class="table-head">
                                                                         Item Details
                                                                     </td>
-                                                                    {% if a.mode == quantity %}
+                                                                    {% if a.mode == "Quantity" %}
                                                                         <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
                                                                             Quandity Adjusted
                                                                         </td>
                                                                     {% else %}
+                                                                
                                                                         <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
                                                                             Value Adjusted
                                                                         </td>
