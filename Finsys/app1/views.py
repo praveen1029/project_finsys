@@ -31488,32 +31488,8 @@ def gostock_adjust(request):
         return render(request, 'app1/gostock_adjust.html',context)  
     except:
         return redirect('gostock_adjust')        
-    
-def gostock_adjust1(request):
-    try:
-        cmp1 = company.objects.get(id=request.session['uid'])
-        acc = accounts1.objects.filter(cid=cmp1)
-        item = itemtable.objects.filter(cid=cmp1)
-        reason = stockreason.objects.filter(cid=cmp1)
-        context = {'cmp1':cmp1,'acc':acc,'item':item,'reason':reason}
-        return render(request, 'app1/gostock_adjust1.html',context)  
-    except:
-        return redirect('gostock_adjust1')             
- 
-      
-    
-def gostock_adjust2(request):
-    try:
-        cmp1 = company.objects.get(id=request.session['uid'])
-        stock = stockadjust.objects.filter(id=3)
-        acc = accounts1.objects.filter(cid=cmp1)
-        item = itemtable.objects.filter(cid=cmp1)
-        reason = stockreason.objects.filter(cid=cmp1)
-        context = {'cmp1':cmp1,'acc':acc,'item':item,'reason':reason,'stock':stock}
-        return render(request, 'app1/gostock_adjust2.html',context)  
-    except:
-        return redirect('gostock_adjust2')    
 
+        
 @login_required(login_url='regcomp')
 def approve_stock_adjust(request,pk):    
     try:
@@ -31681,33 +31657,33 @@ def create_stock_adjustment(request):
                                 qty_hand5=sqtyh5,
                                 new_qty5=snqty5,
                                 cid=cmp1)
-            item = itemtable.objects.get(name=sitem1)
-            item.stock = stock.qty_hand1
-            item.save()  
+            item = itemtable.objects.filter(name=sitem1)
+            item[0].stock = stock.qty_hand1
+            item[0].save()  
             try:
-                item1 = itemtable.objects.get(name=sitem2)
-                item1.stock = stock.qty_hand2
-                item1.save() 
-            except itemtable.DoesNotExist:
+                item1 = itemtable.objects.filter(name=sitem2)
+                item1[0].stock = stock.qty_hand2
+                item1[0].save() 
+            except:
                 item1 = None
             try:
-                item2 = itemtable.objects.get(name=sitem3)
-                item2.stock = stock.qty_hand3
-                item2.save() 
-            except itemtable.DoesNotExist:
-                item1 = None
+                item2 = itemtable.objects.filter(name=sitem3)
+                item2[0].stock = stock.qty_hand3
+                item2[0].save() 
+            except:
+                item2 = None
             try:        
-                item3 = itemtable.objects.get(name=sitem4)
-                item3.stock = stock.qty_hand4
-                item3.save() 
-            except itemtable.DoesNotExist:
-                item1 = None  
+                item3 = itemtable.objects.filter(name=sitem4)
+                item3[0].stock = stock.qty_hand4
+                item3[0].save() 
+            except:
+                item3 = None  
             try:      
-                item4 = itemtable.objects.get(name=sitem5)
-                item4.stock = stock.qty_hand5
-                item4.save()  
-            except itemtable.DoesNotExist:
-                item1 = None                     
+                item4 = itemtable.objects.filter(name=sitem5)
+                item4[0].stock = stock.qty_hand5
+                item4[0].save()  
+            except:
+                item4 = None                     
             stock.save()
             
             messages.success(request, 'Stock adjusted successfully')
@@ -31787,37 +31763,37 @@ def update_stock_adjustment(request,id):
                 stock.qty_hand5 = request.POST.get('qty_hand5')
                 stock.new_qty5 = request.POST.get('new_qty5')
 
-            item = itemtable.objects.get(name=stock.item1)
-            item.stock = stock.qty_hand1
-            item.save()  
+            item = itemtable.objects.filter(name=stock.item1)
+            item[0].stock = stock.qty_hand1
+            item[0].save()  
 
 
             try:
-                item1 = itemtable.objects.get(name=stock.item2)
-                item1.stock = stock.qty_hand2
-                item1.save() 
-            except itemtable.DoesNotExist:
+                item1 = itemtable.objects.filter(name=stock.item2)
+                item1[0].stock = stock.qty_hand2
+                item1[0].save() 
+            except:
                 item1 = None
 
             try:
-                item2 = itemtable.objects.get(name=stock.item3)
-                item2.stock = stock.qty_hand3
-                item2.save() 
-            except itemtable.DoesNotExist:
+                item2 = itemtable.objects.filter(name=stock.item3)
+                item2[0].stock = stock.qty_hand3
+                item2[0].save() 
+            except:
                 item1 = None
 
             try:        
-                item3 = itemtable.objects.get(name=stock.item4)
-                item3.stock = stock.qty_hand4
-                item3.save() 
-            except itemtable.DoesNotExist:
+                item3 = itemtable.objects.filter(name=stock.item4)
+                item3[0].stock = stock.qty_hand4
+                item3[0].save() 
+            except:
                 item1 = None  
 
             try:      
-                item4 = itemtable.objects.get(name=stock.item5)
-                item4.stock = stock.qty_hand5
-                item4.save()  
-            except itemtable.DoesNotExist:
+                item4 = itemtable.objects.filter(name=stock.item5)
+                item4[0].stock = stock.qty_hand5
+                item4[0].save()  
+            except:
                 item1 = None      
 
             stock.save()

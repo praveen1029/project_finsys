@@ -626,8 +626,6 @@ urlpatterns = [
 
     re_path(r'^item_trans/(?P<id>\d+)$',views.item_trans,name='item_trans'),
     re_path(r'^gostock_adjust$', views.gostock_adjust, name='gostock_adjust'),
-    re_path(r'^gostock_adjust1$', views.gostock_adjust1, name='gostock_adjust1'),
-    re_path(r'^gostock_adjust2$', views.gostock_adjust2, name='gostock_adjust2'),
     path("approve_stock_adjust/<int:pk>/",views.approve_stock_adjust,name="approve_stock_adjust"),
     path("create_comment/<int:pk>/",views.create_comment,name="create_comment"),
     re_path(r'^stock_adjustpage$', views.stock_adjustpage, name='stock_adjustpage'),

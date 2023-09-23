@@ -185,150 +185,85 @@
                             
                             <br><br>
                             <div class="row" style="margin: auto;">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-8">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
                                     <table style="width:100%;margin-top:20px;table-layout:fixed;" cellspacing="0" cellpadding="0" class="pcs-itemtable">
                                         <thead style="background-color:rgba(0,0,0,.4)">
                                             <tr style="height:40px;">
-                                                <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center;" w class="table-head">
                                                         Item Details
                                                 </td>
                                                 {% if a.mode == "Quantity" %}
-                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
-                                                        Quandity Adjusted
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        Quantity Available
+                                                    </td>
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        New Quantity on hand
+                                                    </td>
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        Quantity Adjusted
                                                     </td>
                                                 {% else %}
-                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
-                                                        Value Adjusted
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        Value Available
+                                                    </td>
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        New Stock in Value
+                                                    </td>
+                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                        Adjusted Stock in Value
                                                     </td>
                                                 {% endif %}
-                                                <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width: 120px; text-align: center;" class="table-head">
-                                                    Cost Price
-                                                </td>
                                             </tr>
                                         </thead>
                 
-                                        <tbody>
-                                            <tr class="breakrow-inside breakrow-after">
-                                                <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                    {{ a.item1 }} 
-                                                </td>
-                                                <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                    {{ a.new_qty1 }}
-                                                </td>
-                                                <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                    {% for b in item %}
-                                                        {% if a.item1 == b.name %}
-                                                            {{ b.purchase_cost }}.00
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </td>
+                                        <tbody id="items-table-body">
+                                            <tr class="row0" id="row1">
+                                              <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item1 }} </td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty1 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand1 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty1 }}</td>
                                             </tr>
-                
-                                            {% if a.item2 == None %}
-                                                <tr>
-                                                    <td></td>
-                                                    
-                                                    <td></td>
-                                                    
-                                                    <td></td>
-                                                </tr>
-                                            {% else %}
-                                                <tr class="breakrow-inside breakrow-after">
-                                                    <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                        {{ a.item2 }} 
-                                                    </td>
-                                                    <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                        {{ a.new_qty2 }}
-                                                    </td>
-                                                    <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                        {% for b in item %}
-                                                            {% if a.item2 == b.name %}
-                                                                {{ b.purchase_cost }}.00
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                {% endif %}
-                
-                                                {% if a.item3 == None %}
-                                                    <tr>
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                    </tr>
-                
-                                                {% else %}
-                                                    <tr class="breakrow-inside breakrow-after">
-                                                        <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                            {{ a.item3 }} 
-                                                        </td>
-                                                        <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {{ a.new_qty3 }}
-                                                        </td>
-                                                        <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {% for b in item %}
-                                                                {% if a.item3 == b.name %}
-                                                                    {{ b.purchase_cost }}.00
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                
-                                                {% if a.item4 == None %}
-                                                    <tr>
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                    </tr>
-                                                {% else %}
-                                                    <tr class="breakrow-inside breakrow-after">
-                                                        <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                            {{ a.item4 }} 
-                                                        </td>
-                                                        <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {{ a.new_qty4 }}
-                                                        </td>
-                                                        <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {% for b in item %}
-                                                                {% if a.item4 == b.name %}
-                                                                    {{ b.purchase_cost }}.00
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
-                
-                                                {% if a.item5 == None %}
-                                                    <tr>
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                        
-                                                        <td></td>
-                                                    </tr>
-                                                {% else %}
-                                                    <tr class="breakrow-inside breakrow-after">
-                                                        <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                            {{ a.item5 }} 
-                                                        </td>
-                                                        <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {{ a.new_qty5 }}
-                                                        </td>
-                                                        <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                            {% for b in item %}
-                                                                {% if a.item5 == b.name %}
-                                                                    {{ b.purchase_cost }}.00
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                        </td>
-                                                    </tr>
-                                                {% endif %}
+                          
+                                            <!-------------------ROW 1---------------------------->
+                                            {% if a.item2 %}
+                                            <tr class="row1" id="row2">
+                                              <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item2 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty2 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand2 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty2 }}</td>
+                                            </tr>
+                                            {% endif %}
+                                             <!-------------------ROW 2---------------------------->
+                                             {% if a.item3 %}
+                                             <tr class="row2" id="row3">
+                                             
+                                              <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item3 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty3 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand3 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty3 }}</td>
+                                            </tr>
+                                            {% endif %}
+                                             <!-------------------ROW 3---------------------------->
+                                             {% if a.item4%}
+                                             <tr class="row3" id="row4">
+                                              <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item4 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty4 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand4 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty4 }}</td>
+                                            </tr>
+                          
+                                            {% endif %}
+                          
+                                             <!-------------------ROW 4---------------------------->
+                                             {% if a.item5 %}
+                                             <tr class="row4" id="row5">
+                                              <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item5 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty5 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand5 }}</td>
+                                              <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty5 }}</td>
+                                            </tr>
+                                            {% endif %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -523,151 +458,84 @@
 
                                                 <br><br>
                                                 <div class="row">
-                                                    <div class="col-md-1"></div>
-                                                    <div class="col-md-10">
-                                                        <table style="width:100%;margin-top:20px;table-layout:fixed;" cellspacing="0" cellpadding="0" class="pcs-itemtable">
+                                                    <div class="col-md-11">
+                                                        <table style="width:100%;margin-top:20px;table-layout:fixed; margin-left:5vh;" cellspacing="0" cellpadding="0" class="pcs-itemtable">
                                                             <thead style="background-color:#22b8d1">
                                                                 <tr style="height:40px;">
-                                                                    <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center; width: 50%;" class="table-head">
-                                                                        Item Details
+                                                                    <td style="padding:5px 10px 5px 10px;word-wrap: break-word; text-align: center;" w class="table-head">
+                                                                            Item Details
                                                                     </td>
                                                                     {% if a.mode == "Quantity" %}
-                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
-                                                                            Quandity Adjusted
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            Quantity Available
+                                                                        </td>
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            New Quantity on hand
+                                                                        </td>
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            Quantity Adjusted
                                                                         </td>
                                                                     {% else %}
-                                                                
-                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width:200px; text-align: center;" class="table-head">
-                                                                            Value Adjusted
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            Value Available
+                                                                        </td>
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            New Stock in Value
+                                                                        </td>
+                                                                        <td  style="padding:5px 10px 5px 5px;word-wrap: break-word; text-align: center;" class="table-head">
+                                                                            Adjusted Stock in Value
                                                                         </td>
                                                                     {% endif %}
-                                                                    <td  style="padding:5px 10px 5px 5px;word-wrap: break-word;width: 120px; text-align: center;" class="table-head">
-                                                                        Cost Price
-                                                                    </td>
                                                                 </tr>
                                                             </thead>
                                     
-                                                            <tbody>
-                                                                <tr class="breakrow-inside breakrow-after">
-                                                                    <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                                        {{ a.item1 }} 
-                                                                    </td>
-                                                                    <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                        {{ a.new_qty1 }}
-                                                                    </td>
-                                                                    <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                        {% for b in item %}
-                                                                            {% if a.item1 == b.name %}
-                                                                                {{ b.purchase_cost }}.00
-                                                                            {% endif %}
-                                                                        {% endfor %}
-                                                                    </td>
+                                                            <tbody id="items-table-body">
+                                                                <tr class="row0" id="row1">
+                                                                  <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item1 }} </td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty1 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand1 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty1 }}</td>
                                                                 </tr>
-                                    
-                                                                {% if a.item2 == None %}
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        
-                                                                        <td></td>
-                                                                        
-                                                                        <td></td>
-                                                                    </tr>
-                                                                {% else %}
-                                                                    <tr class="breakrow-inside breakrow-after">
-                                                                        <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                                            {{ a.item2 }} 
-                                                                        </td>
-                                                                        <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                            {{ a.new_qty2 }}
-                                                                        </td>
-                                                                        <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                            {% for b in item %}
-                                                                                {% if a.item2 == b.name %}
-                                                                                    {{ b.purchase_cost }}.00
-                                                                                {% endif %}
-                                                                            {% endfor %}
-                                                                        </td>
-                                                                    </tr>
-                                                                    {% endif %}
-                                    
-                                                                    {% if a.item3 == None %}
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                        </tr>
-                                    
-                                                                    {% else %}
-                                                                        <tr class="breakrow-inside breakrow-after">
-                                                                            <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                                                {{ a.item3 }} 
-                                                                            </td>
-                                                                            <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {{ a.new_qty3 }}
-                                                                            </td>
-                                                                            <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {% for b in item %}
-                                                                                    {% if a.item3 == b.name %}
-                                                                                        {{ b.purchase_cost }}.00
-                                                                                    {% endif %}
-                                                                                {% endfor %}
-                                                                            </td>
-                                                                        </tr>
-                                                                    {% endif %}
-                                    
-                                                                    {% if a.item4 == None %}
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                        </tr>
-                                                                    {% else %}
-                                                                        <tr class="breakrow-inside breakrow-after">
-                                                                            <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                                                {{ a.item4 }} 
-                                                                            </td>
-                                                                            <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {{ a.new_qty4 }}
-                                                                            </td>
-                                                                            <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {% for b in item %}
-                                                                                    {% if a.item4 == b.name %}
-                                                                                        {{ b.purchase_cost }}.00
-                                                                                    {% endif %}
-                                                                                {% endfor %}
-                                                                            </td>
-                                                                        </tr>
-                                                                    {% endif %}
-                                    
-                                                                    {% if a.item5 == None %}
-                                                                        <tr>
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                            
-                                                                            <td></td>
-                                                                        </tr>
-                                                                    {% else %}
-                                                                        <tr class="breakrow-inside breakrow-after">
-                                                                            <td  style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">
-                                                                                {{ a.item5 }} 
-                                                                            </td>
-                                                                            <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {{ a.new_qty5 }}
-                                                                            </td>
-                                                                            <td  style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;" >
-                                                                                {% for b in item %}
-                                                                                    {% if a.item5 == b.name %}
-                                                                                        {{ b.purchase_cost }}.00
-                                                                                    {% endif %}
-                                                                                {% endfor %}
-                                                                            </td>
-                                                                        </tr>
-                                                                    {% endif %}
+                                              
+                                                                <!-------------------ROW 1---------------------------->
+                                                                {% if a.item2 %}
+                                                                <tr class="row1" id="row2">
+                                                                  <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item2 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty2 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand2 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty2 }}</td>
+                                                                </tr>
+                                                                {% endif %}
+                                                                 <!-------------------ROW 2---------------------------->
+                                                                 {% if a.item3 %}
+                                                                 <tr class="row2" id="row3">
+                                                                 
+                                                                  <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item3 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty3 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand3 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty3 }}</td>
+                                                                </tr>
+                                                                {% endif %}
+                                                                 <!-------------------ROW 3---------------------------->
+                                                                 {% if a.item4%}
+                                                                 <tr class="row3" id="row4">
+                                                                  <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item4 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty4 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand4 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty4 }}</td>
+                                                                </tr>
+                                              
+                                                                {% endif %}
+                                              
+                                                                 <!-------------------ROW 4---------------------------->
+                                                                 {% if a.item5 %}
+                                                                 <tr class="row4" id="row5">
+                                                                  <td style="padding: 10px 0px 10px 10px; font-size:16px; text-align: center;" class="pcs-item-row">{{ a.item5 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty5 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.qty_hand5 }}</td>
+                                                                  <td style="padding: 10px 10px 10px 5px;word-wrap: break-word;font-size:18px; text-align: center;">{{ a.new_qty5 }}</td>
+                                                                </tr>
+                                                                {% endif %}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -733,7 +601,7 @@
         var content = document.getElementById("GFG");
         html2pdf()
         .from(content)
-        .save('report.pdf')
+        .save('Stock-Adjustment.pdf')
     }
 </script>
 
