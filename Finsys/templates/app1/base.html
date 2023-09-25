@@ -8,50 +8,52 @@
   {% load static %}
   <!-- Required meta tags -->
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Reset styles -->
-    <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
-    <!-- Google Fonts Muli -->
-    <link href="https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Fin sYs</title>
-    <!--favicon-->
-    <link rel="icon" href="{% static 'assets/images/favicon-32x32.png' %}" type="image/png"/>
-    <!-- Vector CSS -->
-    <link href="{% static 'assets/plugins/vectormap/jquery-jvectormap-2.0.2.css' %}" rel="stylesheet"/>
-    <!--plugins-->
-    <link href="{% static 'assets/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet"/>
-    <link href="{% static 'assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet"/>
-    <link href="{% static 'assets/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet"/>
-    <!-- loader-->
-    <link href="{% static 'assets/css/pace.min.css' %}" rel="stylesheet"/>
-    <script src="{% static 'assets/js/pace.min.js' %}"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
-    <!-- Icons CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}"/>
-    <!-- App CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Reset styles -->
+  <link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css" />
+  <!-- Google Fonts Muli -->
+  <link href="https://fonts.googleapis.com/css2?family=Muli:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Fin sYs</title>
+  <!--favicon-->
+  <link rel="icon" href="{% static 'assets/images/favicon-32x32.png' %}" type="image/png" />
+  <!-- Vector CSS -->
+  <link href="{% static 'assets/plugins/vectormap/jquery-jvectormap-2.0.2.css' %}" rel="stylesheet" />
+  <!--plugins-->
+  <link href="{% static 'assets/plugins/simplebar/css/simplebar.css' %}" rel="stylesheet" />
+  <link href="{% static 'assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}" rel="stylesheet" />
+  <link href="{% static 'assets/plugins/metismenu/css/metisMenu.min.css' %}" rel="stylesheet" />
+  <!-- loader-->
+  <link href="{% static 'assets/css/pace.min.css' %}" rel="stylesheet" />
+  <script src="{% static 'assets/js/pace.min.js' %}"></script>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+  <!-- Icons CSS -->
+  <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}" />
+  <!-- App CSS -->
 
-    
-    <link rel="stylesheet" href="{% static 'assets/css/app.css' %}"/>
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-  
-      
-    
+  <link rel="stylesheet" href="{% static 'assets/css/app.css' %}" />
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+
+
   <style>
     .a {
       font-family: "Poppins", sans-serif;
     }
+
     li {
       list-style: none;
       padding-top: 10px;
-}
+    }
+
     .one {
       border-collapse: separate;
       white-space: normal;
@@ -61,18 +63,29 @@
       font-style: normal;
       color: -internal-quirk-inherit;
       text-align: start;
-      border-spacing: 0px!important;
-      font-variant: normal;   }
+      border-spacing: 0px !important;
+      font-variant: normal;
+    }
+
+
+    .submenu {
+      max-height: 500px;
+      overflow: auto;
+    }
+
+    .submenu::-webkit-scrollbar {
+      display: none;
+    }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       var $select1 = $('#select1'),
         $select2 = $('#select2'),
         $select3 = $('#name'),
         $options = $select2.find('option'),
         $options1 = $select3.find('option');
-      $select1.on('change', function() {
+      $select1.on('change', function () {
         $select2.html($options.filter('[text="' + this.value + '"]'));
         $select3.html($options1.filter('[text="' + this.value + '"]'));
       }).trigger('change');
@@ -104,60 +117,74 @@
                 <button class="btn btn-search-back" type="button"><i class="bx bx-arrow-back"></i>
                 </button>
               </div>
-              <input type="text" autocomplete="off" id="myInput" onkeyup="filter(this);" onclick="myFunction1()" class="form-control" placeholder="search" />
+              <input type="text" autocomplete="off" id="myInput" onkeyup="filter(this);" onclick="myFunction1()"
+                class="form-control" placeholder="search" />
               <div class="input-group-append">
                 <button class="btn btn-search" type="button"><i class="lni lni-search-alt"></i>
                 </button>
               </div>
               <div class=" mt-5" id="myDIV" style="z-index:1;position:absolute; 
               background-color: #213b52;width:550px;height:1px;">
-              
-                 <ul id="myList" class="one" style="background-color: #213b52;">
+
+                <ul id="myList" class="one" style="background-color: #213b52;">
                   <li><a href="{% url 'godash' %}">Dashboard</a></li>
                   <li><a href="{% url 'goitem' %}">Item</a></li>
                   <li><a href="{% url 'goonlinebank' %}">Online Banking</a></li>
-                    <li><a href="{% url 'gobankrecon' %}">Bank Reconcilation</a></li>
-                      <li><a href="{% url 'gosalesrecords' %}">Sales Records</a></li>
-                        <li><a href="{% url 'goinvoices' %}">Invoices</a></li>
-                          <li><a href="{% url 'gocustomers' %}">Customers</a></li>
-                            <li><a href="{% url 'gopands' %}">Product and Services</a></li>
-                              <li><a href="{% url 'goexpences' %}">Expenses</a></li>
-                                <li><a href="{% url 'gosupplies' %}">Suppliers</a></li>
-                                  <li><a href="{% url 'gocoa' %}">Chart of Accounts</a></li>
-                                    <li><a href="{% url 'gorecon' %}">Reconcile</a></li>
-                                      <li><a href="{% url 'cashposition' %}">Cash Position</a></li>
-                                        <li><a href="{% url 'gorecon' %}">Reconcile</a></li>
-                                          <li><a href="{% url 'gorecon' %}">Cash Position</a></li>
-                                            <li><a href="{% url 'govendor' %}">Vendor</li>
-                                              <li><a href="{% url 'gopurchaseorder' %}">Purchase Order</li>
-                                              <li><a href="{% url 'gobilling' %}">Bill</li>
-                                                <li><a href="{% url 'cash_in_hand' %}">Cash In Hand</a></li>
-                                                <li><a href="{% url 'bnnk' %}">Offline Banking</a></li>
-
-        
-                 </ul>
-                 </div>
+                  <li><a href="{% url 'gobankrecon' %}">Bank Reconcilation</a></li>
+                  <li><a href="{% url 'gosalesrecords' %}">Sales Records</a></li>
+                  <li><a href="{% url 'goinvoices' %}">Invoices</a></li>
+                  <li><a href="{% url 'gocustomers' %}">Customers</a></li>
+                  <li><a href="{% url 'gopands' %}">Product and Services</a></li>
+                  <li><a href="{% url 'goexpences' %}">Expenses</a></li>
+                  <li><a href="{% url 'gosupplies' %}">Suppliers</a></li>
+                  <li><a href="{% url 'gocoa' %}">Chart of Accounts</a></li>
+                  <li><a href="{% url 'gorecon' %}">Reconcile</a></li>
+                  <li><a href="{% url 'cashposition' %}">Cash Position</a></li>
+                  <li><a href="{% url 'gorecon' %}">Reconcile</a></li>
+                  <li><a href="{% url 'gorecon' %}">Cash Position</a></li>
+                  <li><a href="{% url 'govendor' %}">Vendor</li>
+                  <li><a href="{% url 'gopurchaseorder' %}">Purchase Order</li>
+                  <li><a href="{% url 'gobilling' %}">Bill</li>
+                  <li><a href="{% url 'cash_in_hand' %}">Cash In Hand</a></li>
+                  <li><a href="{% url 'bnnk' %}">Offline Banking</a></li>
 
 
-              
+                </ul>
+              </div>
+
+
+
             </div>
           </div>
           <div class="right-topbar ml-auto">
             <ul class="navbar navbar-expand" style="list-style-type: none; margin: 0; padding: 0;">
-              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;" data-toggle="dropdown" style=" display: block; padding: 8px 16px; text-decoration: none;">
+              <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;"
+                data-toggle="dropdown" style=" display: block; padding: 8px 16px; text-decoration: none;">
                 <i class="fa fa-gear" style="font-size:24px"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-right">
                 <ul class="a" style=" list-style-type: none; margin: 0; padding: 0; width: 200px;">
-                  <li><a href="{% url 'C_profile' %}" style="display: block; padding: 8px 16px; text-decoration: none">Company Profile</a></li>
-                  <li><a href="{% url 'view_users' %}" style="display: block; padding: 8px 16px; text-decoration: none">Users</a></li>
-                  <li><a href="{% url 'godash' %}" style="display: block; padding: 8px 16px; text-decoration: none">Branches</a></li>
-                  <li><a href="{% url 'Currencies' %}" style="display: block; padding: 8px 16px; text-decoration: none">Currencies</a></li>
-                  <li><a href="{% url 'gotax' %}" style="display: block; padding: 8px 16px; text-decoration: none">Tax</a></li>
-                  <li><a href="{% url 'gotemplates' %}" style="display: block; padding: 8px 16px; text-decoration: none">Templates</a></li>
-                  <li><a href="editaccounts/{{ user.id }}" style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
-                  <li><a href="{% url 'customstyle' %}" style="display: block; padding: 8px 16px; text-decoration: none">Customize Form Style</a></li>
-                  <li><a href="{% url 'gocoa' %}" style="display: block; padding: 8px 16px; text-decoration: none">Chart of Accounts</a></li>
+                  <li><a href="{% url 'C_profile' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Company Profile</a></li>
+                  <li><a href="{% url 'view_users' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Users</a></li>
+                  <li><a href="{% url 'godash' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Branches</a></li>
+                  <li><a href="{% url 'Currencies' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Currencies</a></li>
+                  <li><a href="{% url 'gotax' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Tax</a></li>
+                  <li><a href="{% url 'gotemplates' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Templates</a></li>
+                  <li><a href="editaccounts/{{ user.id }}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Accounts and Settings</a></li>
+                  <li><a href="{% url 'customstyle' %}"
+                      style="display: block; padding: 8px 16px; text-decoration: none">Customize Form Style</a></li>
+                  <li><a href="{% url 'gocoa' %}" style="display: block; padding: 8px 16px; text-decoration: none">Chart
+                      of Accounts</a></li>
+                  <li><a href="{% url 'module_settings'%}" style="display: block; padding: 8px 16px; text-decoration: none">
+                    Module Settings</a></li>
+
                 </ul>
               </div>
             </ul>
@@ -165,7 +192,8 @@
           <div class="right-topbar ml-auto">
             <ul class="navbar-nav">
               <li class="nav-item dropdown dropdown-lg">
-                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;" data-toggle="dropdown"> <i class="bx bx-bell vertical-align-middle"></i>
+                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="javascript:;"
+                  data-toggle="dropdown"> <i class="bx bx-bell vertical-align-middle"></i>
                   <span class="msg-count">5</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -256,10 +284,13 @@
                   {% endif %}
                 </a>
                 {% if user.is_authenticated %}
-                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="/app1/userprofile/{{ user.id }}"><i class="bx bx-user"></i><span>Profile</span></a>
-                  <a class="dropdown-item" href="{% url 'godash' %}"><i class="bx bx-tachometer"></i><span>Dashboard</span></a>
+                <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
+                    href="/app1/userprofile/{{ user.id }}"><i class="bx bx-user"></i><span>Profile</span></a>
+                  <a class="dropdown-item" href="{% url 'godash' %}"><i
+                      class="bx bx-tachometer"></i><span>Dashboard</span></a>
                   <div class="dropdown-divider mb-0"></div>
-                  <a class="dropdown-item" href="{% url 'logout' %}"><i class="bx bx-power-off"></i><span>Logout</span></a>
+                  <a class="dropdown-item" href="{% url 'logout' %}"><i
+                      class="bx bx-power-off"></i><span>Logout</span></a>
                 </div>
                 {% endif %}
               </li>
@@ -269,7 +300,7 @@
       </header>
       <!--end header-->
 
-      
+
       <!--navigation-->
       {% if user.is_authenticated %}
       <div id="nav1" class="nav-container" style="background-color: #213b52;">
@@ -282,22 +313,22 @@
             </li>
             <li>
               <a href="javascript:;" class="has-arrow">
-              <div class="parent-icon"><i class='bx bxs-package' ></i>
-              </div>
-              <div class="menu-title">Item</div>
-            </a>
-            <ul>
-              <li><a href="{% url 'goitem' %}"><i class="bx bx-right-arrow-alt"></i>Items</a>
-              </li>
-              <li>
-                <a href="{% url 'pricelist' %}"><i class="bx bx-right-arrow-alt"></i>Price Lists</a>
-              </li>
-              <li><a href="{% url 'gostock_adjust' %}"><i class="bx bx-right-arrow-alt"></i>Stock
-                  Adjustments</a>
-              </li>
-             
-            </ul>
-             
+                <div class="parent-icon"><i class='bx bxs-package'></i>
+                </div>
+                <div class="menu-title">Item</div>
+              </a>
+              <ul>
+                <li id="items"><a href="{% url 'goitem' %}"><i class="bx bx-right-arrow-alt"></i>Items</a>
+                </li>
+                <li id="pricelist">
+                  <a href="{% url 'pricelist' %}"><i class="bx bx-right-arrow-alt"></i>Price Lists</a>
+                </li>
+                <li id="stockadjustment"><a href="{% url 'gostock_adjust' %}"><i class="bx bx-right-arrow-alt"></i>Stock
+                    Adjustments</a>
+                </li>
+
+              </ul>
+
             </li>
             <li>
               <a href="javascript:;" class="has-arrow">
@@ -305,28 +336,28 @@
                 </div>
                 <div class="menu-title">Cash&Bank</div>
               </a>
-              <ul>
+              <ul class="submenu">
                 <!-- <li><a href="{% url 'goonlinebank' %}"><i class="bx bx-right-arrow-alt"></i>Online
                     Banking</a>
                 </li> -->
-                <li><a href="{% url 'bnnk' %}"><i class="bx bx-right-arrow-alt"></i>Offline
+                <li id="Offlinebanking"><a href="{% url 'bnnk' %}"><i class="bx bx-right-arrow-alt"></i>Offline
                     Banking</a>
                 </li>
-                <li><a href="{% url 'gobankrecon' %}"><i class="bx bx-right-arrow-alt"></i>Bank
+                <li id="bankreconcilation"><a href="{% url 'gobankrecon' %}"><i class="bx bx-right-arrow-alt"></i>Bank
                     Reconcilation</a>
                 </li>
-                <li><a href="{% url 'bank_account_holder_list' %}"><i class="bx bx-right-arrow-alt"></i>Bank
-                  Holders</a>
-              </li>
-                <li><a href="{% url 'cash_in_hand' %}"><i class="bx bx-right-arrow-alt"></i>Cash
-                  In Hand</a>
-              </li>
-			    <li><a href="{% url 'cheques' %}"><i class="bx bx-right-arrow-alt"></i>Cheques
-                    </a>
+                <li id="bankholders"><a href="{% url 'bank_account_holder_list' %}"><i class="bx bx-right-arrow-alt"></i>Bank
+                    Holders</a>
+                </li>
+                <li id="cashinhands"><a href="{% url 'cash_in_hand' %}"><i class="bx bx-right-arrow-alt"></i>Cash
+                    In Hand</a>
+                </li>
+                <li id="cheques"><a href="{% url 'cheques' %}"><i class="bx bx-right-arrow-alt"></i>Cheques
+                  </a>
                 </li>
 
-              <li><a href=""><i class="bx bx-right-arrow-alt"></i>Loan Account</a>
-            </li>
+                <li id="loanaccount"><a href=""><i class="bx bx-right-arrow-alt"></i>Loan Account</a>
+                </li>
               </ul>
             </li>
             <li>
@@ -335,58 +366,60 @@
                 </div>
                 <div class="menu-title">Sales</div>
               </a>
-              <ul>
-                <li><a href="{% url 'gocustomers' %}"><i class="bx bx-right-arrow-alt"></i>Customers</a>
+              <ul class="submenu">
+                <li id="customers"><a href="{% url 'gocustomers' %}"><i class="bx bx-right-arrow-alt"></i>Customers</a>
                 </li>
 
-                <li><a href="{% url 'goestimate' %}"><i class="bx bx-right-arrow-alt"></i>Estimate</a>
+                <li id="estimate"><a href="{% url 'goestimate' %}"><i class="bx bx-right-arrow-alt"></i>Estimate</a>
                 </li>
-                <li><a href="{% url 'gosalesorder' %}"><i class="bx bx-right-arrow-alt"></i>Sales Order</a>
+                <li id="salesorder"><a href="{% url 'gosalesorder' %}"><i class="bx bx-right-arrow-alt"></i>Sales Order</a>
                 </li>
                 <!-- <li><a href="{% url 'gosalesrecords' %}"><i class="bx bx-right-arrow-alt"></i>Sales
                     Records</a>
                 </li> -->
                 <li><a href="{% url 'goinvoices' %}"><i class="bx bx-right-arrow-alt"></i>Invoices</a>
                 </li>
-              </li>
-              <li>
-                <a href="{% url 'credit_note' %}"><i class="bx bx-right-arrow-alt"></i>Credit Note</a>
-              </li>
-                <li><a href="{% url 'gopayment_received' %}"><i class="bx bx-right-arrow-alt"></i>Payments Received</a>
-                </li>
-                <li><a href="{% url 'retainer_invoices_list' %}"><i class="bx bx-right-arrow-alt"></i>Retainer Invoices</a>
-                </li>
-                <li><a href="{% url 'delivery_challan' %}"><i class="bx bx-right-arrow-alt"></i> Delivery Challan</a>
-                </li>
-                <li><a href="{% url 'gorecinvoices' %}"><i class="bx bx-right-arrow-alt"></i> Reccuring Invoices</a>
-                </li>
-                <!-- <li><a href="{% url 'gopands' %}"><i class="bx bx-right-arrow-alt"></i>Product and
-                    Services</a> -->
-                </li>
-              </ul>
             </li>
             <li>
-              <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
-                </div>
-                <div class="menu-title">Purchase</div>
-              </a>
-              <ul>
-                <li><a href="{% url 'govendor' %}"><i class="bx bx-right-arrow-alt"></i>Vendor</a>
-                </li>
-                <li><a href="{% url 'gopurchaseorder' %}"><i class="bx bx-right-arrow-alt"></i>Purchase Order</a>
-                </li>
-                <li><a href="{% url 'gobilling' %}"><i class="bx bx-right-arrow-alt"></i>Bill</a>
-                </li>
-                <li><a href="{% url 'goexpenses' %}"><i class="bx bx-right-arrow-alt"></i>Expense</a>
-                </li>
-                <li><a href="{% url 'gopurchasepymnt' %}"><i class="bx bx-right-arrow-alt"></i>Payment</a>
-                </li>
-                <li><a href="{% url 'gopurchasedebit' %}"><i class="bx bx-right-arrow-alt"></i>Debit Note</a>
-                </li>
-              </ul>
+              <a href="{% url 'credit_note' %}"><i class="bx bx-right-arrow-alt"></i>Credit Note</a>
             </li>
-            <!-- <li>
+            <li><a href="{% url 'gopayment_received' %}"><i class="bx bx-right-arrow-alt"></i>Payments Received</a>
+            </li>
+            <li><a href="{% url 'retainer_invoices_list' %}"><i class="bx bx-right-arrow-alt"></i>Retainer Invoices</a>
+            </li>
+            <li><a href="{% url 'delivery_challan' %}"><i class="bx bx-right-arrow-alt"></i> Delivery Challan</a>
+            </li>
+            <li><a href="{% url 'gorecinvoices' %}"><i class="bx bx-right-arrow-alt"></i> Reccuring Invoices</a>
+            </li>
+            <!-- <li><a href="{% url 'gopands' %}"><i class="bx bx-right-arrow-alt"></i>Product and
+                    Services</a> -->
+            </li>
+          </ul>
+          </li>
+          <li>
+            <a href="javascript:;" class="has-arrow">
+              <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
+              </div>
+              <div class="menu-title">Purchase</div>
+            </a>
+            <ul class="submenu">
+              <li><a href="{% url 'govendor' %}"><i class="bx bx-right-arrow-alt"></i>Vendor</a>
+              </li>
+              <li><a href="{% url 'gopurchaseorder' %}"><i class="bx bx-right-arrow-alt"></i>Purchase Order</a>
+              </li>
+              <li><a href="{% url 'gobilling' %}"><i class="bx bx-right-arrow-alt"></i>Bill</a>
+              </li>
+              <li><a href="{% url 'goexpenses' %}"><i class="bx bx-right-arrow-alt"></i>Expense</a>
+              </li>
+              <li><a href="{% url 'gopurchasepymnt' %}"><i class="bx bx-right-arrow-alt"></i>Payment</a>
+              </li>
+              <li><a href="{% url 'gopurchasedebit' %}"><i class="bx bx-right-arrow-alt"></i>Debit Note</a>
+              </li>
+              <li><a href="{% url 'recurringbill_home' %}"><i class="bx bx-right-arrow-alt"></i>Recurring Bill</a>
+              </li>
+            </ul>
+          </li>
+          <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
                 </div>
@@ -400,8 +433,8 @@
               
               </ul>
             </li> -->
-           
-            <!-- <li>
+
+          <!-- <li>
               <a href="javascript:;" class="has-arrow">
 
                 <div class="parent-icon"><i class='bx bx-briefcase-alt'></i>
@@ -415,7 +448,7 @@
                 </li>
               </ul>
             </li> -->
-            <!-- <li>
+          <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class='bx bx-wallet'></i>
                 </div>
@@ -428,53 +461,62 @@
                 </li>
               </ul>
             </li> -->
-			
 
-            <li>
-              <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="bx bx-comment-edit"></i></div>
-                <div class="menu-title">Reports</div>
-              </a>
-              <ul>
-			    <li>
-                  <a><i class="bx bx-right-arrow-alt"></i>Transaction Reports</a>
-                  <ul class="px-4">
+
+          <li>
+            <a href="javascript:;" class="has-arrow">
+              <div class="parent-icon"><i class="bx bx-comment-edit"></i></div>
+              <div class="menu-title">Reports</div>
+            </a>
+            <ul class="submenu">
+              <li>
+                <a><i class="bx bx-right-arrow-alt"></i>Transaction Reports</a>
+                <ul class="px-4">
                   <li><a href="{% url 'sales' %}"><i class="bx bx-right-arrow-alt"></i>Sales
-                </a>
-            </li>
-                   <li><a href="{% url 'purchase' %}"><i class="bx bx-right-arrow-alt"></i>Purchase
-                </a>
-            </li>
-                    <li><a href="{% url 'alltransactions' %}"><i class="bx bx-right-arrow-alt"></i>All Transactions
-                </a>
-            </li>
-			<li><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
-            <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
-            <li><a href="{% url 'cashflow' %}"><i class="bx bx-right-arrow-alt"></i>Cash Flow</a></li>
-                   
-                  </ul>
-                </li>
-                <li>
-                  <a><i class="bx bx-right-arrow-alt"></i>GST Reports</a>
-                  <ul class="px-4">
-                    <li><a href="{% url 'gstrr1' %}">GSTR-1</a></li>
+                    </a>
+                  </li>
+                  <li><a href="{% url 'purchase' %}"><i class="bx bx-right-arrow-alt"></i>Purchase
+                    </a>
+                  </li>
+                  <li><a href="{% url 'alltransactions' %}"><i class="bx bx-right-arrow-alt"></i>All Transactions
+                    </a>
+                  </li>
+                  <li><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
+                  <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
+                  <li><a href="{% url 'cashflow' %}"><i class="bx bx-right-arrow-alt"></i>Cash Flow</a></li>
+
+                </ul>
+              </li>
+              <li>
+                <a><i class="bx bx-right-arrow-alt"></i>Party </a>
+                <ul class="px-4">
+                  <li><a href="{% url 'party_stmt' %}">Party Statements</a></li>
+                <li><a href="{% url 'all_parties' %}">All Parties</a></li>
+                
+                </ul>
+              </li>
+              <li>
+                <a><i class="bx bx-right-arrow-alt"></i>GST Reports</a>
+                <ul class="px-4">
+                  <li><a href="{% url 'gstrr1' %}">GSTR-1</a></li>
                   <li><a href="{% url 'gstr2' %}">GSTR-2</a></li>
                   <li><a href="{% url 'gstr3b' %}">GSTR-3B</a></li>
                   <li><a href="{% url 'gstr9' %}">GSTR-9</a></li>
-                    <li><a href="{% url 'sale_summary_byHSN' %}"><i class="bx bx-right-arrow-alt"></i>Sale Summary by HSN</a></li>
-                  </ul>
-                </li>
-                <li><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
-                <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
-                <li><a href="{% url 'trial_balance' %}"><i class="bx bx-right-arrow-alt"></i>Trial Balance</a></li>
-                <li><a href="{% url 'accreceivables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Receivables</a></li>
-                <li><a href="{% url 'accpayables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Payables</a></li>
-                
-                <li><a href="{% url 'stocksummary' %}"><i class="bx bx-right-arrow-alt"></i>Stock Summary </a></li>
-                <li><a href="{% url 'stockvaluation' %}"><i class="bx bx-right-arrow-alt"></i>Stock Valuation</a></li>
-              </ul>
-            </li>
-            <!-- <li>
+                  <li><a href="{% url 'sale_summary_byHSN' %}"></i>Sale Summary by HSN</a></li>
+                </ul>
+              </li>
+              <li><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
+              <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
+              <li><a href="{% url 'trial_balance' %}"><i class="bx bx-right-arrow-alt"></i>Trial Balance</a></li>
+              <li><a href="{% url 'accreceivables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Receivables</a>
+              </li>
+              <li><a href="{% url 'accpayables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Payables</a></li>
+
+              <li><a href="{% url 'stocksummary' %}"><i class="bx bx-right-arrow-alt"></i>Stock Summary </a></li>
+              <li><a href="{% url 'stockvaluation' %}"><i class="bx bx-right-arrow-alt"></i>Stock Valuation</a></li>
+            </ul>
+          </li>
+          <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class='bx bx-wallet'></i>
                 </div>
@@ -493,38 +535,38 @@
                 </li>
               </ul>
             </li> -->
-            <li>
-              <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="bx bx-line-chart"></i>
-                </div>
-                <div class="menu-title">Accounting</div>
-              </a>
-              <ul>
-                <li><a href="{% url 'gocoa' %}"><i class="bx bx-right-arrow-alt"></i>Chart of
-                    Accounts</a>
-                </li>
-                <li><a href="{% url 'gomjoural' %}"><i class="bx bx-right-arrow-alt"></i>Manual Journal
+          <li>
+            <a href="javascript:;" class="has-arrow">
+              <div class="parent-icon"><i class="bx bx-line-chart"></i>
+              </div>
+              <div class="menu-title">Accounting</div>
+            </a>
+            <ul class="submenu">
+              <li><a href="{% url 'gocoa' %}"><i class="bx bx-right-arrow-alt"></i>Chart of
+                  Accounts</a>
+              </li>
+              <li><a href="{% url 'gomjoural' %}"><i class="bx bx-right-arrow-alt"></i>Manual Journal
                 </a>
-            </li>
-                <li><a href="{% url 'gorecon' %}"><i class="bx bx-right-arrow-alt"></i>Reconcile</a>
-                </li>
-              </ul>
-            </li>
-            <!-- <a href="#nav2" role="button" onclick="document.getElementById('nav2').style.display='flex'">
+              </li>
+              <li><a href="{% url 'gorecon' %}"><i class="bx bx-right-arrow-alt"></i>Reconcile</a>
+              </li>
+            </ul>
+          </li>
+          <!-- <a href="#nav2" role="button" onclick="document.getElementById('nav2').style.display='flex'">
               <span class="carousel-control-next-icon" style="color: #2F5D6D;width:10px"></span>
               <span class="carousel-control-next-icon" style="color: #2F5D6D;width:10px"></span>
             </a> -->
-			 <li>
-              <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="bx bx-money"></i>
-                </div>
-                <div class="menu-title">Payroll</div>
-              </a>
-              <ul>
-                <li><a href="{% url 'listpayrollemployee' %}"><i class="bx bx-right-arrow-alt"></i>Employee</a> </li> 
-                <li><a href="{% url 'employeeloanpage' %}"><i class="bx bx-right-arrow-alt"></i>Employee Loan</a> </li> 
-              </ul>
-            </li>
+          <li>
+            <a href="javascript:;" class="has-arrow">
+              <div class="parent-icon"><i class="bx bx-money"></i>
+              </div>
+              <div class="menu-title">Payroll</div>
+            </a>
+            <ul class="submenu">
+              <li><a href="{% url 'listpayrollemployee' %}"><i class="bx bx-right-arrow-alt"></i>Employee</a> </li>
+              <li><a href="{% url 'employeeloanpage' %}"><i class="bx bx-right-arrow-alt"></i>Employee Loan</a> </li>
+            </ul>
+          </li>
           </ul>
         </nav>
       </div>
@@ -535,12 +577,12 @@
               <span class="carousel-control-prev-icon" style="color: #2F5D6D;width:10px"></span>
               <span class="carousel-control-prev-icon" style="color: #2F5D6D;width:10px"></span>
             </a> -->
-            <!-- <li>
+      <!-- <li>
               <a href="{% url 'gomyacc' %}">
                 <div class="menu-title">My Accountant</div>
               </a>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="menu-title">Cash Management</div>
               </a>
@@ -554,32 +596,32 @@
                 </li>
               </ul>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="menu-title">Production</div>
               </a>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="menu-title">Quality Managment</div>
               </a>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a href="javascript:;" class="has-arrow">
                 <div class="menu-title">Project Management</div>
               </a>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a class="has-arrow" href="javascript:;">
                 <div class="menu-title">Usage Decisions</div>
               </a>
             </li> -->
-            <!-- <li>
+      <!-- <li>
               <a class="has-arrow" href="javascript:;">
                 <div class="menu-title">Accounts and Payable</div>
               </a>
             </li> -->
-          <!-- </ul>
+      <!-- </ul>
         </nav>
       </div> -->
       {% endif %}
@@ -600,8 +642,8 @@
             {% endif %}
             {% endfor %}
           </div>
-<div></div>
-          
+          <div></div>
+
           {% block body %}
 
           {% endblock %}
@@ -609,37 +651,54 @@
         </div>
       </div>
     </div>
-
   </div>
 
 
   <script>
+    // Get the list from the context passed by the view
+    const selected_options = JSON.parse('{{ selected_options|safe }}');
 
-$(document).ready(function(){
-  $("#myList li").hide();
-  
-  $("#myInput").on("keyup", function() {
-    
-    var value = $(this).val().toLowerCase();
-    if (value !== '' ) {
-    $("#myList li").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });   
-    } else {
-      $("#myList li").hide();   
-    }    
-  });
-});
+    function disableOptions() {
+      selected_options.forEach(function (id) {
+        var optionelement = document.getElementById(id)
+        if(optionelement){
+          optionelement.style.display= "none";
+        }
+      })
+    };
 
+  // Call the function to disable options when the page loads
+  disableOptions();   
+</script>
 
 
+  <script>
+
+    $(document).ready(function () {
+      $("#myList li").hide();
+
+      $("#myInput").on("keyup", function () {
+
+        var value = $(this).val().toLowerCase();
+        if (value !== '') {
+          $("#myList li").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        } else {
+          $("#myList li").hide();
+        }
+      });
+    });
 
 
 
 
-   
-   
- </script>
+
+
+
+
+
+  </script>
 
 
   <!-- end wrapper -->

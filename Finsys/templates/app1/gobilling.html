@@ -20,6 +20,13 @@
                         <center><h2 class="mb-0">BILL</h2></center>
                         <hr>
                     </div>
+                    <div class="row">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button id="exportBtn" class="btn btn-outline-info" style="color: white;">Export to Excel</button>
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
             <div class="card radius-15">
@@ -27,22 +34,21 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="d-flex">
-                                <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off">
-                                <center><i class="fa fa-search form-control" style="width: 60px;"></i></center>
+                                <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off" style="border-color: #213b52;">
+                                <center><i class="fa fa-search form-control" style="width: 60px;border-color: #213b52;"></i></center>
                             </div>    
                         </div>
                         <div class="col-md-4"></div>
                         <div class="col-md-3"></div>
                         <div class="btn-group col-md-2">
-                            <a class="btn btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            <!-- <a class="btn btn-outline-info text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                 role="button">Filter By
                             </a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{% url 'gobilling' %}">All</a>
-                                <a class="dropdown-item" href="{% url 'bill_draft' %}">Draft</a>
-                                <a class="dropdown-item" href="{% url 'bill_billed' %}">Billed</a>
-                            </div>
-                            <a href="{% url 'addbilling' %}" class="btn btn-outline-info fa fa-plus" role="button"> &nbsp;New</a>
+                                
+                            </div> -->
+                            <a href="{% url 'addbilling' %}" class="btn btn-outline-info fa fa-plus text-white w-50" role="button"> &nbsp;New</a>
                         </div>
                     </div>
 
@@ -51,26 +57,29 @@
                             <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Branch</th>
                                 <th>Bill Number</th>
-                                <th>Reference</th>
                                 <th>Vendor Name</th>
-                                <th>Status</th>
+                                <th>Mail Id</th>
                                 <th>Expected Delivery Date</th>
                                 <th>Total Amount</th>
+                                <th>Balance Due</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for p in pbill %}
                                 <tr onclick="window.location='viewbill/{{ p.billid }}';">
-                                    <th>{{ p.date | date:'d-m-Y' }}</th>
-                                    <td>{{ p.branch }}</td>
+                                    <td>{{ p.date | date:'d-m-Y' }}</td>
                                     <td>{{ p.bill_no }}</a></td>
-                                    <td>{{ p.reference }}</td>
-                                    <td>{{ p.vendor_name }}</td>
-                                    <td>{{ p.status }}</td>
+                                    <th>{{ p.vendor_name }}</th>
+                                    <td>{{ p.vendor_mail }}</td>
                                     <td>{{ p.deliver_date| date:'d-m-Y' }}</td>
                                     <td>{{ p.grand_total }}</td>
+                                    {% if p.balance_amount > 0 %}
+                                    <td>{{ p.balance_amount }}</td>
+                                    {% else %}
+                                    <td>0.0</td>
+                                    {% endif %}
+
                                 </tr> 
                             {% endfor %}
                             </tbody>
@@ -82,7 +91,7 @@
 
         <!-- <a href="javascript:generatePDF()">Dowload PDF</a> -->
 
-        <script>
+        <!-- <script>
             var $rows = $('#table tr');
             $('#search').keyup(function() {
                 var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
@@ -92,23 +101,79 @@
                     return !~text.indexOf(val);
                 }).hide();
             });
+        </script> -->
+
+        <!-- <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById("search");
+            const dataTable = document.getElementById("table");
+            
+            searchInput.addEventListener("input", function() {
+                const searchText = searchInput.value.toLowerCase();
+                const rows = dataTable.getElementsByTagName("tr");
+            
+                for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip table header row
+                const rowData = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
+                if (rowData.includes(searchText)) {
+                    rows[i].style.display = ""; // Show the row
+                } else {
+                    rows[i].style.display = "none"; // Hide the row
+                }
+                }
+            });
+            });
+        </script> -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+        <script>
+            document.getElementById("exportBtn").addEventListener("click", function () {
+            const Table = document.getElementById("table");
+            const ws = XLSX.utils.table_to_sheet(Table);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "table.xlsx");
+          });
+
         </script>
 
-<!-- <script>
-    function generatePDF() {
-        var doc = new jsPDF();
-        doc.fromHTML(document.getElementById("test"), // page element which you want to print as PDF
-        15,
-        15, 
-        {
-            'width': 170
-        },
-        function(a) 
-        {
-            doc.save("HTML2PDF.pdf");
-        });
-        }
-</script> -->
+        <!-- <script>
+            function generatePDF() {
+                var doc = new jsPDF();
+                doc.fromHTML(document.getElementById("test"), // page element which you want to print as PDF
+                15,
+                15, 
+                {
+                    'width': 170
+                },
+                function(a) 
+                {
+                    doc.save("HTML2PDF.pdf");
+                });
+                }
+        </script> -->
+
+        <script>
+            // Add an event listener to the search input
+            document.getElementById("search").addEventListener("input", function() {
+                var searchText = this.value.toLowerCase(); // Get the entered search text
+            
+                // Get the table rows
+                var rows = document.querySelectorAll("#table tbody tr");
+            
+                // Loop through each row and check the vendor name column for a match
+                rows.forEach(function(row) {
+                    var vendorName = row.querySelector("th").textContent.toLowerCase(); // Change to lowercase for case-insensitive search
+                    if (vendorName.includes(searchText)) {
+                        row.style.display = ""; // Display the row if it matches the search text
+                    } else {
+                        row.style.display = "none"; // Hide the row if it doesn't match
+                    }
+                });
+            });
+        </script>
+
+
 
     {% endif %}
 {% endblock %}

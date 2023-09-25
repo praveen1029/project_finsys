@@ -69,9 +69,11 @@
 
 
                 <div class="right">
+                    <button class="btn btn_pdf btn-outline-info mt-4">pdf</button>
+                    <button class="btn btn_print btn-outline-info mt-4">Print</button>
                     <button class="exportToExcel btn btn-outline-info mt-4" id="export-button"
                         onclick="exportAsExcel()">Excel</button>
-                    <button class="btn btn_print btn-outline-info mt-4">Print</button>
+
                 </div>
             </div>
             <br>
@@ -288,7 +290,7 @@
                         </tr>
                     </tbody>
                 </table>
-                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable5">
                     <thead>
                         <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
@@ -644,7 +646,7 @@
                         </tr>
                     </tbody>
                 </table>
-                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable7">
                     <thead>
                         <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
@@ -736,7 +738,7 @@
                         </tr>
                     </tbody>
                 </table>
-                        <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable8">
                     <thead>
                         <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.062);">
@@ -1376,6 +1378,28 @@
             }
         });
     });
+    $(document).ready(function ($) {
+
+
+        $(document).on('click', '.btn_pdf', function (event) {
+            console.log('print1');
+            event.preventDefault();
+            var element = document.getElementById('pdf-card');
+            element.style.color = 'black';
+            element.style.backgroundColor = '#243e54';
+            var opt =
+            {
+                margin: 1,
+                filename: 'gstr9' + '.pdf',
+                image: { type: 'png', quality: 1.0 },
+                html2canvas: { scale: 3, useCORS: true, backgroundColor: null },
+                jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function ($) {
@@ -1383,29 +1407,42 @@
 
         $(document).on('click', '.btn_print', function (event) {
             console.log('print1');
-            event.preventDefault();
-            var printContent = document.getElementById("pdf-card").innerHTML;
-                        var originalContents = document.body.innerHTML;
 
-                        // Create a <div> container for centering
-                        var containerDiv = document.createElement("div");
-                        containerDiv.style.textAlign = "center"; // Center-align the content
+            const pdfCard = document.getElementById('pdf-card').cloneNode(true);
 
-                        // Create the <h1> element
-                        var h1Element = document.createElement("h1");
-                        h1Element.textContent = "GSTR9 REPORT"; // Replace "Title" with your desired title text
+            // Create a new window for printing
+            const printWindow = window.open('', '');
 
-                        // Append the <h1> element to the container
-                        containerDiv.appendChild(h1Element);
+            pdfCard.style.color = 'black';
+            pdfCard.style.backgroundColor = '#243e54';
+            const pageTitle = printWindow.document.createElement('h1');
+            pageTitle.textContent = 'GSTR9 REPORT'; // Replace 'Page Title' with your desired title text
+            pageTitle.style.textAlign = 'center';
+            pageTitle.style.color = 'black';
 
-                        // Insert the container and the print content
-                        containerDiv.innerHTML += printContent;
-                        document.body.innerHTML = containerDiv.outerHTML;
+            // Append the <h1> element to the new window's body
+            printWindow.document.body.appendChild(pageTitle);
 
-                        window.print();
+            // Append the cloned 'pdf-card' div to the new window
+            printWindow.document.body.appendChild(pdfCard);
 
-                        // Restore the original contents (excluding the container)
-                        document.body.innerHTML = originalContents;
+            // Ensure the styles are preserved by copying CSS from the original document
+            const stylesheets = document.styleSheets;
+            for (let i = 0; i < stylesheets.length; i++) {
+                const stylesheet = stylesheets[i];
+                if (stylesheet.href) {
+                    const link = printWindow.document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = stylesheet.href;
+                    printWindow.document.head.appendChild(link);
+                }
+            }
+
+            // Trigger the print dialog for the new window
+            printWindow.print();
+
+            // Close the new window after printing
+            printWindow.close();
 
 
         });
@@ -1413,53 +1450,53 @@
     });
 </script>
 <script type="text/javascript">
- 
+
     function exportAsExcel() {
         const table1 = document.getElementById('myTable1');
-        const table2 = document.getElementById('myTable4'); 
-        const table3 = document.getElementById('myTable5'); 
-        const table4 = document.getElementById('myTable6'); 
-        const table5 = document.getElementById('myTable7'); 
-        const table6 = document.getElementById('myTable8'); 
-        const table7 = document.getElementById('myTable9'); 
-        const table8 = document.getElementById('myTable1013'); 
-        const table9 = document.getElementById('myTable14'); 
-        const table10 = document.getElementById('myTable15'); 
-        const table11 = document.getElementById('myTable16'); 
-        const table12 = document.getElementById('myTable17'); 
-        const table13 = document.getElementById('myTable18'); 
-        const table14 = document.getElementById('myTable19'); 
+        const table2 = document.getElementById('myTable4');
+        const table3 = document.getElementById('myTable5');
+        const table4 = document.getElementById('myTable6');
+        const table5 = document.getElementById('myTable7');
+        const table6 = document.getElementById('myTable8');
+        const table7 = document.getElementById('myTable9');
+        const table8 = document.getElementById('myTable1013');
+        const table9 = document.getElementById('myTable14');
+        const table10 = document.getElementById('myTable15');
+        const table11 = document.getElementById('myTable16');
+        const table12 = document.getElementById('myTable17');
+        const table13 = document.getElementById('myTable18');
+        const table14 = document.getElementById('myTable19');
         const wb = XLSX.utils.book_new();
 
         const ws1 = XLSX.utils.table_to_sheet(table1);
-        const ws2 = XLSX.utils.table_to_sheet(table2); 
-        const ws3 = XLSX.utils.table_to_sheet(table3); 
-        const ws4 = XLSX.utils.table_to_sheet(table4); 
-        const ws5 = XLSX.utils.table_to_sheet(table5); 
-        const ws6 = XLSX.utils.table_to_sheet(table6); 
-        const ws7 = XLSX.utils.table_to_sheet(table7); 
-        const ws8 = XLSX.utils.table_to_sheet(table8); 
-        const ws9 = XLSX.utils.table_to_sheet(table9); 
-        const ws10 = XLSX.utils.table_to_sheet(table10); 
-        const ws11 = XLSX.utils.table_to_sheet(table11); 
-        const ws12 = XLSX.utils.table_to_sheet(table12); 
-        const ws13 = XLSX.utils.table_to_sheet(table13); 
-        const ws14 = XLSX.utils.table_to_sheet(table14); 
+        const ws2 = XLSX.utils.table_to_sheet(table2);
+        const ws3 = XLSX.utils.table_to_sheet(table3);
+        const ws4 = XLSX.utils.table_to_sheet(table4);
+        const ws5 = XLSX.utils.table_to_sheet(table5);
+        const ws6 = XLSX.utils.table_to_sheet(table6);
+        const ws7 = XLSX.utils.table_to_sheet(table7);
+        const ws8 = XLSX.utils.table_to_sheet(table8);
+        const ws9 = XLSX.utils.table_to_sheet(table9);
+        const ws10 = XLSX.utils.table_to_sheet(table10);
+        const ws11 = XLSX.utils.table_to_sheet(table11);
+        const ws12 = XLSX.utils.table_to_sheet(table12);
+        const ws13 = XLSX.utils.table_to_sheet(table13);
+        const ws14 = XLSX.utils.table_to_sheet(table14);
 
         XLSX.utils.book_append_sheet(wb, ws1, '1-3'); // Add the first sheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws2, '4'); 
-        XLSX.utils.book_append_sheet(wb, ws3, '5'); 
-        XLSX.utils.book_append_sheet(wb, ws4, '6'); 
-        XLSX.utils.book_append_sheet(wb, ws5, '7'); 
-        XLSX.utils.book_append_sheet(wb, ws6, '8'); 
-        XLSX.utils.book_append_sheet(wb, ws7, '9'); 
-        XLSX.utils.book_append_sheet(wb, ws8, '10-11-12-13'); 
-        XLSX.utils.book_append_sheet(wb, ws9, '14'); 
-        XLSX.utils.book_append_sheet(wb, ws10, '15'); 
-        XLSX.utils.book_append_sheet(wb, ws11, '16'); 
-        XLSX.utils.book_append_sheet(wb, ws12, '17'); 
-        XLSX.utils.book_append_sheet(wb, ws13, '18'); 
-        XLSX.utils.book_append_sheet(wb, ws14, '19'); 
+        XLSX.utils.book_append_sheet(wb, ws2, '4');
+        XLSX.utils.book_append_sheet(wb, ws3, '5');
+        XLSX.utils.book_append_sheet(wb, ws4, '6');
+        XLSX.utils.book_append_sheet(wb, ws5, '7');
+        XLSX.utils.book_append_sheet(wb, ws6, '8');
+        XLSX.utils.book_append_sheet(wb, ws7, '9');
+        XLSX.utils.book_append_sheet(wb, ws8, '10-11-12-13');
+        XLSX.utils.book_append_sheet(wb, ws9, '14');
+        XLSX.utils.book_append_sheet(wb, ws10, '15');
+        XLSX.utils.book_append_sheet(wb, ws11, '16');
+        XLSX.utils.book_append_sheet(wb, ws12, '17');
+        XLSX.utils.book_append_sheet(wb, ws13, '18');
+        XLSX.utils.book_append_sheet(wb, ws14, '19');
 
         XLSX.writeFile(wb, 'tables.xlsx');
     }
@@ -1472,10 +1509,10 @@
         const selectedValue = this.value;
         const dynamicCell = document.getElementById("year");
 
-        
-            dynamicCell.innerHTML = selectedValue;
-            document.getElementById("id1").innerHTML=selectedValue;
-        
+
+        dynamicCell.innerHTML = selectedValue;
+        document.getElementById("id1").innerHTML = selectedValue;
+
     });
 
 </script>

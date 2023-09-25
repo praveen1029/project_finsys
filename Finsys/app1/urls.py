@@ -566,7 +566,8 @@ urlpatterns = [
     re_path(r'^deleteitem/(?P<id>\d+)$', views.deleteitem, name='deleteitem'),
     #re_path(r'^showservices$', views.showservices, name='showservices'),
     re_path(r'^create_unit$', views.create_unit, name='create_unit'),
-    re_path(r'^view_item/(?P<id>\d+)$', views.view_item, name='view_item'),
+    # re_path(r'^view_item/(?P<id>\d+)$', views.view_item, name='view_item'),
+    path('view_item/<int:id>/',views.view_item,name="view_item"),
     re_path(r'^itemedit_page/(?P<id>\d+)$', views.itemedit_page, name='itemedit_page'),
     re_path(r'^igoods$', views.igoods, name='igoods'),
     re_path(r'^iservices$', views.iservices, name='iservices'),
@@ -626,8 +627,6 @@ urlpatterns = [
 
     re_path(r'^item_trans/(?P<id>\d+)$',views.item_trans,name='item_trans'),
     re_path(r'^gostock_adjust$', views.gostock_adjust, name='gostock_adjust'),
-    path("approve_stock_adjust/<int:pk>/",views.approve_stock_adjust,name="approve_stock_adjust"),
-    path("create_comment/<int:pk>/",views.create_comment,name="create_comment"),
     re_path(r'^stock_adjustpage$', views.stock_adjustpage, name='stock_adjustpage'),
     re_path(r'^getit$', views.getit, name='getit'),
     re_path(r'^create_reason$', views.create_reason, name='create_reason'),
@@ -930,6 +929,8 @@ urlpatterns = [
     path('gochallan1',views.gochallan1,name='gochallan1'),
     path('gochallan2',views.gochallan2,name='gochallan2'),
     path('additem_challan',views.additem_challan,name='additem_challan'),
+    path('sort_chellan_customername', views.sort_chellan_customername, name='sort_chellan_customername'),
+    path('sort_chellan_chellannumber', views.sort_chellan_chellannumber, name='sort_chellan_chellannumber'),
     
     # urls for Price list
     
@@ -1086,8 +1087,60 @@ urlpatterns = [
     path('getdata3',views.getdata3,name='getdata3'),
     path('removerecinv',views.removerecinv,name='removerecinv'),
     path('gorecinvoices3',views.gorecinvoices3,name='gorecinvoices3'),
+    
+    path('update_status/<int:item_id>/', views.update_item_status, name='update_item_status'),
+    
+    # Alen Antony(vendor,bill,purchase order)-correction
+    path('activate_Vendor/<int:id>',views.activate_vendor,name='activate_vendor'),
+    path('inactivate_Vendor/<int:id>',views.inactivate_vendor,name='inactivate_vendor'),
+    path('fileupload_vendor/<int:id>',views.upload_file_vendor,name='upload_file_vendor'),
+    path('convert_to_bill/<int:id>',views.purchaseorder_convert,name='purchaseorder_convert'),
+    path('converttobill/<int:id>',views.converttobill,name='converttobill'),
+    path('get_transaction_data/<int:id>',views.get_transaction_data,name='get_transaction_data'),
+    
+    path("approve_stock_adjust/<int:pk>/",views.approve_stock_adjust,name="approve_stock_adjust"),
+    path("create_comment/<int:pk>/",views.create_comment,name="create_comment"),
+    
+    path('party_stmt',views.party_stmt,name='party_stmt'),
+    path('all_parties',views.all_parties,name='all_parties'),
+    
+    # #recurringbills_reshna_start
+    path('recurringbill_home',views.recurringbill_home,name='recurringbill_home'),
+    path('addrecurringbill',views.addrecurringbill,name='addrecurringbill'),
+    path('createrecurringbill',views.createrecurringbill,name='createrecurringbill'),
+    path('createcustomer_rbill',views.createcustomer_rbill,name='createcustomer_rbill'),
+    path('createvendor_rbill',views.createvendor_rbill,name='createvendor_rbill'),
+    path('createitem_rbill',views.createitem_rbill,name='createitem_rbill'),
+    path('createunit_rbill',views.createunit_rbill,name='createunit_rbill'),
+    path('create_repeatevery',views.create_repeatevery,name='create_repeatevery'),
+    path('vendor_dropdown_rbill',views.vendor_dropdown_rbill,name='vendor_dropdown_rbill'),
+    path('credit_period_rbill',views.credit_period_rbill,name='credit_period_rbill'),
+    path('credit_period_rbill2',views.credit_period_rbill2,name='credit_period_rbill2'),
+    path('get_vendordet',views.get_vendordet,name='get_vendordet'),
+    path('repeat_dropdown_rbill',views.repeat_dropdown_rbill,name='repeat_dropdown_rbill'),
+    path('cust_dropdown_rbill',views.cust_dropdown_rbill,name='cust_dropdown_rbill'),
+    path('get_customerdet',views.get_customerdet,name='get_customerdet'),
+    path('getperiod_rbill',views.getperiod_rbill,name='getperiod_rbill'),
+    path('credit_dropdown_rbill',views.credit_dropdown_rbill,name='credit_dropdown_rbill'),
+    path('item_dropdown_rbill',views.item_dropdown_rbill,name='item_dropdown_rbill'),
+    path('itemdata_rbill',views.itemdata_rbill,name='itemdata_rbill'),
+    path('draft_rbill',views.draft_rbill,name='draft_rbill'),
+    path('billed_rbill',views.billed_rbill,name='billed_rbill'),
+    path('view_rbill/<int:id>',views.view_rbill,name='view_rbill'),
+    path('rbillconvert/<int:id>',views.rbillconvert,name='rbillconvert'),
+    path('recur_custasc',views.recur_custasc,name='recur_custasc'),
+    path('recur_profasc',views.recur_profasc,name='recur_profasc'),
+    path('recur_billasc',views.recur_billasc,name='recur_billasc'),
+    path('deleterbill<int:id>',views.deleterbill,name='deleterbill'),
+    path('update_recurringbill<int:id>',views.update_recurringbill,name='update_recurringbill'),
+    path('edit_recurringbill<int:id>',views.edit_recurringbill,name='edit_recurringbill'),
+    path('rbill_file<int:id>',views.rbill_file,name='rbill_file'),
+    path('pdfrbill_view<int:id>',views.pdfrbill_view,name='pdfrbill_view'),
+    # # recurring_bills-Reshna-end
 
- 
-     
-     
+    path('module_settings/',views.module_settings, name='module_settings'),
+    path('hide_options/',views.hide_options, name='hide_options'),
+    path('module_settings1/',views.module_settings1, name='module_settings1'),
+    path('module_settings2/',views.module_settings2, name='module_settings2'),
+
 ]

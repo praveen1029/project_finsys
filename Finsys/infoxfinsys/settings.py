@@ -35,8 +35,6 @@ SECRET_KEY = 'django-insecure-@ym=g-9p=kgp46%-$ug_t#g%3o5g(f6+37-wzyd16h=z*&grds
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['accuhub.in']
-
 # Application definition
 
 INSTALLED_APPS = [

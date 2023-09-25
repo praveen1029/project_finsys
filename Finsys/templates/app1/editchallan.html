@@ -705,73 +705,107 @@
             <h5 class="text-info">{{ cmp1.cname }}</h5>
             <h5 class="text-info">{{ cmp1.cemail }}</h5>
           </div> -->
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-3 mt-3">
               <label class="col-form-label">Select Customer</label>
               <div class="">
                 <select name="customername" id="select" class="form-control" style="background-color: #2f516f; color: white;" onclick="calc()">
-                  <option value="{{ch.customer}}"  selected>{{ch.customer}}</option>
-                  {% for cust in customers %}
-                  {% if cust.cid_id == cmp1.cid %}
-                  <option text="{{ cust.customerid }}" value="{{ cust.firstname }} {{ cust.lastname }}">{{ cust.firstname }} {{ cust.lastname }}</option>
-                  {% endif %}
-                  {% endfor %}
+                  <option value="{{ch.customer..customerid}}"  selected>{{ch.customer.firstname}} {{ ch.customer.lastname }}</option>
+                  
                 </select>
                
               </div>
             </div>
-            <div class="col-md-3 mt-3">
-              <label class="col-form-label">Email </label>
-              <input class="custom-select" name="email" placeholder="Email" value="{{ch.cx_mail}}" required style="background-color: #2f516f; color: white;"  onclick="calc()" id="email">
-            </div>
-            <div class="col-md-3 mt-3">
-                <label class="col-form-label">Challan number</label>
-                <input type="text"  id="ref" class="form-control" name="chal_no" value="{{ch.chal_no}}" style="background-color: #2f516f; color: white;" onselect="calc()">
-              </div>
-            <div class="col-md-3 mt-3"></div>
-            <div class="col-md-3 mt-3"></div>
-          </div>
-          <div class="row">
-            <div class="col-md-3 mt-3">
-              <label class="col-form-label">Challan Date:</label>
-              <div>
-                <input type="date" value="{{ ch.challan_date |date:'Y-m-d'}}" class="form-control" name="challandate" style="background-color: #2f516f; color: white;">
-              </div>
-            </div>
-            <div class="col-md-3 mt-3">
-              <label class="col-form-label">Challan Type </label>
-              <div>
-                <select class="custom-select"  onclick="calc()" name="terms" required style="background-color: #2f516f; color: white;" id="termadd" onclick="showinp('newtrm', this)">
-                  <option selected value="{{ch.challan_type}}">{{ch.challan_type}}</option>
-                  <option value="Supply of Liquid Gas">Supply of Liquid Gas</option>
-                  <option value="Job Work">Job Work</option>
-                  <option value="Supply on Approval">Supply on Approval</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3 mt-3">
-                <label class="col-form-label">Refrence number</label>
-                <input type="text"  id="ref" value="{{ch.ref}}" class="form-control" name="ref" style="background-color: #2f516f; color: white;" onselect="calc()">
-              </div>
-            <div class="col-md-3 mt-3"></div>
-            <div class="col-md-3 mt-3"></div>
-          </div>
 
+ -->
+
+            <div class="row">
+                <div class="col">
+                  <center>
+                    <!-- <h2>Fin sYs</h2> -->
+                  </center>
+                </div>
+              </div>
+              <!-- <div class="company-details mb-4">
+                <h5 class="text-info">{{ cmp1.cname }}</h5>
+                <h5 class="text-info">{{ cmp1.cemail }}</h5>
+              </div> -->
+              <div class="row">
+                <div class="col-md-5 mt-3 mr-4 ml-4">
+                    
+                  <label class="col-form-label">Select Customer</label>
+                  <div class="d-flex">
+                    <select name="customername" id="select" class="form-control" style="background-color: #2f516f; color: white;" onclick="calc()" >
+                        <option value="{{ch.customer.customerid}}"  selected readonly>{{ch.customer.firstname}} {{ ch.customer.lastname }}</option>
+                        <!-- {% for cust in customers %}
+                        {% if cust.cid_id == cmp1.cid %}
+                        <option text="{{ cust.customerid }}" value="{{ cust.firstname }} {{ cust.lastname }}">{{ cust.firstname }} {{ cust.lastname }}</option>
+                        {% endif %}
+                        {% endfor %} -->
+                      </select>
+                    <!-- <a data-toggle="modal" href="#newcust">
+                      <button type="button" class="btn btn-outline-secondary ml-1">+</button>
+                  </a> -->
+                  </div>
+                  
+                    <label class="col-form-label mt-4 mb-2">Email </label>
+                    <input class="custom-select" name="email" placeholder="Email" value="{{ch.customer.email}}" required style="background-color: #2f516f; color: white;"  onclick="calc()" id="email" readonly>
+                </div>
+                
+            
+                    <div class="col-md-5 ml-4 mt-3">
+                        <label class="text-gray-light">Bill To:</label>
+                        <textarea class="form-control mb-4" name="bname" id="bname"  onclick="calc()" rows="7" type="text" value="{{ch.billto}}" style="background-color: #2f516f; color: white;" readonly>{{ch.billto}}</textarea>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                      <input type="number" class="form-control mt-4" id="newtrm" placeholder="0" onchange="addtemopt(this)" style="display: none;">
+                    </div>
+                    <div class="col-md-3 mt-3"></div>
+                    
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-5 ml-4 mt-2 mr-4">
+                    <label class="col-form-label">Challan number</label>
+                    <input type="text"  id="ref" class="form-control" name="chal_no" value="{{ch.chal_no}}" style="background-color: #2f516f; color: white;" onselect="calc()">
+                  </div>
+                  <div class="col-md-5 ml-4 mt-3">
+                    <label class="col-form-label">Challan Date:</label>
+                    <div>
+                        <input type="date" value="{{ ch.challan_date |date:'Y-m-d'}}" class="form-control" name="challandate" style="background-color: #2f516f; color: white;">
+                    </div>
+                  </div>
+            </div>
+
+
+            <div class="row">
+  
+                <div class="col-md-5 ml-4 mt-3 mr-4">
+                  <label class="col-form-label">Challan Type </label>
+                  <div>
+                    <select class="custom-select"  onclick="calc()" name="terms" required style="background-color: #2f516f; color: white;" id="termadd" onclick="showinp('newtrm', this)">
+                        <option selected value="{{ch.challan_type}}">{{ch.challan_type}}</option>
+                        <option value="Supply of Liquid Gas">Supply of Liquid Gas</option>
+                        <option value="Job Work">Job Work</option>
+                        <option value="Supply on Approval">Supply on Approval</option>
+                        <option value="Others">Others</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-5 ml-4 mt-3">
+                    <label class="col-form-label">Refrence number</label>
+                    <input type="text"  id="ref" value="{{ch.ref}}" class="form-control" name="ref" style="background-color: #2f516f; color: white;" onselect="calc()">
+                  </div>
+                <div class="col-md-3 mt-3"></div>
+                <div class="col-md-3 mt-3"></div>
+            </div>   
+            
+          
+
+          
           <div class="row">
-            <div class="col-md-3">
-              <label class="text-gray-light">Bill To:</label>
-              <textarea class="form-control mb-4" name="bname" id="bname"  onclick="calc()" rows="7" type="text" value="{{ch.billto}}" style="background-color: #2f516f; color: white;">{{ch.billto}}</textarea>
-            </div>
-            <div class="col-md-3 mt-3">
-              <input type="number" class="form-control mt-4" id="newtrm" placeholder="0" onchange="addtemopt(this)" style="display: none;">
-            </div>
-            <div class="col-md-3 mt-3"></div>
-            <div class="col-md-3 mt-3">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3 mt-3">
+            <div class="col-md-5 ml-4 mt-3 mr-4">
               <label class="col-form-label">Place of supply</label>
               <select type="text" class="form-control " id="plosu" name="placosupply" style="background-color: #2f516f; color: white;" onclick="calc()" onclick="state">
                 <option value="{{ch.pl}}">{{ch.pl}}</option>
@@ -980,6 +1014,10 @@ function calc() {
     // get the shipping charge value
     var shippingCharge = parseFloat($('#ship').val());
 
+    var Adjustment = parseFloat($('#Adjustment').val());
+    
+
+
     // update the subtotal and total tax amount input fields
     $('#subtotal').val(total.toFixed(2));
     $('#total_taxamount').val(taxamount.toFixed(2));
@@ -1000,9 +1038,28 @@ function calc() {
     calc(); // Call the calc() function whenever the shipping value changes
     });
 
+    
+// check if adjustment charge exists
+        if (!isNaN(Adjustment) && Adjustment !== 0) {
+            total_with_tax += Adjustment;
+            $('#total_with_tax').val(total_with_tax.toFixed(2) );
+        } else {
+            $('#total_with_tax').val(total_with_tax.toFixed(2));
+        }
+    
+// Event listener for the adjustment input field    
+    $('#Adjustment').on('input', function() {
+    calc(); // Call the calc() function whenever the adjustment value changes
+    });  
+
+    // calculate the total amount including tax and shipping charge
+    var total_with_tax = total + taxamount;
+
     test(taxamount);
 
+
 }
+
 
   // Update subtotal when a row is deleted
     $(document).ready(function dlt () {
@@ -1140,7 +1197,7 @@ function test(taxamount) {
             
             </div>
           </div>
-          <div class="row clearfix" style="margin-top:20px">
+          <!-- <div class="row clearfix" style="margin-top:20px">
             <div class="col-md-6">
 
                 <textarea class="form-control" value="{{ch.note}}"  id="" name="Note" placeholder="Note" style="height: 190px;">
@@ -1224,10 +1281,106 @@ function test(taxamount) {
           </div>
       </div>
     
-        </div>
+        </div> -->
 
+        <div class="row clearfix " style="margin-top:20px">
+            <div class="col-md-6">
 
+                <textarea class="form-control mt-5"  id="" name="Note" value="{{ch.note}}"  placeholder="Note" style="height: 190px;"></textarea>
+
+                <input type="file" name="file"  style="margin-top: 10px; width: 70%;">
+            </div>
+
+            <div class="col-md-1"></div>
+            
+            <div class="col-md-5 table-responsive-md mt-3 " id="tab_logic_total" style="background-color:rgba(0,0,0,.4); border: 1px solid rgba(128, 128, 128, 0.6);">
+                  
+                <div class="p-3" > 
+                    <div class="row container-fluid p-2 m-0">
+                    
+                        <div class="col-sm-4 mt-2" > <label class="text-center " >Sub Total</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"> <input  type="number" value="{{ch.subtotal}}" step="any" placeholder=0 class="form-control" id="subtotal" name="subtotal"
+                          readonly/></div>
+                    </div>
+                  
+                  
+                    <div class="row container-fluid p-2 m-0" id="tr_igst">  
+                        <div class="col-sm-4 mt-2" ><label class="text-center " >IGST</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" 
+                        id='igst' name="igst" value="{{ch.igst}}"
+                        placeholder='0.00'
+                        class="form-control"
+                         readonly/></div>
+    
+                    </div>
+                  
+                    <div class="row container-fluid p-2 m-0" id="tr_cgst" >
+                        <div class="col-sm-4 mt-2" ><label class="text-center">CGST</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" id='cgst' name="cgst" step="any" placeholder=0 
+                        class="form-control" value="{{ch.cgst}}"
+                           readonly/></div>
+
+                    </div>
+               
+                    <div class="row container-fluid p-2 m-0" id="tr_sgst" >
+                        <div class="col-sm-4 mt-2" ><label class="text-center" >SGST</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" id='sgst' name="sgst" step="any" placeholder=0
+                        class="form-control" value="{{ch.sgst}}"
+                         readonly/></div>
+    
+                    </div>
+    
+                
+                    <div  class="row container-fluid p-2 m-0">
+                        <div class="col-sm-4 mt-2" ><label class="text-center" >Total Tax</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" id="total_taxamount" value="{{ch.taxamount}}" name="totaltax" placeholder=0 step="any"
+                        class="form-control"
+                           readonly/></div>
         
+                    </div>
+                
+                
+                    <div class="row container-fluid p-2 m-0">
+                        <div class="col-sm-4 mt-2" ><label class="text-center" onclick="calc()">Shipping Charge</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" id="ship" name="ship" value="{{ch.shipping}}" placeholder=0 step="any" value="0" required
+                        class="form-control ship"
+                         /></div>
+        
+                    </div>
+                    <div class="row container-fluid p-2 m-0">
+                        <div class="col-sm-4 mt-2" ><label class="text-center" oninput="calc()">Adjustment</label></div>
+                        <div class="col-sm-1 mt-2">:</div>
+                        <div class="col-sm-7 mt-2"><input type="number" id="Adjustment" name="Adjustment" value="{{ch.adjustment}}" placeholder=0 step="any" value="0" required
+                        class="form-control" /></div>    
+                    
+    
+                    </div>
+                
+                    <div class="row container-fluid p-2 m-0">
+                            <div class="col-sm-4 mt-2" ><label class="text-center">Grand Total</label></div>
+                            <div class="col-sm-1 mt-2">:</div>
+                            <div class="col-sm-7 mt-2"><input type="number"  value={{ch.grand}} id="total_with_tax" name="t_total" value=0 step="any"
+                            class="form-control"
+                             readonly/></div>
+          
+                    </div>
+                       
+                          
+                    
+                   
+                
+
+                 
+                 
+                </div>
+            </div>
+        </div>        
           <div class="row">
             <div class="col-md-10 mt-3"></div>
             <div class="col-md-2 mt-3">
@@ -1284,6 +1437,82 @@ function test(taxamount) {
   
   });
 </script>
+<script>
+    function test(taxamount) {
+        console.log('test333');
+        console.log(taxamount)
+        d = 0;
+        var pos = document.getElementById('plosu').value;
+        var state = "{{cmp1.state}}";
+        console.log(pos)
+        console.log('state')
+        console.log(state)
+        console.log('state')
+        console.log('----------')
+        if (pos == state) {
+            console.log(pos);
+            console.log(state);
+            console.log(taxamount);
+            gst = taxamount / 2;
+            console.log(gst);
+            $('#cgst').val(parseFloat(gst.toFixed(2)));
+            $('#sgst').val(parseFloat(gst.toFixed(2)));
+            $('#igst').val(parseFloat(d.toFixed(2)));
+            
+            // document.getElementById('tr_cgst').style= ('display: flex');
+            
+            // document.getElementById('tr_sgst').style= ('display: flex');
+            // document.getElementById('tr_igst').style= ('display: none');
+
+           
+        }
+        else{
+            gst = taxamount ;
+            console.log(gst);
+            $('#cgst').val(parseFloat(d.toFixed(2)));
+            $('#sgst').val(parseFloat(d.toFixed(2)));
+            $('#igst').val(parseFloat(gst.toFixed(2)));
+        }
+
+        if (pos != state) {
+            console.log(pos);
+            console.log(state);
+            document.getElementById('tr_cgst').style=('display: none');
+            document.getElementById('tr_sgst').style= ('display: none');
+            document.getElementById('tr_igst').style= ('display: flex');
+            
+        }
+        else{
+            document.getElementById('tr_cgst').style=('display: flex');
+            document.getElementById('tr_sgst').style= ('display: flex');
+            document.getElementById('tr_igst').style= ('display: none');
+ 
+        }
+    }
+$(document).ready(function () {
+
+    var bc = document.getElementById("plosu").value;
+    var compstate = "{{cmp1.state}}";
+    if (bc == compstate ) {
+        document.getElementById('tr_cgst').style.display = 'flex';
+        document.getElementById('tr_sgst').style.display = 'flex';
+        document.getElementById('tr_igst').style.display = 'none'; 
+   
+
+    } else {
+        document.getElementById('tr_cgst').style.display = 'none';
+        document.getElementById('tr_sgst').style.display = 'none';
+        document.getElementById('tr_igst').style.display = 'flex';
+
+   
+    }
+
+
+  
+
+});
+</script>
+
 <!-- modal hsncode edit -->
 
 

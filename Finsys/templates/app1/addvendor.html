@@ -38,25 +38,24 @@
                             </div>
                             <div class="col-md-3 mt-2">
                                 <label for="validationCustom02">First name</label>
-                                <input type="text" class="form-control" id="validationCustom02" name="firstname"
-                                       required>
-                                <div class="valid-feedback">Looks good!</div>
+                                <input type="text" class="form-control" id="validationCustom02" name="firstname" required>
+                                
                             </div>
                             <div class="col-md-3 mt-2">
                                 <label for="validationCustom02">Last name</label>
-                                <input type="text" class="form-control" id="validationCustom02" name="lastname">
+                                <input type="text" class="form-control" id="validationCustom02" name="lastname" required>
                             </div>
                             <div class="col-md-3 mt-2">
                                 <label for="validationCustom03">Company</label>
-                                <input type="text" class="form-control" id="validationCustom03" name="company_name">
+                                <input type="text" class="form-control" id="validationCustom03" name="company_name" required>
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-4 mt-3">
                                 <label for="validationCustom03">Email</label>
                                 <input type="email" class="form-control" id="validationCustom03" name="email"
-                                    placeholder="finsys@mail.com">
+                                    placeholder="finsys@mail.com" required>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label for="validationCustom03">Website</label>
@@ -67,7 +66,7 @@
                                 <label for="validationCustom01">Mobile</label>
                                 <input type="text" class="form-control" id="validationCustom01"
                                     placeholder="Mobile number" maxlength="10"
-                                    name="mobile">
+                                    name="mobile" required>
                             </div>
                         </div>
                         <hr>
@@ -76,18 +75,18 @@
                         <div class="row">
                             <div class="col-md-4 mt-3">
                                 <label for="validationCustom04">GST Treatment</label>
-                                <select class="form-control" id="gsttyp" name="gsttype" onchange="showgsttyp()"
-                                    onclick="hidinput('hello', this)" required>
-                                    <option selected disabled value="">Choose..</option>
+                                <select class="form-control" id="gsttyp" name="gsttype" onchange="showgsttyp()" onclick="hidinput('hello', this)" required>
+                                    <option value="" hidden>Select a GST Treatment</option>
                                     <option value="Registered Business - Regular">Registered Business - Regular <span><i>(Business that is registered under gst)</i></span></option>
                                     <option value="Registered Business - Composition">Registered Business - Composition (Business that is registered under composition scheme in gst)</option>
                                     <option value="unregistered Business">Unregistered Business (Business that has not been registered under gst)</option>
                                     <option value="Overseas">Overseas (Import/Export of supply outside india)</option>
                                     <option value="Special Economic Zone (SEZ)">Special Economic Zone (SEZ) (Business that is located in a special economic zone of india or a SEZ developer)</option>
-                                    <option value="Demed Exports">Demed Exports (Supply of woods to an exports oriented unit or againsed advanced authorization or export promotion capital woods)</option>
+                                    <!-- <option value="Demed Exports">Demed Exports (Supply of woods to an exports oriented unit or againsed advanced authorization or export promotion capital woods)</option>
                                     <option value="Tax Deductor">Tax Deductor (State of central gov,government agencies or local authority)</option>
-                                    <option value="SEZ Developer">SEZ Developer (A person or organization who owns atleast 26% eqaulity in creating business units in special economic zone)</option>
+                                    <option value="SEZ Developer">SEZ Developer (A person or organization who owns atleast 26% eqaulity in creating business units in special economic zone)</option> -->
                                 </select>
+
                                 <!-- <div class="hide" id="regular"><label><i>(Business that is registered under gst)</i></label></div>
                                 <div class="hide" id="comp"><label>&nbsp;<i>(Business that is registered under composition scheme in gst)</i></label></div>
                                 <div class="hide" id="unreg"><label>&nbsp;&nbsp;&nbsp;<i>(Business that has not been registered under gst)</i></label></div>
@@ -124,10 +123,10 @@
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-3 mt-2">
                                <label for="">Place of Supply</label>
-                                <select class="form-control" id="" name="sourceofsupply">
+                                <select class="form-control" id="" name="sourceofsupply" required>
                                     <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                                     <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
                                     <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
@@ -198,8 +197,12 @@
                             <div class="col-md-3 mt-2">
                                 <label for="">Opening Balance</label>
                                 <div class="d-flex">
-                                    <p class="form-control" style="width: 60px;">INR</p>
-                                    <input type="number" class="form-control" name="openingbalance">
+                                    <select class="form-control w-50" name="opb_type" required>
+                                        <option value="" hidden>Type</option>
+                                        <option value="Debit">Debit</option>
+                                        <option value="Credit">Credit</option>
+                                    </select>
+                                    <input type="number" class="form-control" name="openingbalance" required>
                                </div>
                             </div>
                             
@@ -208,9 +211,9 @@
                                <div class="d-flex">
                                 <select class="form-control" name="paymentterms">
                                     <option value="Due on Receipt">Due on Receipt</option>
-                                    <option value="Net 15">NET 15</option>
-                                    <option value="Net 30">NET 30</option>
                                     <option value="Net 60">NET 60</option>
+                                    <option value="Net 45">NET 45</option>
+                                    <option value="Net 30">NET 30</option>
                                     {% for pd in cpd %}
                                         <option value="{{ pd.newperiod }}">NET {{ pd.newperiod }}</option>
                                     {% endfor %}
@@ -219,6 +222,9 @@
                             </div> 
                             </div>
                         </div>
+
+                    
+
                         <div class="row" style="display: none;">
                             <div class="col-md-3 mt-2" >
                                 <label for="">Date</label>
@@ -237,7 +243,7 @@
                                     <div class="col-md-12 mt-3">
                                         <div class="form-row">
                                             <label for="street">Street</label>
-                                            <textarea class="form-control street" id="street" name="street"></textarea>
+                                            <textarea class="form-control street" id="street" name="street" required></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -247,13 +253,13 @@
                                             <label for="city">City</label>
                                             <input type="text" class="form-control" id="city"
                                                 name="city"
-                                                placeholder="City">
+                                                placeholder="City" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-3">
                                         <div class="form-row">
                                             <label for="state">State</label>
-                                            <select type="text" class="form-control" id="state" name="state">
+                                            <select type="text" class="form-control" id="state" name="state" required>
                                                 <option value="" selected>Choose</option>
                                                 <option value="None Of This">None Of This</option>
                                                 <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -305,7 +311,7 @@
                                             <label for="pinco">Pin Code</label>
                                             <input type="text" class="form-control" id="pinco"
                                                 name="pincode" maxlength="6"
-                                                placeholder="PIN Code">
+                                                placeholder="PIN Code" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-3">
@@ -313,7 +319,7 @@
                                             <label for="country">Country</label>
                                             <input type="text" class="form-control" id="country"
                                                 name="country"
-                                                placeholder="Country">
+                                                placeholder="Country" required>
                                         </div>
                                     </div>
                                 </div>
@@ -628,6 +634,25 @@
                 alert('Please provide a valid GSTIN');
             }
         }
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
     </script>
 
 {% endblock %}

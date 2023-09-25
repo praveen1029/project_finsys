@@ -135,11 +135,12 @@
                         {% for invoices in invoice %}
                             {% if invoices.cid_id == cmp1.cid %}
 
+                                
                                 <tr  class="table-row " data-href="">
                                     <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.invoicedate | date:'d-m-Y'}}</a></td>
                                     <th style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.invoiceno }}</a></th>
                             
-                                    <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.cust }}</a></td>
+                                    <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.customername }}</a></td>
                                     <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.status }}</a></td>
                                     <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.duedate }}</a></td>
                                     <td style="text-align: center;"><a class="idsr" style="list-style: none;"  href="{% url 'invoice_view' invoices.invoiceid %}">{{ invoices.grandtotal }}</a></td>
@@ -147,6 +148,7 @@
                                     
 
                                 </tr>
+                                
                             {% endif %}
                         {% endfor %}
                     </tbody>

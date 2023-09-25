@@ -1,0 +1,126 @@
+<!-- reshna-recurringbill -->
+{% extends 'app1/base.html' %}
+{% block body %}
+    {% load static %}
+    {% if user.is_authenticated %}
+
+    <style>
+        tr:hover{
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+  
+
+        <div class="page-content" id="test">
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="card-title">
+                        <center><h2 class="mb-0">RECURRING BILL</h2></center>
+                        <hr>
+                       
+                        <div class="btn-group col-md-2" style="float: right;">
+                            <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Export To Excel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="d-flex">
+                                <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off">
+                                <center><i class="fa fa-search form-control" style="width: 60px;"></i></center>
+                            </div>    
+                        </div>
+                        <div class="col-md-2">
+                          
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sort By
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'recurringbill_home' %}">All</a>
+                                    <a class="dropdown-item" href="{% url 'recur_custasc' %}">CUSTOMER NAME</a>
+                                    <a class="dropdown-item" href="{% url 'recur_profasc' %}">PROFILE NAME</a>
+                                    <a class="dropdown-item" href="{% url 'recur_billasc' %}">BILL NO</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5"></div>
+                        <div class="btn-group col-md-2">
+                            <a class="btn btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                role="button">Filter By
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{%url 'recurringbill_home'%}">All</a>
+                                <a class="dropdown-item" href="{%url 'draft_rbill'%}">Draft</a>
+                                <a class="dropdown-item" href="{%url 'billed_rbill'%}">Billed</a>
+                            </div>
+                            <a href="{%url 'addrecurringbill'%}" class="btn btn-outline-info fa fa-plus" role="button"> &nbsp;New</a>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <table class="table table-responsive-md mt-4" id="table">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Bill Number</th>
+                                <th>Profile Name</th>
+                                <th>Vendor Name</th>
+                                <th>Customer Name</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Balance</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for r in rbill %}
+                            <!-- <tr> -->
+                                <tr onclick="window.location='view_rbill/{{ r.rbillid }}';">
+                                    <th>{{ r.start_date | date:'d-m-Y' }}</th>
+                                    <td>{{ r.billno }}</a></td>
+                                    <td>{{ r.profile_name }}</td>
+                                    <td>{{ r.vendor_name }}</td>
+                                    <td>{{ r.customer_name }}</td>
+                                    <td>{{ r.status }}</td>
+                                    <td>{{ r.grand_total}}</td>
+                                    <td>{{ r.balance }}</td>
+                                </tr> 
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+        <script>
+            var $rows = $('#table tr');
+            $('#search').keyup(function() {
+                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                
+                $rows.show().filter(function() {
+                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                    return !~text.indexOf(val);
+                }).hide();
+            });
+
+        function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('table');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('Recurring_bills.' + (type || 'xlsx')));
+    }
+</script>
+ 
+
+
+    {% endif %}
+{% endblock %}

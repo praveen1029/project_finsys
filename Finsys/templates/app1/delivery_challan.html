@@ -18,7 +18,7 @@
             <div class="card radius-15">
                 <div class="card-body">
                     <div class="card-title">
-                        <center><h2 class="mb-0">Delivery Challan</h2></center>
+                        <center><h2 class="mb-0">DELIVERY CHALLAN</h2></center>
                         <hr>
                     </div>
                 </div>
@@ -28,16 +28,62 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="d-flex">
-                                <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off">
-                                <center><i class="fa fa-search form-control" style="width: 60px;"></i></center>
+                                <!-- <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off">
+                                <center><i class="fa fa-search form-control" style="width: 60px;"></i></center> -->
+                                <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
+                            style="margin-top: 8px; background-color: #2f516f;color: white;">
                             </div>    
                         </div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-2" style="width: 40%; margin-top: 9px;">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-outline-info dropdown-toggle fa fa-sort text-grey"
+                                        data-toggle="dropdown"> Sort by
+                                </button>
+                                <div class="dropdown-menu " style="background-color: black;">
+                                    <a class="dropdown-item	" href="{% url 'delivery_challan' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" > All
+                                    
+                               </a>
+                                <a class="dropdown-item	" href="{% url 'sort_chellan_customername' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center;" > Customer Name
+                                    
+                               </a>
+                                 
+                                <a class="dropdown-item " href="{% url 'sort_chellan_chellannumber' %}"
+                                    style="height: 40px; font-size: 15px; color: white; text-align: center; " >Chellan Number</a>
+                                
+                                        
+                                </div> 
+                            </div>
+                        </div>
                         <div class="col-md-3"></div>
-                        <div class="btn-group col-md-2">
-                            <a class="btn btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                role="button">Filter By
+                       
+                        <div class="col-md-1 mx-5" style="width: 40%; margin-top: 8px;">
+
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-outline-info dropdown-toggle fa fa-filter  text-grey"
+                                        data-toggle="dropdown"> filter by
+                                </button>
+                                    <div class="dropdown-menu" style="background-color: black;">
+                                        <a class="dropdown-item" href="{% url 'delivery_challan' %}"
+                                            style="height: 40px; font-size: 15px; color: white; text-align: center;" >All</a>
+                                        <a class="dropdown-item" href="{% url 'gochallan1' %}"
+                                            style="height: 40px; font-size: 15px; color: white; text-align: center;" >Draft</a>
+                                        <a class="dropdown-item" href="{% url 'gochallan2' %}"
+                                            style="height: 40px; font-size: 15px; color: white; text-align: center;">Approved</a>
+                                       
+                                    </div> 
+                            </div>
+                        </div>
+                        <div class="col-md-2" >
+                            <a href="{% url 'goadd_dl_challan' %}" >
+                                <button id="myBtn" class="btn btn-outline-info fa fa-plus text-grey" style="margin-top: 8px;"> Add New</button>
                             </a>
+                        </div>
+                        <!-- <div class="btn-group col-md-2">
+                            <button type="button" class="btn btn-outline-info dropdown-toggle fa fa-filter  text-grey"
+                                        data-toggle="dropdown"> filter by
+                                </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{% url 'delivery_challan' %}">All</a>
                                 <a class="dropdown-item" href="{% url 'gochallan1' %}">Draft</a>
@@ -45,19 +91,19 @@
                             </div>
                             <a href="{% url 'goadd_dl_challan' %}" class="btn btn-outline-info fa fa-plus" role="button"> &nbsp;New</a>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="container-fluid">
-                        <table class="table table-responsive-md mt-4" id="table">
+                        <table class="table table-responsive-md mt-4 table-hover" id="table">
                             <thead>
                             <tr>
                                 <th>Date</th>
                                 <th>Challan Number</th>
-                                <th>Reference</th>
                                 <th>Customer Name</th>
+                                <th>Email</th>
                                 <th>Status</th>
                                 <th>Total Amount</th>
-                            </tr>
+                            </tr> 
                             </thead>
                             <tbody>
                             {% for p in invoice %}
@@ -66,8 +112,8 @@
                                 <tr onclick="window.location='delivery_view/{{ p.id }}';">
                                     <td>{{ p.challan_date | date:'d-m-Y' }}</td>
                                     <td>{{ p.chal_no }}</a></td>
-                                    <td>{{ p.ref  }}</td>
-                                    <td>{{ p.customer }}</td>
+                                    <td>{{ p.customer.firstname }} {{ p.customer.lastname }}</td>
+                                    <td>{{ p.customer.email }}</td>
                                     <td>{{ p.status }}</td>
                                     <td>{{ p.grand }}</td>
                                 </tr> 
@@ -83,14 +129,19 @@
         <!-- <a href="javascript:generatePDF()">Dowload PDF</a> -->
 
         <script>
-            var $rows = $('#table tr');
-            $('#search').keyup(function() {
-                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-                
-                $rows.show().filter(function() {
-                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                    return !~text.indexOf(val);
-                }).hide();
+           
+           $(document).ready(function() {
+                var $rows = $('.table tbody tr');
+                $('#search').keyup(function() {
+                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                    $rows.show().filter(function() {
+                        console.log($rows.show())
+        
+                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                        console.log(text)
+                        return !~text.indexOf(val);
+                    }).hide();
+                });
             });
         </script>
 

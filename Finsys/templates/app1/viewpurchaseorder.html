@@ -84,7 +84,7 @@
         .top-left .graphic-path {
             height: 40px;
             position: relative;
-            margin-left: -50px;
+            margin-left: 0px;
         }
         .top-left .graphic-path::before {
             content: "";
@@ -110,13 +110,13 @@
             /* color: var(--white); */
             height: 40px;
             left: 0;
-            right: -100px;
+            right: -0px;
             text-transform: uppercase;
             background-color: var(--themeColor);
             font: 26px;
             z-index: 3;
             position: absolute;
-            padding-left: 10px;
+            padding-left: 5px;
             /* margin-left: -50px; */
         }
         .store-user {
@@ -138,7 +138,7 @@
             font-weight: 400;
         
         }
-        thead {
+        /* thead {
             color: var(--white);
             background: var(--themeColor);
         }
@@ -150,7 +150,7 @@
         tr th:first-child,
         tr td:first-child {
             text-align: left;
-        }
+        } */
         .media img {
             height: 60px;
             width: 60px;
@@ -169,7 +169,7 @@
             border: 0;
         }
         .balance-info tr td:first-child {
-            font-weight: 600;
+            font-weight: 500;
         }
         tfoot {
             border-top: 2px solid var(--darkWhite);
@@ -204,9 +204,9 @@
             display: inline-block;
             color: #000000;
         }
-        table.table-bordered{
+        /* table.table-bordered{
             color: 1px solid #000;
-        }
+        } */
         #sign{
             border: none;
             border-bottom: 2px solid #000;
@@ -215,9 +215,9 @@
             border: 0;
             clear:both;
             display:block;
-            width: 96%;               
-            background-color:#000000;
-            height: 1px;
+            width: 100%;               
+            background-color:#252525;
+            height: .6px;
         }
     </style>
 
@@ -246,51 +246,25 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarScroll">
                             <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                              <li class="nav-item active" >
-                                <a class="nav-link text-light btn" role="button" onclick="window.print()"><i class="fa fa-print">Print</i><span class="sr-only">(current)</span></a>
-                              </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-light btn" href="#" id="navbarDropdown" role="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-share-alt">Share</i> 
+                                <li class="nav-item active" >
+                                    <a class="nav-link text-light btn btn-outline-info btn-sm " role="button" onclick="printDiv()"><i class="fa fa-print"  style="font-size: medium;"> Print</i><span class="sr-only">(current)</span></a>
+                                </li>
+                                
+                               
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link text-light btn btn-outline-info btn-sm " role="button" href="{% url 'render_pdfpurchase_view' pordr.porderid%}">
+                                        <i class="fa fa-file-pdf-o" style="font-size: medium;"> Pdf</i>
                                     </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item">&nbsp;{% send_email object.title "New:{{object.title}}" object_or_url "Email" %}</a>
-                                        <a class="dropdown-item" href="#">&nbsp;{% post_to_whatsapp object_or_url "Whatsapp" %}</a>
-                                    </div>
+                                </li> -->
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link text-light btn btn-outline-info btn-sm mx-1" role="button" href="goeditpurchaseorder/{{ pordr.porderid }}{{ pitem.porder }}"><i class=" fa fa-pencil" style="font-size: medium;"> Edit</i></a>
                                 </li>
+                                
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-light btn" id="navbarDropdown" role="button"
+                                    <a class="nav-link dropdown-toggle text-light btn btn-outline-info btn-sm" href="#" id="navbarDropdown" role="button"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-exchange">Convert</i>
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{% url 'convertapproved' pordr.porderid %}">Approved</a>
-                                        {% if pordr.status != 'Billed' %}
-                                            <a class="dropdown-item" href="{% url 'convertbilled' pordr.porderid %}">
-                                                Bill
-                                            </a>
-                                        {% endif %}    
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-light btn" role="button" href="{% url 'render_pdfpurchase_view' pordr.porderid%}">
-                                        <i class="fa fa-file-pdf-o">Pdf</i>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-light btn" role="button" href="goeditpurchaseorder/{{ pordr.porderid }}{{ pitem.porder }}"><i class=" fa fa-pencil">Edit</i></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-light btn" role="button" href="deletepurchasorder/{{ pordr.porderid }}{{ pitem.porder }}"><i class="fa fa-trash-o delete">Delete</i></a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-light btn" href="#" id="navbarDropdown" role="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-file">File</i>
+                                        <i class="fa fa-file" style="font-size: medium;"> File</i>
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" data-toggle="modal" data-target="#file"><i class="fa fa-paperclip">&nbsp;Attach File</i></a>
@@ -298,6 +272,19 @@
                                             <a class="dropdown-item" download  href="{{pordr.file.url }}"><i class="fa fa-download">&nbsp;Download File</i></a>
                                         {% endif %}
                                     </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-light btn btn-outline-info btn-sm mx-1" href="#" id="navbarDropdown" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-share-alt" style="font-size: medium;"> Share</i> 
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item " style="margin-left: 15px;">{% send_email object.title "New:{{object.title}}" object_or_url " Email" %}</a>
+                                        <a class="dropdown-item " href="#" style="margin-left: 15px;">{% post_to_whatsapp object_or_url " Whatsapp" %}</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light btn btn-outline-info btn-sm " role="button" href="deletepurchasorder/{{ pordr.porderid }}{{ pitem.porder }}"><i class="fa fa-trash-o delete" style="font-size: medium;"> Delete</i></a>
                                 </li>
                             </ul>
                         </div>
@@ -310,64 +297,80 @@
                 <div class="my-5 page" size="A4" >
                     <div class="p-5">
                         <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
-                            <div class="ribbon-inner ribbon-open">{{pordr.status}}<!----></div></div>
+                            <div class="ribbon-inner ribbon-open">{{pordr.status}}<!----></div>
+                        </div>
+                        <div>
+                            <center class="h3" style="color: #000;"><b>PURCHASE ORDER</b></center>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-md-8">
+                                <h5 class="text-info" style="font-weight: bold;">{{cmp1.cname }}</h5>
+                                <p class="address" style="font-weight: bold;color: #000;"> {{cmp1.caddress}}<br>
+                                    {{cmp1.city}},
+                                    {{cmp1.state}}<br>
+                                    {{cmp1.pincode}}<br>
+                                    {{cmp1.cemail}}<br>
+                                    {{cmp1.phone}}<br>
+                                </p> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="top-left">
+                                    <div class="graphic-path">
+                                        <p style="color:#000">Order NO : <b>PO - {{pordr.puchaseorder_no }}</b></p>
+                                    </div>
+                                    <div class="mt-2">
+                                        
+                                        <p style="color:#000">Date : <b>{{ pordr.date | date:'d-m-Y' }}</b></p>
+                                        <p style="color:#000">Excpected Date : <b>{{ pordr.deliver_date | date:'d-m-Y' }}</b></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <section class="top-content bb d-flex justify-content-between">
                             <div class="logo">
-                                <!-- <img src="logo.png" alt="" class="img-fluid"> -->
+                                
                             </div>
+                            
                             <div class="top-left">
-                                <div class="graphic-path">
-                                    <p>Purchase Order</p>
-                                </div>
-                                <div class="position-relative">
-                                    <p> PO - <span>{{pordr.puchaseorder_no }}</span></p>
-                                </div>
+                                
                             </div>
                         </section>
+                    
             
-                        <section class="store-user mt-5">
+                        <section class="store-user">
                             <div class="col-12">
-                                <div class="row bb pb-3">
-                                    <div class="col-7">
-                                        <p>FROM,</p>
-                                        <h5>{{cmp1.cname }}</h5>
-                                        <p class="address "> {{cmp1.caddress}}<br>
-                                            {{cmp1.city}},
-                                            {{cmp1.state}}<br>
-                                            {{cmp1.pincode}}<br>
-                                            {{cmp1.email}}<br>
+                                <div class="row bb pb-3 mt-3">
+                                    <div class="col-4">
+                                        <label class="text-white bg-info w-100 p-1"><b>BILL TO</b></label>
+                                        <h5 class="text-info" style="font-weight: bold;">{{pordr.vendor_name}}</h5>
+                                        <p class="address" style="font-weight: bold;margin-top: 2px; color: #000;" >
+                                            {{pordr.vendor_mail}} <br>
+                                            {{ pordr.billing_address|linebreaksbr }}
+                                            
                                         </p>  
                                     </div>
-                                    <div class="col-5">
-                                        <p>TO,</p>
-                                        <h5>{{pordr.vendor_name}}</h5>
-                                        <p class="address col-6" style="margin-left: -14px;" > {{ pordr.billing_address}} </p>   
+                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        <label class="text-white bg-info w-100 p-1"><b>DELIVER TO</b></label>
+                                        <h5 class="text-info" style="font-weight: bold;">{{pordr.contact_name}}</h5>
+                                        <p class="address" style="font-weight: bold;margin-top: 2px; color: #000;">{{ pordr.deliverto|linebreaksbr }} </p>   
                                     </div>
                                 </div>
-                                <div class="row extra-info pt-3">
-                                    <div class="col-7">
-                                        <p>Deliver To Details: </p>
-                                        <p>{{pordr.contact_name}}</p>
-                                        <p class="address col-6" style="margin-left: -14px;"> {{ pordr.deliverto}} </p>   
-                                    </div>
-                                    <div class="col-5">
-                                        <p>Date : <span>{{ pordr.date | date:'d-m-Y' }}</span></p>
-                                        <p>Excpected Date : <span> {{ pordr.deliver_date | date:'d-m-Y' }}</span></p>
-                                    </div>
-                                </div>
+                               
                             </div>
                         </section>
             
-                        <section class="product-area mt-4">
-                            <table class="table table-hover table-bordered">
+                        <section class="product-area mt-2">
+                            <table class="table table-hover table-bordered table-primary">
                                 <thead>
-                                    <tr>
-                                        <td>Items</td>
-                                        <td>HSN Code</td>
-                                        <td>Quantity</td>
-                                        <td>Rate</td>
-                                        <td>Tax</td>
-                                        <td>Total</td>
+                                    <tr class="table-primary">
+                                        <th class="text-center" style="color:#000">Items</th>
+                                        <th class="text-center" style="color:#000">HSN Code</th>
+                                        <th class="text-center" style="color:#000">Quantity</th>
+                                        <th class="text-center" style="color:#000">Rate</th>
+                                        <th class="text-center" style="color:#000">Tax</th>
+                                        <th class="text-center" style="color:#000">Discount</th>
+                                        <th class="text-center" style="color:#000">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -378,6 +381,7 @@
                                             <td class="text-center" style="color:#000">{{ pordr.quantity }}</td>
                                             <td class="text-center" style="color:#000">{{ pordr.rate  }}</td>
                                             <td class="text-center" style="color:#000">{{ pordr.tax  }}</td>
+                                            <td class="text-center" style="color:#000">{{ pordr.discount  }}</td>
                                             <td class="text-center" style="color:#000">{{ pordr.amount }}</td>
                                         </tr>
                                     {% endfor %} 
@@ -386,63 +390,121 @@
                         </section>
             
                         <section class="balance-info">
-                            <div class="row">
-                                <div class="col-8">
-                                    <p class="m-0 font-weight-bold" style="color:black"> Note: </p>
-                                    <p style="color:black">{{pordr.note}}</p>
-                                </div>
+                            <div class="row mt-3">
                                 <div class="col-4">
-                                    <table class="table border-0 table-hover">
-                                        <tr >
-                                            <td style="color:black">Sub Total :</td>
-                                            <td style="color:black">{{pordr.sub_total}}</td>
-                                        </tr>
-                                        {% if pordr.discount != "0" %}
-                                        <tr>
-                                            <td style="color:black">Discount</td>
-                                            <td style="color:black">{{pordr.discount}}</td>
-                                        </tr>
-                                        {% endif %}
-                                        {% if pordr.igst != "0" %}
-                                        <tr>
-                                            <td style="color:black">IGST :</td>
-                                            <td style="color:black">{{pordr.igst}}</td>
-                                        </tr>
-                                        {% endif %}
-                                        {% if pordr.cgst != "0" %}
-                                        <tr>
-                                            <td style="color:black">CGST :</td>
-                                            <td style="color:black">{{pordr.cgst}}</td>
-                                        </tr>
-                                        {% endif %}
-                                        {% if pordr.sgst != "0" %}
-                                        <tr>
-                                            <td style="color:black">SGST :</td>
-                                            <td style="color:black">{{pordr.sgst}}</td>
-                                        </tr>
-                                        {% endif %}
-                                        {% if pordr.tcs != "0.00" %}
-                                        <tr style="display: none;">
-                                            <td style="color:black">TCS:</td>
-                                            <td style="color:black">{{pordr.tcs}}</td>
-                                        </tr>
-                                        {% endif %}
-                                        <tfoot>
-                                            <tr>
-                                                <td style="color:black">Grand Total:</td>
-                                                <td style="color:black ;">{{pordr.grand_total}}</td>
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            
+                                            <tr >
+                                                <td style="color: #000;text-align: left;">Payment Type</td>
+                                                <td style="color: #000;text-align: left;">:</td>
+                                                
+                                                {% if bank %}
+                                                <th style="color: #000;text-align: center;">{{bank.bankname}}</th>
+                                                {% else %}
+                                                <th style="color: #000;text-align: center;">{{pordr.payment_type}}</th>
+                                                {% endif %}
                                             </tr>
-                                        </tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                
+                                            </tr>
+                                            {% if pordr.note %}
+                                            <tr >
+                                                <td style="color: #000;text-align: left;">Note</td>
+                                                <td style="color: #000;text-align: left;">:</td>
+                                                <th style="color: #000;text-align: center;">{{pordr.note}}</th>
+                                            </tr>
+                                            {% endif %}
+
+                                        </tbody>
                                     </table>
+                                    
+                                </div>
+                                <div class="col-4"></div>
+                                <div class="col-4">
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr >
+                                                <td style="color: #000;">Sub Total</td>
+                                                <td style="color: #000;">:</td>
+                                                <td class="text-center" style="color: #000;">{{pordr.sub_total}}</td>
+                                            </tr>
+                                            
+                                            {% if pordr.igst != "0" %}
+                                            <tr >
+                                                <td style="color: #000;">IGST</td>
+                                                <td style="color: #000;">:</td>
+                                                <td class="text-center" style="color: #000;">{{pordr.igst}}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% if pordr.cgst != "0" %}
+                                            <tr>
+                                                <td style="color: #000;">CGST</td>
+                                                <td style="color: #000;">:</td>
+                                                <td class="text-center" style="color: #000;">{{pordr.cgst}}</td>
+                                                
+                                            </tr>
+                                            {% endif %}
+                                            {% if pordr.sgst != "0" %}
+                                            <tr>
+                                                <td style="color: #000;">SGST</td>
+                                                <td style="color: #000;">:</td>
+                                                <td class="text-center" style="color: #000;">{{pordr.sgst}}</td>
+                                            </tr>
+                                            {% endif %}
+                                            <tr >
+                                                <td style="color: #000;">Shipping Charge</td>
+                                                <td style="color: #000;">:</td>
+                                                <td class="text-center" style="color: #000;">{{pordr.ship_charge}}</td>
+                                            </tr>
+                                            {% if pordr.tcs != "0.00" %}
+                                            <tr style="display: none;">
+                                                <td style="color:black">TCS:</td>
+                                                <td style="color:black">{{pordr.tcs}}</td>
+                                            </tr>
+                                            {% endif %}
+                                            
+                                        </tbody>
+
+                                    </table>
+                                    <hr>
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr >
+                                                <th style="color: #000;">Grand Total</th>
+                                                <th style="color: #000;">:</th>
+                                                <th class="text-center" style="color: #000;">{{pordr.grand_total}}.0</th>
+                                            </tr>
+                                            <!-- <tr >
+                                                <td style="color: #000;">Advance Amount</td>
+                                                <td style="color: #000;">:</td>
+                                                <th class=" text-center" style="color: #000;">{{pordr.paid_amount}}</th>
+                                            </tr>
+                                            <tr >
+                                                <td style="color: #000;">Balance Amount</td>
+                                                <td style="color: #000;">:</td>
+                                                <th class="text-center" style="color: #000;">{{pordr.balance_amount}}</th>
+                                            </tr> -->
+
+                                        </tbody>
+
+                                    </table>
+                                    
+                                    
+                                    
+                                    
                                 </div> 
                             </div>
-                            <div class="row container-fluid  p-2 m-0">
+                            <div class="row container-fluid">
                                 <div class="col-sm-3 m-0 p-0"><label style="color: #000;"><b>Authorized Signature</b></label></div>
-                                <div class="col-sm-4 m-0 p-0"><input type="text" id="sign"></div>
+                                <div class="col-sm-4 m-0 p-0 text-dark">________________________</div>
                                 <div class="col-sm-4 m-0 p-0"></div>
                             </div>
                         </section>
-                        <img src="cart.jpg" class="img-fluid cart-bg" alt="">   
+                        
                     </div>
                 </div>
             </div>
@@ -482,18 +544,20 @@
                 });
             });
         </script>
+        
 
-        <script> 
-            function printDiv() { 
-                var divContents = document.getElementById("panel").innerHTML; 
-                var a = window.open('', '', 'height=800, width=800'); 
-                a.document.write('<html>'); 
-                a.document.write('<body > <h1> <br>'); 
-                a.document.write(divContents); 
-                a.document.write('</body></html>'); 
-                a.document.close(); 
-                a.print(); 
-            } 
+       
+        <script>
+            function printDiv() {
+                var printContents = document.getElementById("whatToPrint").innerHTML;
+                var originalContents = document.body.innerHTML;
+
+                document.body.innerHTML = printContents;
+
+                window.print();
+
+                document.body.innerHTML = originalContents;
+            }
         </script>
 
         <script type="text/javascript">

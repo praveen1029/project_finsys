@@ -64,7 +64,56 @@
         background: rgb(177, 177, 177);
     }
 
-    
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        header {
+            display: none;
+        }
+
+        .print-only * {
+            visibility: visible;
+
+        }
+
+        .print-only {
+            color: black;
+            /* position: absolute; */
+
+            /* position: fixed; */
+            left: 0;
+            top: 0;
+            right: 0;
+            height: auto;
+            /* page-break-before: always;
+            page-break-inside: avoid; */
+        }
+
+        @page {
+            size: 100%;
+            margin: 0;
+            height: auto;
+        }
+
+        .print-only .table {
+            border-collapse: collapse;
+            width: 100%;
+            /* Set the width to 100% of the printed page */
+            margin: 0;
+            /* Remove margins to maximize the width */
+        }
+
+        .print-only th,
+        .print-only td {
+            padding: 8px;
+            /* Add padding for better readability */
+            text-align: center;
+            /* Center-align text in cells */
+        }
+
+    }
 </style>
 
 <div class="page-content">
@@ -75,8 +124,8 @@
                     <h6>{{cmp1.cname}}</h6>
                     <h2 class="mb-0">GSTR-3B REPORT</h2>
                     <div class="display">
-                        <div id="d1"  style="display: inline-block;"></div>
-                        <div id="d2"  style="display: inline-block;"></div>
+                        <div id="d1" style="display: inline-block;"></div>
+                        <div id="d2" style="display: inline-block;"></div>
                     </div>
 
                 </center>
@@ -92,56 +141,114 @@
                 <div class=" left">
                     <div class="px-2">
                         <label style="text-align:left ">From</label><br>
-                        <input  name="FromDate" class="inputdate form-control" type="date"
-                             id="in1">
+                        <input name="FromDate" class="inputdate form-control" type="date" id="in1">
                     </div>
 
                     <div class="px-2">
                         <label style="text-align:left ">To</label><br>
-                        <input  name="ToDate" type="date" class="inputdate form-control"
-                            id="in2">
+                        <input name="ToDate" type="date" class="inputdate form-control" id="in2">
                     </div>
 
                 </div>
                 <div class="right">
+                    <button class="btn btn_pdf btn-outline-info">pdf</button>
                     <button class="btn btn_print btn-outline-info">Print</button>
                     <button class=" btn btn-outline-info" id="export-button" onclick="exportAsExcel()">Excel</button>
                 </div>
             </div>
-            <h6 id="inp"></h6>
+
 
             <br>
 
 
             <script type="text/javascript">
                 $(document).ready(function ($) {
+
+
+                    $(document).on('click', '.btn_pdf', function (event) {
+                        console.log('print1');
+                        event.preventDefault();
+                        var element = document.getElementById('pdf-card');
+                        element.style.color = 'black';
+                        element.style.backgroundColor = '#243e54';
+                        var opt =
+                        {
+                            margin: 1,
+                            filename: 'gstr3b' + '.pdf',
+                            image: { type: 'png', quality: 1.0 },
+                            html2canvas: { scale: 3, useCORS: true, backgroundColor: null },
+                            jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' }
+                        };
+                        html2pdf().set(opt).from(element).save();
+
+                    });
+
+                });
+                $(document).ready(function ($) {
                     console.log('print');
 
                     $(document).on('click', '.btn_print', function (event) {
                         console.log('print1');
                         event.preventDefault();
-                        var printContent = document.getElementById("pdf-card").innerHTML;
-                        var originalContents = document.body.innerHTML;
+                        // var printContent = document.getElementById("pdf-card").innerHTML;
+                        // var originalContents = document.body.innerHTML;
 
-                        // Create a <div> container for centering
-                        var containerDiv = document.createElement("div");
-                        containerDiv.style.textAlign = "center"; // Center-align the content
+                        // // Create a <div> container for centering
+                        // var containerDiv = document.createElement("div");
+                        // containerDiv.style.textAlign = "center"; // Center-align the content
 
-                        // Create the <h1> element
-                        var h1Element = document.createElement("h1");
-                        h1Element.textContent = "GSTR-3B REPORT"; // Replace "Title" with your desired title text
+                        // // Create the <h1> element
+                        // var h1Element = document.createElement("h1");
+                        // h1Element.textContent = "GSTR-3B REPORT"; // Replace "Title" with your desired title text
 
-                        // Append the <h1> element to the container
-                        containerDiv.appendChild(h1Element);
+                        // // Append the <h1> element to the container
+                        // containerDiv.appendChild(h1Element);
 
-                        // Insert the container and the print content
-                        containerDiv.innerHTML += printContent;
-                        document.body.innerHTML = containerDiv.outerHTML;
+                        // // Insert the container and the print content
+                        // containerDiv.innerHTML += printContent;
+                        // document.body.innerHTML = containerDiv.outerHTML;
 
-                        window.print();
+                        // window.print();
 
-                        // Restore the original contents (excluding the container)
-                        document.body.innerHTML = originalContents;
+                        // // Restore the original contents (excluding the container)
+                        // document.body.innerHTML = originalContents;
+                        const pdfCard = document.getElementById('pdf-card').cloneNode(true);
+
+                        // Create a new window for printing
+                        const printWindow = window.open('', '');
+
+                        pdfCard.style.color = 'black';
+                        pdfCard.style.backgroundColor = '#243e54';
+                        const pageTitle = printWindow.document.createElement('h1');
+                        pageTitle.textContent = 'GSTR2 REPORT'; // Replace 'Page Title' with your desired title text
+                        pageTitle.style.textAlign = 'center';
+                        pageTitle.style.color = 'black';
+
+                        // Append the <h1> element to the new window's body
+                        printWindow.document.body.appendChild(pageTitle);
+
+
+                        // Append the cloned 'pdf-card' div to the new window
+                        printWindow.document.body.appendChild(pdfCard);
+
+                        // Ensure the styles are preserved by copying CSS from the original document
+                        const stylesheets = document.styleSheets;
+                        for (let i = 0; i < stylesheets.length; i++) {
+                            const stylesheet = stylesheets[i];
+                            if (stylesheet.href) {
+                                const link = printWindow.document.createElement('link');
+                                link.rel = 'stylesheet';
+                                link.href = stylesheet.href;
+                                printWindow.document.head.appendChild(link);
+                            }
+                        }
+
+                        // Trigger the print dialog for the new window
+                        printWindow.print();
+
+                        // Close the new window after printing
+                        printWindow.close();
+
 
                     });
 
@@ -175,18 +282,20 @@
         </div>
     </div>
 
-    <div class="card radius-15" id="pdf-card">
+    <div class="card radius-15 print-only" id="pdf-card" size="A4">
         <div class="card-body">
             <div class="container-fluid">
+                <h6>1. Details of outward supplies and inward supplies liable to reverse charge</h6>
+
                 <table class="table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable1">
                     <thead>
                         <tr>
                             <th style="text-align: center;">Nature Of Supplies</th>
                             <th style="text-align: center;">Total Taxable Value</th>
-                            <th style="text-align: center;">IGST</th>
-                            <th style="text-align: center;">CGST</th>
-                            <th style="text-align: center;">SGST</th>
+                            <th style="text-align: center;">Integrated Tax</th>
+                            <th style="text-align: center;">Central Tax</th>
+                            <th style="text-align: center;">State/UT Tax</th>
                             <th style="text-align: center;">Cess</th>
                         </tr>
                     </thead>
@@ -303,7 +412,7 @@
                 </table>
 
                 <br>
-                <h6> Details of inter-State supplies made to unregistered persons, composition dealer and UIN holders
+                <h6>2. Details of inter-State supplies made to unregistered persons, composition dealer and UIN holders
                 </h6>
                 <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
@@ -337,15 +446,15 @@
                 </table>
 
                 <br>
-                <h6>Eligible ITC</h6>
+                <h6>3. Details of eligible Input Tax Credit</h6>
                 <table class="table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable3">
                     <thead>
                         <tr class="text-center" style="background-color: rgba(255, 255, 255, 0.137);">
                             <th>Details</th>
-                            <th>IGST</th>
-                            <th>CGST</th>
-                            <th>SGST</th>
+                            <th>Integrated Tax</th>
+                            <th>Central Tax</th>
+                            <th>State/UT Tax</th>
                             <th>Cess</th>
                         </tr>
                         <tr>
@@ -410,7 +519,7 @@
                 </table>
 
                 <br>
-                <h6>Details of exempt, nil-rated and non-GST inward supplies</h6>
+                <h6>4. Details of exempt, nil-rated and non-GST inward supplies</h6>
                 <table class="table table-responsive-md mt-4 table-hover table-bordered"
                     style="background-color: rgba(0, 0, 0, 0.2);" id="myTable4">
                     <thead>
@@ -442,13 +551,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
 <script>
-        var fromDate;
+    var fromDate;
     $('#in1').on('change', function () {
         fromDate = $(this).val();
         $('#in2').prop('min', function () {
             return fromDate
         })
-        var tdate= new Date(fromDate)
+        var tdate = new Date(fromDate)
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById("d1").innerHTML = tdate.toLocaleDateString(undefined, options);
     })
@@ -458,9 +567,9 @@
         $('#in1').prop('max', function () {
             return toDate
         })
-        var tdate= new Date(toDate)
+        var tdate = new Date(toDate)
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById("d2").innerHTML = "  To  "+tdate.toLocaleDateString(undefined, options);
+        document.getElementById("d2").innerHTML = "  To  " + tdate.toLocaleDateString(undefined, options);
     })
 
 </script>

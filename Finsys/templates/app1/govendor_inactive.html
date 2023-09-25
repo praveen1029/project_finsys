@@ -1,0 +1,167 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+    {% load static %}
+    {% if user.is_authenticated %}
+
+        <style>
+            tr.row1:hover{
+                cursor: pointer;
+                background-color: #1827348e;
+            }
+        </style>
+        
+        <div class="page-content">
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="card-title">
+                        <center><h2 class="mb-0">INACTIVE VENDORS</h2></center>
+                        <hr>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button id="exportBtn" class="btn btn-outline-info" style="color: white;">Export to Excel</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card radius-15">
+                <div class="card-body">
+                    <div class="row mt-4 mb-5">
+                        <div class="col-md-3">
+                            <div class="d-flex">
+                                <input type="text" id="search" class="form-control" placeholder="Search.." autocomplete="off" style="border-color: #213b52;">
+                                <center><i class="fa fa-search form-control" style="width: 60px;border-color: #213b52;"></i></center>
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-3"></div>
+                        <div class="btn-group col-md-2">
+                            <a class="btn btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                role="button" style="color: white;">Filter By
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'govendor' %}">All</a>
+                                <a class="dropdown-item" href="{% url 'vendor_active' %}">Active</a>
+                                <a class="dropdown-item" href="{% url 'vendor_inactive' %}">Inactive</a>
+                            </div>
+                            <a href="{% url 'addvendor' %}" class="btn btn-outline-info fa fa-plus" role="button" style="color: white;">&nbsp;New</a>   
+                        </div>
+                    </div>
+
+                    <div class="container-fluid">
+                        <table class="table table-responsive-md mt-4" id="table">
+                            <thead>
+                            <tr>
+                                <th>NAME</th>
+                                <th>COMPANY NAME</th>
+                                <th>EMAIL ID</th>
+                                <th>MOBILE NO</th>
+                                <th>GST TYPE</th>
+                                <th>GSTIN</th>
+                                <th>PAN NO</th>
+                                <th>STATUS</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for v in vndr %}
+                            <tr class="row1" onclick="window.location='viewvendor/{{ v.vendorid }} ';">
+                                <td>{{ v.firstname }} {{ v.lastname }}</td>
+                                <td>{{ v.companyname }}</td>
+                                <td>{{ v.email }}</td>
+                                <td>{{ v.mobile }}</td>
+                                <td>{{ v.gsttype }}</td>
+                                <td>{{ v.gstin }}</td>
+                                <td>{{ v.panno }}</td>
+                                {% if v.is_active %}
+                                <td>Active</td>
+                                {% else %}
+                                <td>Inactive</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="porderno">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #213b52;">
+                    <div class="modal-header">
+                        <h3 class="m-3">Prchase Order#</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your Purchase Order number are set on auto-generate to save your time Are you shure about changing the setting ?</p>
+                    
+                        <div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" value="Taxable" name="taxpref">
+                                <label class="form-check-label">Continue auto generated purchase order number</label>
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" value="Tax Exempt" name="taxpref">
+                                <label class="form-check-label">I will add them manually each time</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-info" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById("search");
+            const dataTable = document.getElementById("table");
+            
+            searchInput.addEventListener("input", function() {
+                const searchText = searchInput.value.toLowerCase();
+                const rows = dataTable.getElementsByTagName("tr");
+            
+                for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip table header row
+                const rowData = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
+                if (rowData.includes(searchText)) {
+                    rows[i].style.display = ""; // Show the row
+                } else {
+                    rows[i].style.display = "none"; // Hide the row
+                }
+                }
+            });
+            });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+        <script>
+            document.getElementById("exportBtn").addEventListener("click", function () {
+            const Table = document.getElementById("table");
+            const ws = XLSX.utils.table_to_sheet(Table);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "table.xlsx");
+          });
+
+        </script>
+
+        
+          
+
+
+
+
+
+    
+    {% endif %}
+    
+{% endblock %}

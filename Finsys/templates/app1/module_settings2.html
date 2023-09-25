@@ -1,0 +1,26 @@
+<!-- second_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Second Page</title>
+</head>
+<body>
+    <form method="post" action="{% url 'hide_options' %}">
+        {% csrf_token %}
+        <h1>Item</h1>
+        <label for="option1">Items</label>
+        <input type="checkbox" name="selected_options" value="items" id="option1"><br>
+        
+        <label for="option2">Price Lists</label>
+        <input type="checkbox" name="selected_options" value="pricelist" id="option2"><br>
+        
+        <label for="option3">Stock Adjustments</label>
+        <input type="checkbox" name="selected_options" value="stockadjustment" id="option3"><br>
+        
+        <!-- Add more options as needed -->
+        
+        <input type="submit" value="Update Options">
+    </form>
+</body>
+</html>

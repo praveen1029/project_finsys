@@ -237,6 +237,7 @@
                 display: none;
                 margin-top: 10px;
             }
+            
         </style>
         <div class="page-content">
             <div class="card radius-15">
@@ -363,8 +364,8 @@
                                                             <input type="text" name="hsn" class="form-control" 
                                                                        style="background-color: #2a4964; color: white;"
                                                                       
-                                                                       placeholder="Enter a valid HSN code" required>
-                                                              
+                                                                       placeholder="Enter a valid HSN code" required id="hsnField" oninput="validateHSN()">
+                                                                       <div id="errorText" style="color: red;"></div>
                                                             </div>
                                                            
                                                         </div>
@@ -384,9 +385,9 @@
                                             <div class="col-md-3">
                                                 <div class="form-check mt-1">
                                                    
-                                                        <input class="form-check-input" name="taxref" type="checkbox" id="inclusive"
-                                                             value="taxable" checked >taxable
-                                                        <label style="color: white;">
+                                                        <input class="form-check-input" name="taxref" type="checkbox" id="inclusive" 
+                                                             value="taxable"  onchange="ShowHideDivi(inclusive)" >taxable
+                                                        <label style="color: white;" for="inclusive">
                                                             </label>
                                                   
                                                 </div>
@@ -400,6 +401,39 @@
                                         </div>
                                     </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mx-0">
+                                            <div class="row"  id="intrastateFiled" style="display: none;">
+                                                <div class="col-md-6 mt-3">
+                                                    <label for="validationCustom05"
+                                                           style="color: white;">Intra State Tax Rate</label>
+                                                           <select name="intra_st" class="form-control" 
+                                                           style="background-color: #2a4964; color: white;"
+                                                           id="validationCustom05" >
+                                                          
+                                                           <option value=0>GST 0 (0%)</option>
+                                                           <option value=5>GST 5 (5%)</option>
+                                                           <option value=12>GST 12 (12%)</option>
+                                                           <option value=18>GST 18 (18%)</option>
+                                                           <option value=28>GST 28 (28%)</option>
+                                                           
+                                                </select>
+                                                <br>
+                                                    <label for="validationCustom05"
+                                                           style="color: white;">Inter State Tax Rate</label>
+                                                    <select name="inter_st" class="form-control" 
+                                                              style="background-color: #2a4964; color: white;"
+                                                              id="validationCustom05" >
+                                                             
+                                                              <option value=0>IGST 0 (0%)</option>
+                                                           <option value=5>IGST 5 (5%)</option>
+                                                           <option value=12>IGST 12 (12%)</option>
+                                                           <option value=18>IGST 18 (18%)</option>
+                                                           <option value=28>IGST 28 (28%)</option>
+                                                           
+                                                </select>
+                                                </div>
+                                            </div><br>
                                         <div class="row">
                                             <div class="col-md-6 mt-3">
                                                 <label for="validationCustom01"
@@ -456,9 +490,15 @@
                                                               style="background-color: #2a4964; color: white;"
                                                               id="validationCustom01" >
                                                               <option value="Sales">Sales</option>
+                                                              <option value="General Income">General Income</option>
+                                                           <option value="Account Charges">Account Charges</option>
+                                                           <option value="Intrest Charges">Intrest Charges</option>
+                                                           <option value="Other Charges">Other Charges</option>
                                                            {% for a in acc1 %}
                                                            <option value="{{ a.name }}">{{ a.name }}</option>
                                                            {% endfor %}</select>
+                                                           
+
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -521,41 +561,14 @@
                                             </div>
                                         </div>-->
                                         
-                                        <div class="row">
-                                            <div class="col-md-12 mx-0">
+                                        
+
                                                 <div class="row">
                                                     <div class="col-md-6 mt-3">
-                                                        <label for="validationCustom01"
-                                                               style="color: white;">Intra State Tax Rate</label>
-                                                               <select name="intra_st" class="form-control" 
-                                                               style="background-color: #2a4964; color: white;"
-                                                               id="validationCustom01" >
-                                                               <option >Choose...</option>
-                                                               <option value=0>GST 0 (0%)</option>
-                                                               <option value=5>GST 5 (5%)</option>
-                                                               <option value=12>GST 12 (12%)</option>
-                                                               <option value=18>GST 18 (18%)</option>
-                                                               <option value=28>GST 28 (28%)</option>
-                                                               <option value=0>Out of Scope(0%)</option>
-                                                    </select>
+                                                       
                                                     </div>
-                                                
-                                                    <div class="col-md-6 mt-3">
-                                                        <label for="validationCustom01"
-                                                               style="color: white;">Inter State Tax Rate</label>
-                                                        <select name="inter_st" class="form-control" 
-                                                                  style="background-color: #2a4964; color: white;"
-                                                                  id="validationCustom01" >
-                                                                  <option >Choose...</option>
-                                                                  <option value=0>IGST 0 (0%)</option>
-                                                               <option value=5>IGST 5 (5%)</option>
-                                                               <option value=12>IGST 12 (12%)</option>
-                                                               <option value=18>IGST 18 (18%)</option>
-                                                               <option value=28>IGST 28 (28%)</option>
-                                                               <option value=0>Out of Scope(0%)</option>
-                                                    </select>
-                                                    </div>
-                                                </div><br>
+                                                   
+                                                </div>
                                                 <div class="row" >
                                                    
                                                    
@@ -777,6 +790,14 @@
     
             }
         </script>
+        <script type="text/javascript">
+            function ShowHideDivi(inclusive) {
+                var inter = document.getElementById("intrastateFiled");
+    
+                inter.style.display = inclusive.checked ? "block" : "none";
+    
+            }
+        </script>
 
         <script>
             function validateForm() {
@@ -787,6 +808,22 @@
                 }
             }
         </script>
+<script>
+    function validateHSN() {
+      var hsnField = document.getElementById("hsnField");
+      var errorText = document.getElementById("errorText");
+      var hsnValue = hsnField.value;
+
+      // Check if the HSN value has more than 6 digits
+      if (hsnValue.length !== 6) {
+        errorText.innerText = "HSN must be exactly 6 digits ";
+        hsnField.style.borderColor = "red";
+      } else {
+        errorText.innerText = "";
+        hsnField.style.borderColor = ""; // Reset border color
+      }
+    }
+  </script>
 
        
     {% endif %}

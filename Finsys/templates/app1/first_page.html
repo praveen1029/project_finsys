@@ -1,0 +1,18 @@
+<!-- first_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Page</title>
+</head>
+<body>
+    <h1>First Page</h1>
+    <ul>
+        {% for item in my_list %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'second_page' %}">Go to Second Page</a>
+</body>
+</html>

@@ -383,23 +383,60 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <div class="form-check mt-1">
-                                                   
-                                                        <input class="form-check-input" value="taxable" name="taxref" type="checkbox" id="inclusive"
-                                                               >taxable
-                                                        <label style="color: white;">
-                                                            </label>
+                                                    <input class="form-check-input"  type="checkbox" id="inclusive" name="taxref" 
+                                                 value="taxable"   onclick="ShowHideDivi(inclusive)"  {% if a.tax_reference == 'taxable' %}checked{% endif %}  onchange="toggleTaxFields()">taxable
+                                               <label style="color: white;" for="inclusive">
+                                                   </label>
                                                   
                                                 </div>
                                             </div>
                                             <div class="form-check mt-1">
                                                 <input class="form-check-input" name="taxref" type="checkbox"
-                                                       value="non taxable" required
-                                                       id="check">
-                                                <label style="color: white;">non taxable</label>
+                                                       value="non taxable" required onclick="hideshow(check)"
+                                                       id="check" {% if a.tax_reference == 'non taxable' %}checked{% endif %} onchange="toggleTaxFields()">
+                                                <label style="color: white;" for="check">non taxable</label>
                                             </div>
                                         </div>
                                     </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mx-0" >
+                                        
+                                            <div class="row"  id="intrastateFiled" style="display: none;" >
+                                                <div class="col-md-6 mt-3">
+                                                    <label for="validationCustom05"
+                                                           style="color: white;">Intra State Tax Rate</label>
+                                                           <select name="intra_st"  class="form-control" 
+                                                           style="background-color: #2a4964; color: white;"
+                                                           id="validationCustom05" required>
+                                                          
+                                                           <option value="{{ a.intra_st }}" selected >GST {{ a.intra_st }} %</option>
+                                                           <option >Choose...</option>
+                                                           <option value=0>GST 0 </option>
+                                                           <option value=5>GST 5 </option>
+                                                           <option value=12>GST 12 </option>
+                                                           <option value=18>GST 18</option>
+                                                           <option value=28>GST 28 </option>
+                                                           
+                                                </select>
+                                                <br>
+                                                
+                                                    <label for="validationCustom05"
+                                                           style="color: white;">Inter State Tax Rate</label>
+                                                    <select name="inter_st" class="form-control" 
+                                                              style="background-color: #2a4964; color: white;"
+                                                              id="validationCustom05" required >
+                                                              <option value="{{ a.inter_st }}" selected>IGST {{ a.inter_st }} %</option>
+                                                              <option >Choose...</option>
+                                                              <option value=0>IGST 0 </option>
+                                                           <option value=5>IGST 5 </option>
+                                                           <option value=12>IGST 12 </option>
+                                                           <option value=18>IGST 18 </option>
+                                                           <option value=28>IGST 28 </option>
+                                                           
+                                                </select>
+                                                </div>
+                                            </div> <br>
                                         <div class="row">
                                             <div class="col-md-6 mt-3">
                                                 <label for="validationCustom01"
@@ -454,7 +491,7 @@
                                                     <select name="sale_account" class="form-control" 
                                                         style="background-color: #2a4964; color: white;"
                                                         id="validationCustom01" value="{{ a.account_sal }}" >
-                                                        <option value="{{ a.account_sal }}">{{ a.account_sal }}</option>
+                                                       {{ a.account_sal }}
                                                         <option value="Sales">Sales</option>
                                                         {% for a in acc1 %}
                                                             <option value="{{ a.name }}">{{ a.name }}</option>
@@ -471,7 +508,7 @@
                                                                    <textarea class="form-control" name="pur_desc"
                                                                    id="validationCustom01" value="{{ a.pur_desc }}" 
                                                                    style="background-color: #2a4964; color: white;"
-                                                                   ></textarea>  
+                                                                   >{{ a.pur_desc }}</textarea>  
                                                         </div>
                                                         <div class="col-md-6 mt-3">
                                                             <label for="validationCustom01"
@@ -479,48 +516,10 @@
                                                                    <textarea class="form-control" name="sale_desc"
                                                                    id="validationCustom01" value="{{ a.sale_desc }}"
                                                                    style="background-color: #2a4964; color: white;"
-                                                                   ></textarea>
+                                                                   >{{ a.sale_desc }}</textarea>
                                                         </div>
                                                     </div>
-                                        <div class="row">
-                                            
-                                            <div class="col-md-12 mt-3"><center>
-                                                <label for="validationCustom03"
-                                                       style="color: white;">Tax rate</label><br>
-                                                <select class="custom-select" name="tax"
-                                                        id="tax" required
-                                                        style=" width:60%;background-color: #2a4964; color: white;">
-                                                    <!-- <option   value="{{ a.tax_rate }}">{{ a.tax_rate }}</option> -->
-                                                    <option value=28>28.0% GST (28%)</option>
-                                                    <option value=28>28.0% IGST (28%)</option>
-                                                    <option value=18>18.0% GST (18%)</option>
-                                                    <option value=18>18.0% IGST (18%)</option>
-                                                    <option value=15>15.0% ST (100%)</option>
-                                                    <option value=14.5>14.5% ST (100%)</option>
-                                                    <option value=14>14.00% ST (100%)</option>
-                                                    <option value=14>14.0% VAT (100%)</option>
-                                                    <option value=12.36>12.36% ST (100%)</option>
-                                                    <option value=12>12.0% GST (12%)</option>
-                                                    <option value=12>12.0% IGST (12%)</option>
-                                                    <option value=6>6.0% GST (6%)</option>
-                                                    <option value=6>6.0% IGST (6%)</option>
-                                                    <option value=5>5.0% GST (5%)</option>
-                                                    <option value=5>5.0% IGST (5%)</option>
-                                                    <option value=5>5.0% VAT (100%)</option>
-                                                    <option value=4>4.0% VAT (100%)</option>
-                                                    <option value=3>3.0% GST (3%)</option>
-                                                    <option value=3>3.0% IGST (3%)</option>
-                                                    <option value=2>2.0% CST (100%)</option>
-                                                    <option value=0.25>0.25% GST (0.25%)</option>
-                                                    <option value=0.25>0.25% IGST (0.25%)</option>
-                                                    <option value=0>0% GST (0%)</option>
-                                                    <option value=0>0% IGST (0%)</option>
-                                                    <option value=0>Exempt GST (0%)</option>
-                                                    <option value=0>Exempt IGST (0%)</option>
-                                                    <option value=0>Out of Scope(0%)</option>
-                                                </select></center>
-                                            </div>
-                                        </div><br>
+                                     
                                         <div class="row">
                                                    
                                                    
@@ -544,7 +543,7 @@
                                                        <select name="invacc" class="form-control" 
                                                           style="background-color: #2a4964; color: white;"
                                                           id="validationCustom01" required>
-                                                       <option  value="{{ a.inventry }}">{{ a.inventry }}</option>
+                                                       {{ a.inventry }}
                                                        <option value="Inventory Assets">Inventory Assets</option>
                                                    
                                             </select>
@@ -558,33 +557,14 @@
                                             </div>
                                         </div>
                                        
-
-                                    
-                       
                                         
-                                        <div class="row">
-                                            <div class="col-md-12 mx-0">
+
+
                                                 <div class="row">
                                                     <div class="col-md-6 mt-3">
-                                                        <label for="validationCustom01"
-                                                               style="color: white;">Intra State Tax Rate</label>
-                                                               <select name="intra_st" class="form-control" 
-                                                               style="background-color: #2a4964; color: white;"
-                                                               id="validationCustom01" required>
-                                                               <option value="{{ a.intra_st }}">{{ a.intra_st }}</option>
-                                                             <option value="goods">Goods</option>
-                                                         <option value="services">Services</option></select>
+                                                       
                                                     </div>
-                                                    <div class="col-md-6 mt-3">
-                                                        <label for="validationCustom01"
-                                                               style="color: white;">Inter State Tax Rate</label>
-                                                        <select name="inter_st" class="form-control" 
-                                                                  style="background-color: #2a4964; color: white;"
-                                                                  id="validationCustom01" required>
-                                                                  <option value="{{ a.inter_st }}">{{ a.inter_st }}</option>
-                                                                <option value="goods">Goods</option>
-                                                            <option value="services">Services</option></select>
-                                                    </div>
+                                                   
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6 mt-3">
@@ -600,7 +580,7 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" value="Active" type="radio" name="status" id="flexRadioDefault1">
+                                                            <input class="form-check-input" value="Active" type="radio" name="status" id="flexRadioDefault1" {% if a.status == 'Active' %}checked{% endif %}>
                                                             <label class="form-check-label" for="flexRadioDefault1">
                                                               Active
                                                             </label>
@@ -608,21 +588,30 @@
                                                          
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" value="Inactive" type="radio" name="status" id="flexRadioDefault2" >
+                                                        <input class="form-check-input" value="Inactive" type="radio" name="status" id="flexRadioDefault2" {% if a.status == 'Inactive' %}checked{% endif %} >
                                                         <label class="form-check-label" for="flexRadioDefault2">
                                                           Inactive
                                                         </label>
                                                     </div>
+                                                   
+
+                                                    
+                                                 
+                                                
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-3" style="display: none;">
                                                         <input type="date" name="itmdate" value="{{ a.itmdate|date:'Y-m-d' }}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             </div>
+                                      
                                        
                                         <div class="row mt-5 mb-5">
-                                            <div class="col-md-4"></div>
+                                            <div class="col-md-4">
+                                               
+                                            </div>
                                             <div class="col-md-4">
                                                 <button class="btn btn-outline-info rounded-pill w-100 text-light"
                                                         type="submit">UPDATE
@@ -742,17 +731,9 @@
                 
 
             });
-            // $('#tax').on('change', function () {
-            //     alert(" INFORMATION \n\n Change saleprice before changing tax.\n Never mind if already done.")
-            //     tax = parseFloat($('#tax').val());
-            //     saleprice = parseFloat($('#saleprice').val());
-            //     if ($("#inclusive").prop('checked') == true) {
-            //         taxm = 1 + (tax / 100)
-            //         salep = saleprice / taxm
-            //         document.getElementById('saleprice').value = salep.toFixed(2)
-            //     }
-            // });
+            
         </script>
+ 
 
       
         <script type="text/javascript">
@@ -763,7 +744,80 @@
     
             }
         </script>
+        <script type="text/javascript">
+            function ShowHideDivi(inclusive) {
+                var inter = document.getElementById("intrastateFiled");
+    
+                inter.style.display = inclusive.checked ? "block" : "none";
+    
+            }
+        </script>
 
+     
+
+<script>
+    function toggleTaxFields() {
+        var inclusiveCheckbox = document.getElementById('inclusive');
+        
+        var intrastateField = document.getElementById('intrastateFiled');
+        var interstateField = document.getElementById('interstateFiled');
+        
+
+        if (inclusiveCheckbox.checked) {
+           
+            intrastateField.style.display = 'block';
+            interstateField.style.display = 'block';
+        } else {
+           
+            intrastateField.style.display = 'none';
+            interstateField.style.display = 'none';
+        }
+    }
+
+    // Set the initial state of tax fields on page load
+    window.onload = function () {
+        toggleTaxFields();
+    }
+
+</script>
+
+<script>
+    // Get references to the tax checkboxes
+    const taxableCheckbox = document.getElementById('inclusive');
+    const nonTaxableCheckbox = document.getElementById('check');
+    
+    // Get references to the tax rate fields
+    const intraStateTaxRateField = document.querySelector('select[name="intra_st"]');
+    const interStateTaxRateField = document.querySelector('select[name="inter_st"]');
+    
+    // Store the original values of the tax rate fields
+    const originalIntraStateValue = intraStateTaxRateField.value;
+    const originalInterStateValue = interStateTaxRateField.value;
+    
+    // Add an event listener to the taxable checkbox
+   
+       taxableCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+            // If taxable checkbox is checked, uncheck the non-taxable checkbox
+            nonTaxableCheckbox.checked = false;      
+            // You can set the tax rate fields to their original values or handle as needed
+            // intraStateTaxRateField.value = originalIntraStateValue;
+            // interStateTaxRateField.value = originalInterStateValue;
+        }
+    });
+    
+    // Add an event listener to the non-taxable checkbox
+    nonTaxableCheckbox.addEventListener('change', function () {
+        if (this.checked) {
+            // If non-taxable checkbox is checked, uncheck the taxable checkbox
+            taxableCheckbox.checked = false;
+            
+            // Set the tax rate fields to "0"
+            intraStateTaxRateField.value = '0';
+            interStateTaxRateField.value = '0';
+        }
+    });
+</script>
        
     {% endif %}
 

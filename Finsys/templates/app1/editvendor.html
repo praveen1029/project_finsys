@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-4 mt-3">
                                 <label for="validationCustom03">Email</label>
                                 <input type="email" class="form-control" id="validationCustom03" name="email"
@@ -88,16 +88,16 @@
                                 <select class="form-control" id="gsttyp" name="gsttype" onchange="showgsttyp()"
                                     onclick="hidinput('hello', this)" required>
                         
-                                    <option value="{{ vndr.gsttype }}">{{ vndr.gsttype }}</option>
+                                    <option hidden value="{{ vndr.gsttype }}">{{ vndr.gsttype }}</option>
 
-                                    <option value="Registered Business - Regular">Registered Business - Regular</option>
-                                    <option value="Registered Business - Composition">Registered Business - Composition</option>
-                                    <option value="unregistered Business">unregistered Business</option>
-                                    <option value="Overseas">Overseas</option>
-                                    <option value="Special Economic Zone (SEZ)">Special Economic Zone (SEZ)</option>
-                                    <option value="Demed Exports">Demed Exports</option>
+                                    <option value="Registered Business - Regular">Registered Business - Regular <span><i>(Business that is registered under gst)</i></span></option>
+                                    <option value="Registered Business - Composition">Registered Business - Composition (Business that is registered under composition scheme in gst)</option>
+                                    <option value="unregistered Business">Unregistered Business (Business that has not been registered under gst)</option>
+                                    <option value="Overseas">Overseas (Import/Export of supply outside india)</option>
+                                    <option value="Special Economic Zone (SEZ)">Special Economic Zone (SEZ) (Business that is located in a special economic zone of india or a SEZ developer)</option>
+                                    <!-- <option value="Demed Exports">Demed Exports</option>
                                     <option value="Tax Deductor">Tax Deductor</option>
-                                    <option value="SEZ Developer">SEZ Developer</option>
+                                    <option value="SEZ Developer">SEZ Developer</option> -->
                                 </select>
                                 <!-- <div class="invalid-feedback">Please select a valid registration type.</div>
                                 <div class="hide" id="regular"><label><i>(Business that is registered under gst)</i></label></div>
@@ -138,7 +138,7 @@
                             </div> 
 
                         </div>
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-md-3 mt-2">
                                <label for="">Place of Supply</label>
                                 <input type="text" class="form-control" value="{{ vndr.sourceofsupply }}" name="sourceofsupply">
@@ -168,18 +168,25 @@
                             </div>
                             
                             <div class="col-md-3 mt-2">
-                               <label for="">Opening Balance</label>
-                                <input type="number" class="form-control" name="openingbalance" placeholder="INR"
-                                value="{{ vndr.openingbalance }}">
+                                <label for="">Opening Balance</label>
+                                <div class="d-flex">
+                                    <select class="form-control w-50" name="opb_type" required>
+                                        <option value="{{vndr.opening_balance_type}}" hidden>{{vndr.opening_balance_type}}</option>
+                                        <option value="Debit">Debit</option>
+                                        <option value="Credit">Credit</option>
+                                    </select>
+                                    <input type="number" class="form-control" name="openingbalance" value="{{ vndr.openingbalance }}" required>
+                               </div>
+                                
                             </div>
                             <div class="col-md-3 mt-2">
                                <label for="">Payment Terms</label>
                                <select class=" form-control" id="validationCustom02" name="paymentterms">
-                                    <option value="{{ vndr.paymentterms }}">{{ vndr.paymentterms }}</option>
+                                    <option hidden value="{{ vndr.paymentterms }}">{{ vndr.paymentterms }}</option>
                                     <option value="Due on Receipt">Due on Receipt</option>
-                                    <option value="Net 15">NET15</option>
-                                    <option value="Net 30">NET30</option>
-                                    <option value="Net 60">NET60</option>
+                                    <option value="Net 60">NET 60</option>
+                                    <option value="Net 45">NET 45</option>
+                                    <option value="Net 30">NET 30</option>
                                 </select>
                                 
                             </div>
@@ -360,7 +367,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row  mb-5">
                                     <div class="col-md-6 mt-3">
                                         <div class="form-row">
                                             <label for="shippinco">Pin Code</label>
