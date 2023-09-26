@@ -42575,17 +42575,61 @@ def purchase(request):
 
 @login_required(login_url='regcomp')
 def sales(request):
+    cmp1 = company.objects.get(id=request.session["uid"])   
+    from_date = -1
+    context = {'cmp1':cmp1,"from_date":from_date}
+    return render(request, 'app1/sales.html', context)
+
+
+from datetime import datetime
+
+def getsales(request):
+    if request.method == 'POST':
         cmp1 = company.objects.get(id=request.session["uid"])   
 
-        fromdates=request.user.date_joined.date()
-        todates=date.today()
+        from_date = request.POST['fromdate']
+        year = from_date[0:4]
+        month = from_date[5:7]
+        day = from_date[8:11]
+        from_date = year + "-" + month + "-" + day
 
-        
-        
-        context = {'cmp1':cmp1,"fromdate":fromdates,"todate":todates}
-        return render(request, 'app1/sales.html', context)
+        to_date = request.POST['todate']
+        year = to_date[0:4]
+        month = to_date[5:7]
+        day = to_date[8:11]
+        to_date = year + "-" + month + "-" + day
 
+        try:
+            from_date = datetime.strptime(from_date, '%Y-%m-%d')
+        except:
+            from_date = -1
+            messages.error(request, 'Please Select Start Date !!!!')
+            return render(request,"app1/sales.html",{"from_date":from_date})
 
+        try:
+            to_date = datetime.strptime(to_date, '%Y-%m-%d')
+        except:
+            from_date = -1
+            messages.error(request, 'Please Select End Date !!!!')
+            return render(request,"app1/sales.html",{"from_date":from_date})
+
+        item = itemtable.objects.filter(cid=cmp1,itmdate__gte=from_date,itmdate__lte=to_date)
+
+        context = {'cmp1':cmp1,"item":item,"from_date":from_date,"to_date":to_date}
+        return render(request,"app1/sales.html",context)
+    else:
+        return render(request,"app1/sales.html")
+
+def module_settings1(request):
+    cmp1 = company.objects.get(id=request.session["uid"])   
+    item = itemtable.objects.filter(cid=cmp1)
+    context = {'cmp1':cmp1,"item":item}
+    return render(request,"app1/module_settings1.html",context)
+
+def module_settings2(request):
+    user_id = request.session.get('selected_options', None)
+    print(user_id)
+    return render(request,"app1/module_settings2.html")
 
 #alltransactions render
 def alltransactions(request):
@@ -44283,11 +44327,5 @@ def module_settings(request):
     context = {'selected_options': json.dumps(selected_options)}
     return render(request,"app1/module_settings.html",context)
 
-def module_settings1(request):
-    return render(request,"app1/module_settings1.html")
 
-def module_settings2(request):
-    user_id = request.session.get('selected_options', None)
-    print(user_id)
-    return render(request,"app1/module_settings2.html")
 

@@ -92,7 +92,6 @@ class customer(models.Model):
     class meta:
         db_table = "customer"
 
-
 class supplier(models.Model):
     supplierid = models.AutoField(('SUPPLIERID'), primary_key=True)
     cid = models.ForeignKey(company, on_delete=models.CASCADE)

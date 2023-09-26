@@ -1078,6 +1078,7 @@ urlpatterns = [
     path('daybook',views.daybook,name='daybook'), 
     path('purchase',views.purchase,name='purchase'),
     path('sales',views.sales,name='sales'),
+    path('getsales',views.getsales,name='getsales'),
     
     #sale_summary_byHSN
     path('sale_summary_byHSN',views.sale_summary_byHSN,name='sale_summary_byHSN'),
@@ -1142,5 +1143,4 @@ urlpatterns = [
     path('hide_options/',views.hide_options, name='hide_options'),
     path('module_settings1/',views.module_settings1, name='module_settings1'),
     path('module_settings2/',views.module_settings2, name='module_settings2'),
-
 ]
