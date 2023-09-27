@@ -8,6 +8,21 @@
         .tr{
             cursor: pointer;
         }
+
+        @media print{
+        body{
+            visibility: hidden;
+        }
+
+        #printtable{
+            visibility: visible;
+            width: auto;
+            height: auto;
+            margin-top: -600px;
+            margin-left: -100px;
+        }
+    }
+
     </style>
 
     <div class="page-content">
@@ -33,31 +48,27 @@
                             <input type="date" name="fromdate" id="fromdate">   &nbsp; 
                             <label for="To">To</label>  &nbsp;
                             <input type="date" name="todate" id="todate">  &nbsp;
-                
-                            <!-- <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>  &nbsp;
-                            <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button> -->
                         </div>
-                        <div class="col-sm-4" id="frdate" style="display: none;">
-                            <label for="from">From</label>
-                            <input type="date" class="form-control" name="fper">
-                        </div>
-                        <div class="col-sm-4" id="todate" style="display: none;">
-                            <label for="from">To</label>
-                            <input type="date" class="form-control" name="tper">
-                        </div>
-                        <div class="col-md-3"></div>
                     </div>
                     <br>
                     <br>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
                             style="margin-top: 8px; background-color: #2f516f;color: white;">
                         </div>
-                        <div class="col-md-2"></div>
-                        <div class="col-md-2"></div>
-                        <div class="col-md-2">
-                            <button class="btn btn-outline-info  rounded-pill w-100" type="submit">Run report</button>
+                        <div class="col-md-5"></div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+                            <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_pdf"
+                                role="button">PDF</a>
+                        </div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+                            <a href="" id="printBtn" class="btn btn-outline-info text-grey btn_print"
+                                role="button" onclick="printtable()">Print</a>
+                        </div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+        
+                            <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Excel</a>
                         </div>
                     </div>
                 </form>
@@ -66,7 +77,7 @@
         <div class="card radius-15 p-5">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" id="printtable">
                         <div class="rectangle"
                              style="background-color: white;width: 1100px;height:1500px;border: 3px white;padding: 50px;margin: 20px">
                             <div class="rectangle"
@@ -90,38 +101,59 @@
                                                 DATE
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                ITEM NAME
+                                                INVOICE NUMBER
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                STOCK IN
+                                                PARTY
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                STOCK OUT
+                                                TRANSACTION 
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                STOCK
+                                                PAYMENT TYPE
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                TOTAL AMOUNT
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                BALANCE
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody id="tb">
-                                        {% for i in item %}
+                                        {% for i in inv %}
                                             <tr class="tr">
-                                                <td class="center text-dark 1st">{{ i.itmdate   | date:'Y-m-d' }}</td>  
-                                                <td class="center text-dark"><a style="color: blue;" href="{% url 'streport' i.id%}">{{ i.name }}</a></td>
-                                                <td class="center text-dark 1st">{{ i.stockin }}</td>  
-                                                <td class="center text-dark">{{ i.stockout }}</td>         
-                                                <td class="center text-dark">{{i.stock}}</td>       
+                                                <td class="center text-dark">{{ i.invoicedate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ i.invoiceno }}</a></td>
+                                                <td class="center text-dark">{{ i.customername }}</td>  
+                                                <td class="center text-dark">Inventory</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{i.grandtotal}}</td>       
+                                                <td class="center text-dark">{{i.baldue}}</td>       
                                             </tr></a>
                                         {% endfor %}
-                                        <thead>
-                                            <tr>
-                                                <th class="center font-weight-dark border-dark" style="color: black;">TOTAL</th>
-                                                <th class="center font-weight-dark border-dark" style="color: black;"></th>
-                                                <th class="center font-weight-dark border-dark" style="color: black;" id="t3"></th>
-                                                <th class="center font-weight-dark border-dark" style="color: black;" id="t2"></th>
-                                                <th class="center font-weight-dark border-dark" style="color: black;" id="t1"></th>
-                                            </tr>
-                                        </thead>
+                                        {% for c in cnote %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ c.creditdate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ c.credit_no }}</a></td>
+                                                <td class="center text-dark">{{ c.customer }}</td>  
+                                                <td class="center text-dark">Credit Note</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{c.grandtotal}}</td>       
+                                                <td class="center text-dark">0</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                        {% for r in rinv %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ r.startdate}}</td> 
+                                                <td class="center text-dark">{{ r.recinvoiceno }}</a></td>
+                                                <td class="center text-dark">{{ r.customername }}</td>  
+                                                <td class="center text-dark">Reccuring Invoice</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{r.grandtotal}}</td>       
+                                                <td class="center text-dark">{{r.baldue}}</td>       
+                                            </tr></a>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
@@ -150,34 +182,6 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function(){
-            var empsalary;
-            var total = 0;
-            $('td:nth-child(5)').each(function()
-            {
-                salary = $(this).html();
-                total +=parseInt(salary);
-                $('#t1').text(total)
-            });
-            var empsalary1;
-            var total1 = 0;
-            $('td:nth-child(4)').each(function()
-            {
-                salary1 = $(this).html();
-                total1 +=parseInt(salary1);
-                $('#t2').text(total1)
-            });
-            var empsalary2;
-            var total2 = 0;
-            $('td:nth-child(3)').each(function()
-            {
-                salary2 = $(this).html();
-                total2 +=parseInt(salary2);
-                $('#t3').text(total2)
-            });
-        });
-    </script>   
 
 <script>
     function ApplyDateFilter() { 
@@ -222,6 +226,52 @@
     const toDateInput = document.getElementById("todate"); 
     fromDateInput.addEventListener("change", ApplyDateFilter);
     toDateInput.addEventListener("change", ApplyDateFilter);
+</script>
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('saletable');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('sales_summary_report.' + (type || 'xlsx')));
+    }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+      
+
+        $(document).on('click', '.btn_pdf', function (event) {
+           
+            event.preventDefault();
+            var element = document.getElementById('saletable');  
+            element.style.color = 'black';
+            element.style.backgroundColor = 'white';
+            var opt =
+            {
+                margin: 1,
+                filename: 'sales_summary_report' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait', }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+ 
+ });
+</script>
+
+<script>
+    function printtable(){
+
+        window.print();
+    }
 </script>
   
 

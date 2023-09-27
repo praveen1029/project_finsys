@@ -42548,15 +42548,42 @@ def cashflow(request):
 
 @login_required(login_url='regcomp')
 def daybook(request):
-        cmp1 = company.objects.get(id=request.session["uid"])  
-
-        fromdates=request.user.date_joined.date()
-        todates=date.today()
-
+    cmp1 = company.objects.get(id=request.session["uid"])  
+    sales = payment.objects.filter(cid=cmp1.cid).all()
+    purchase = purchasepayment.objects.filter(cid=cmp1.cid).all()
+    estimates = estimate.objects.filter(cid=cmp1.cid).all()
+    deliverychallan = challan.objects.filter(cid=cmp1.cid).all()
+    paymentreceived = payment.objects.filter(cid=cmp1.cid).all()
+    invoices = invoice.objects.filter(cid=cmp1.cid).all()
+    bill = purchasebill.objects.filter(cid=cmp1.cid).all()
+    payments = purchasepayment.objects.filter(cid=cmp1.cid).all()
+    manualjournal = mjournal.objects.filter(cid=cmp1.cid).all()
+    creditnote = salescreditnote.objects.filter(cid=cmp1.cid).all()
+    debitnote = purchasedebit.objects.filter(cid=cmp1.cid).all()
+    salesorders = salesorder.objects.filter(cid=cmp1.cid).all()
+    purchaseorders = purchaseorder.objects.filter(cid=cmp1.cid).all()
+    expenses = purchase_expense.objects.filter(cid=cmp1.cid).all()
+    retainerinvoices = RetainerInvoices.objects.filter(cid=cmp1.cid).all()
+    context={
+        'cmp1':cmp1,
+        'sales':sales,
+        'purchase':purchase,
+        'estimates':estimates,
+        'deliverychallan':deliverychallan,
+        'paymentreceived':paymentreceived,
+        'invoices':invoices,
+        'bill':bill,
+        'payments':payments,
+        'manualjournal':manualjournal,
+        'creditnote':creditnote,
+        'debitnote':debitnote,
+        'salesorders':salesorders,
+        'purchaseorders':purchaseorders,
+        'expenses':expenses,
+        'retainerinvoices':retainerinvoices,
         
-        
-        context = {'cmp1':cmp1,"fromdate":fromdates,"todate":todates}
-        return render(request, 'app1/daybook.html', context)
+     }
+    return render(request, 'app1/daybook.html', context)
 
 
 @login_required(login_url='regcomp')
@@ -42576,54 +42603,26 @@ def purchase(request):
 @login_required(login_url='regcomp')
 def sales(request):
     cmp1 = company.objects.get(id=request.session["uid"])   
-    from_date = -1
-    context = {'cmp1':cmp1,"from_date":from_date}
+    item = itemtable.objects.filter(cid=cmp1)
+    context = {'cmp1':cmp1,"item":item}
     return render(request, 'app1/sales.html', context)
 
+@login_required(login_url='regcomp')
+def salessummaryreport(request):
+    cmp1 = company.objects.get(id=request.session["uid"])   
+    inv = invoice.objects.filter(cid=cmp1)
+    cnote = salescreditnote.objects.filter(cid=cmp1)
+    rinv = recinvoice.objects.filter(cid=cmp1)
+    context = {'cmp1':cmp1,"inv":inv,"cnote":cnote,"rinv":rinv}
+    return render(request, 'app1/sales_summary_report.html', context)
 
-from datetime import datetime
-
-def getsales(request):
-    if request.method == 'POST':
-        cmp1 = company.objects.get(id=request.session["uid"])   
-
-        from_date = request.POST['fromdate']
-        year = from_date[0:4]
-        month = from_date[5:7]
-        day = from_date[8:11]
-        from_date = year + "-" + month + "-" + day
-
-        to_date = request.POST['todate']
-        year = to_date[0:4]
-        month = to_date[5:7]
-        day = to_date[8:11]
-        to_date = year + "-" + month + "-" + day
-
-        try:
-            from_date = datetime.strptime(from_date, '%Y-%m-%d')
-        except:
-            from_date = -1
-            messages.error(request, 'Please Select Start Date !!!!')
-            return render(request,"app1/sales.html",{"from_date":from_date})
-
-        try:
-            to_date = datetime.strptime(to_date, '%Y-%m-%d')
-        except:
-            from_date = -1
-            messages.error(request, 'Please Select End Date !!!!')
-            return render(request,"app1/sales.html",{"from_date":from_date})
-
-        item = itemtable.objects.filter(cid=cmp1,itmdate__gte=from_date,itmdate__lte=to_date)
-
-        context = {'cmp1':cmp1,"item":item,"from_date":from_date,"to_date":to_date}
-        return render(request,"app1/sales.html",context)
-    else:
-        return render(request,"app1/sales.html")
 
 def module_settings1(request):
     cmp1 = company.objects.get(id=request.session["uid"])   
-    item = itemtable.objects.filter(cid=cmp1)
-    context = {'cmp1':cmp1,"item":item}
+    inv = invoice.objects.filter(cid=cmp1)
+    cnote = salescreditnote.objects.filter(cid=cmp1)
+    rinv = recinvoice.objects.filter(cid=cmp1)
+    context = {'cmp1':cmp1,"inv":inv,"cnote":cnote,"rinv":rinv}
     return render(request,"app1/module_settings1.html",context)
 
 def module_settings2(request):

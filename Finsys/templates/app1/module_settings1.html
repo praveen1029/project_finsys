@@ -16,6 +16,7 @@
                 <div class="card-title">
                     <center><h2 class="mb-0">{{ cmp1.cname }}</h2></center><br>
                     <center><label style="font-size: 20px;">SALES REPORT</label></center>
+                    <center><p id="hdate"></p></center>
                 </div>
                 <hr/>
             </div>
@@ -27,16 +28,11 @@
                 <form action="" method="post" class="needs-validation">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="form-group">
-                          <div class="px-2">
-                            <label style="text-align:left ">From</label><br>
-                            <input name="FromDate" class="inputdate form-control" type="date" id="in1">
-                        </div>
-    
-                        <div class="px-2">
-                            <label style="text-align:left ">To</label><br>
-                            <input name="ToDate" type="date" class="inputdate form-control" id="in2">
-                        </div>
+                        <div class="col-sm-4">
+                            <label for="Between">From</label> &nbsp;
+                            <input type="date" name="fromdate" id="fromdate">   &nbsp; 
+                            <label for="To">To</label>  &nbsp;
+                            <input type="date" name="todate" id="todate">  &nbsp;
                 
                             <!-- <button type="submit" class="btn btn-secondary" data-dismiss="modal" onclick="clearFilter(this)">Clear</button>  &nbsp;
                             <button type="submit" class="btn"  data-dismiss="modal" style="background-color: #198fed;"  onclick="ApplyDateFilter(this)">Apply</button> -->
@@ -80,34 +76,68 @@
                                 <h2 style="margin-left: 200px;">{{ cmp1.cname }}</h2>
                             </div>
                             <div class="table-responsive" style="margin-top: 100px;">
-                                <p style="text-align: right;color: black;">
-                                  <span style="font-weight: bold;" >From Date : <span id="from"></span> </span><br> 
-                                  <span style="font-weight: bold;" >To Date : <span id="to"></span></span>
-                                </p>
-                                <table class="table table-hover " id="myTable">
+                                <p style="text-align: right;color: black; display: none;" id="datediv">
+                                    <span style="font-weight: bold;" >From Date : <span id="from"></span> </span><br> 
+                                    <span style="font-weight: bold;" >To Date : <span id="to"></span></span>
+                                  </p>
+                                <table class="table table-hover " id="tbl_exporttable_to_xls">
                                     <thead>
                                         <tr>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                ITEM NAME
+                                                DATE
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                QUANTITY IN
+                                                INVOICE NUMBER
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                QUANTITY OUT
+                                                PARTY
                                             </th>
                                             <th class="center font-weight-dark border-dark" style="color: black;">
-                                                AVAILABLE FOR SALE
+                                                TRANSACTION 
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                PAYMENT TYPE
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                TOTAL AMOUNT
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                BALANCE
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody id="tb">
-                                        {% for i in item %}
+                                        {% for i in inv %}
                                             <tr class="tr">
-                                                <td class="center text-dark"><a style="color: blue;" href="{% url 'streport' i.id%}">{{ i.name }}</a></td>
-                                                <td class="center text-dark 1st">{{ i.stockin }}</td>  
-                                                <td class="center text-dark">{{ i.stockout }}</td>         
-                                                <td class="center text-dark">{{i.stock}}</td>       
+                                                <td class="center text-dark">{{ i.invoicedate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ i.invoiceno }}</a></td>
+                                                <td class="center text-dark">{{ i.customername }}</td>  
+                                                <td class="center text-dark">Inventory</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{i.grandtotal}}</td>       
+                                                <td class="center text-dark">{{i.baldue}}</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                        {% for c in cnote %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ c.creditdate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ c.credit_no }}</a></td>
+                                                <td class="center text-dark">{{ c.customer }}</td>  
+                                                <td class="center text-dark">Credit Note</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{c.grandtotal}}</td>       
+                                                <td class="center text-dark">0</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                        {% for r in rinv %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ r.startdate}}</td> 
+                                                <td class="center text-dark">{{ r.recinvoiceno }}</a></td>
+                                                <td class="center text-dark">{{ r.customername }}</td>  
+                                                <td class="center text-dark">Reccuring Invoice</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{r.grandtotal}}</td>       
+                                                <td class="center text-dark">{{r.baldue}}</td>       
                                             </tr></a>
                                         {% endfor %}
                                         <thead>
@@ -121,7 +151,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -129,49 +159,6 @@
         </div>
         <div id="demo"><p></p></div>
     </div>
-
-  <script>
-            var filterValue = this.value.toLowerCase();
-            var table = document.getElementById("myTable");
-            var rows = table.getElementsByTagName("tr");
-
-
-            document.getElementById("demo").innerHTML = rows 
-            if (document.getElementById("in1").value == '' && document.getElementById("in2").value == '') {
-                for (var i = 1; i < rows.length-1; i++) { // Start from 1 to skip the table header row
-
-                    var firstColumnValue = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
-
-                    if (firstColumnValue.indexOf(filterValue) > -1) {
-
-                        rows[i].style.display = "";
-                    } else {
-                        rows[i].style.display = "none";
-                    }
-
-                }
-
-            }
-            else {
-                var startDate = new Date(document.getElementById("in1").value);
-                var endDate = new Date(document.getElementById("in2").value);
-                for (var i = 1; i < rows.length-1; i++) {
-                    var firstColumnValue = rows[i].getElementsByTagName("td")[0].textContent.toLowerCase();
-                    var row = rows[i];
-                    var dateCell = row.cells[1];
-                    var rowDate = new Date(dateCell.textContent);
-
-                    if (rowDate >= startDate && rowDate <= endDate && firstColumnValue.indexOf(filterValue) > -1) {
-                        row.style.display = "";
-                    } else {
-                        row.style.display = "none";
-                    }
-
-                }
-            }
-
-
-  </script>
 
     <script>
         $(document).ready(function(){
@@ -203,98 +190,48 @@
     </script>
 
 <script>
-  function fromfun(fromdate){
-    year = fromdate.slice(0,4)
-    month = fromdate.slice(5,7)
-    day = fromdate.slice(8,11)
-    document.getElementById("from").innerHTML = day + "-" + month + "-" + year
+    function ApplyDateFilter() { 
 
-  }
+    var fromDate = document.getElementById('fromdate').value;
+    var toDate = document.getElementById('todate').value;
+    document.getElementById("datediv").style.display = "block";
+    document.getElementById("from").innerHTML = fromDate;
+    document.getElementById("to").innerHTML = toDate;
+    document.getElementById("hdate").innerHTML = fromDate +" to " + toDate;
+    table = document.getElementById("tbl_exporttable_to_xls");
+    tr = table.getElementsByTagName("tr");
+     
+    for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
 
-  function tofun(todate){
-    year = todate.slice(0,4)
-    month = todate.slice(5,7)
-    day = todate.slice(8,11)
-    document.getElementById("to").innerHTML = day + "-" + month + "-" + year
-  }
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+               
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    var check = new Date(txtValue)
+                    var from = new Date(fromDate);
+                    var to = new Date(toDate);
+                    if(check >= from && check <= to){
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
 
-  from_date = "{{from_date}}"
-  to_date = "{{to_date}}"
-
-
-
-  var from_date =  from_date;
-  var to_date =  to_date;
-
-// Define a mapping of month names to their numeric representations
-var monthMap = {
-  "Jan.": "01",
-  "Feb.": "02",
-  "March": "03",
-  "April": "04",
-  "May": "05",
-  "June": "06",
-  "July": "07",
-  "Aug.": "08",
-  "Sept.": "09",
-  "Oct.": "10",
-  "Nov.": "11",
-  "Dec.": "12"
-};
-
-// Function to format the date as DD-MM-YYYY
-function formatDate(from_date) {
-  // Split the input string by commas and remove extra spaces
-  var dateParts = from_date.split(",").map(function (part) {
-    return part.trim();
-  });
-
-  // Extract month, day, and year components
-  var monthDayYear = dateParts[0].split(" ");
-  var month = monthMap[monthDayYear[0]];
-  var day = monthDayYear[1];
-  var year = dateParts[1];
-
-  // Create the formatted date string in DD-MM-YYYY format
-  var formattedDate = day + "-" + month + "-" + year;
-
-  return formattedDate;
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
 }
+ 
+</script>
 
-// Call the formatDate function with the input date
-var from_date = formatDate(from_date);
-var to_date = formatDate(to_date);
-
-document.getElementById("from").innerHTML=from_date
-document.getElementById("to").innerHTML=to_date
-
-
-
-if(from_date.length == 9){
-  fyear = from_date.slice(5,9)
-  fmonth = from_date.slice(2,4)
-  fday = '0'+from_date.slice(0,1)
-}else{
-  fyear = from_date.slice(6,10)
-  fmonth = from_date.slice(3,5)
-  fday = from_date.slice(0,2)
-}
-
-if(to_date.length == 9){
-  tyear = to_date.slice(5,9)
-  tmonth = to_date.slice(2,4)
-  tday ='0' +to_date.slice(0,1)
-}else{
-  tyear = to_date.slice(6,10)
-  tmonth = to_date.slice(3,5)
-  tday = to_date.slice(0,2)
-}
-
-document.getElementById("fromdate").value = fyear + '-' + fmonth + '-' + fday
-document.getElementById("todate").value = tyear + '-' + tmonth + '-' + tday
-
-
-
+<script>
+    const fromDateInput = document.getElementById("fromdate");
+    const toDateInput = document.getElementById("todate"); 
+    fromDateInput.addEventListener("change", ApplyDateFilter);
+    toDateInput.addEventListener("change", ApplyDateFilter);
 </script>
 
 {% endblock %}
