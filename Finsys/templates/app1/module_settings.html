@@ -1,6 +1,22 @@
 {% extends 'app1/base.html' %}
 {% block body %}
 
+    <style>
+        #update{
+            width: 25vh;
+            margin-right: auto;
+            margin-left: auto;
+            margin-bottom: 5vh;
+            margin-top: 2vh;
+            background-color: #2a4964;
+            color: white;
+            font-size: large;
+            height: 7vh;
+            border-radius: 5vh;
+            border-color: #1b87dd;
+        }
+    </style>
+
     
     <form method="post" action="{% url 'hide_options' %}">
         {% csrf_token %}
@@ -15,153 +31,164 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-2">
-                <h2 style="text-align: center;">ITEM</h2>
-                <label for="option1">Items</label>
-                <input type="checkbox" name="selected_options" value="items" id="option1" style="float: right;"><br>
-                
-                <label for="option2">Price Lists</label>
-                <input type="checkbox" name="selected_options" value="pricelist" id="option2" style="float: right;"><br>
-                
-                <label for="option3">Stock Adjustments</label>
-                <input type="checkbox" name="selected_options" value="stockadjustment" id="option3" style="float: right;"><br>
-            </div><br>
-            <div class="col-md-2">
-                <h2 style="text-align: center;">CASH & BANK</h2>
-                <label for="option4">Offline Banking</label>
-                <input type="checkbox" name="selected_options" value="Offlinebanking" id="option4" style="float: right;"><br>
-                
-                <label for="option5">Bank Reconcilation</label>
-                <input type="checkbox" name="selected_options" value="bankreconcilation" id="option5" style="float: right;"><br>
-                
-                <label for="option6">Bank Holders</label>
-                <input type="checkbox" name="selected_options" value="bankholders" id="option6" style="float: right;"><br>
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3" style="background-color:#162532;">
+                        <h3 style="text-align: center; padding-top: 1vh;">PURCHASE</h3>
+                        <hr>
 
-                <label for="option7">Cash In Hand</label>
-                <input type="checkbox" name="selected_options" value="cashinhands" id="option7" style="float: right;"><br>
-
-                <label for="option8">Cheques</label>
-                <input type="checkbox" name="selected_options" value="cheques" id="option8" style="float: right;"><br>
-
-                <label for="option9">Loan Account</label>
-                <input type="checkbox" name="selected_options" value="loanaccount" id="option9" style="float: right;"><br>
-            </div><br>
-            <div class="col-md-2">
-                <h2 style="text-align: center;">SALES</h2>
-                <label for="option10">Customers</label>
-                <input type="checkbox" name="selected_options" value="customers" id="option10" style="float: right;"><br>
-                
-                <label for="option11">Estimate</label>
-                <input type="checkbox" name="selected_options" value="estimate" id="option11" style="float: right;"><br>
-                
-                <label for="option12">Sales Order</label>
-                <input type="checkbox" name="selected_options" value="salesorder" id="option12" style="float: right;"><br>
-
-                <label for="option13">Invoices</label>
-                <input type="checkbox" name="selected_options" value="invoices" id="option13" style="float: right;"><br>
-                
-                <label for="option14">Credit Note</label>
-                <input type="checkbox" name="selected_options" value="creditnote" id="option14" style="float: right;"><br>
-                
-                <label for="option15">Payments Received</label>
-                <input type="checkbox" name="selected_options" value="paymentsreceived" id="option15" style="float: right;"><br>
-                
-                <label for="option16">Retainer Invoices</label>
-                <input type="checkbox" name="selected_options" value="retainerinvoices" id="option16" style="float: right;"><br>
-                
-                <label for="option17">Delivery Challan</label>
-                <input type="checkbox" name="selected_options" value="deliverychallan" id="option17" style="float: right;"><br>
-                
-                <label for="option18">Reccuring Invoices</label>
-                <input type="checkbox" name="selected_options" value="reccuringinvoices" id="option18" style="float: right;"><br>
-            </div><br>
-
-            <div class="col-md-2">
-                <h2 style="text-align: center;">PURCHASE</h2>
-                <label for="option19">Vendor</label>
-                <input type="checkbox" name="selected_options" value="vendor" id="option19" style="float: right;"><br>
-                
-                <label for="option20">Purchase Order</label>
-                <input type="checkbox" name="selected_options" value="purchaseorder" id="option20" style="float: right;"><br>
-                
-                <label for="option21">Bill</label>
-                <input type="checkbox" name="selected_options" value="bill" id="option21" style="float: right;"><br>
-                
-                <label for="option22">Expense</label>
-                <input type="checkbox" name="selected_options" value="expense" id="option22" style="float: right;"><br>
-                
-                <label for="option23">Payment</label>
-                <input type="checkbox" name="selected_options" value="payment" id="option23" style="float: right;"><br>
-                
-                <label for="option24">Debit Note</label>
-                <input type="checkbox" name="selected_options" value="debitnote" id="option24" style="float: right;"><br>
-                
-                <label for="option25">Recurring Bill</label>
-                <input type="checkbox" name="selected_options" value="recurringbill" id="option25" style="float: right;"><br>
-            </div><br>
-
-            <div class="col-md-2">
-                <h2 style="text-align: center;">REPORTS</h2>
-                <label for="option26">Transaction Reports</label>
-                <input type="checkbox" name="selected_options" value="transactonreport" id="option26" style="float: right;"><br>
-                
-                <label for="option27">Party</label>
-                <input type="checkbox" name="selected_options" value="party" id="option27" style="float: right;"><br>
-                
-                <label for="option28">GST Reports</label>
-                <input type="checkbox" name="selected_options" value="gstreports" id="option28" style="float: right;"><br>
-                
-                <label for="option29">Profit & Loss</label>
-                <input type="checkbox" name="selected_options" value="profitandloss" id="option29" style="float: right;"><br>
-                
-                <label for="option30">Balance Sheet</label>
-                <input type="checkbox" name="selected_options" value="balancesheet" id="option30" style="float: right;"><br>
-                
-                <label for="option31">Trial Balance</label>
-                <input type="checkbox" name="selected_options" value="trialbalance" id="option31" style="float: right;"><br>
-                
-                <label for="option32">Accounts Receivables</label>
-                <input type="checkbox" name="selected_options" value="accountsreceivables" id="option32" style="float: right;"><br>
-                
-                <label for="option33">Accounts Payables</label>
-                <input type="checkbox" name="selected_options" value="accountspayables" id="option33" style="float: right;"><br>
-                
-                <label for="option34">Stock Summary</label>
-                <input type="checkbox" name="selected_options" value="stocksummary" id="option34" style="float: right;"><br>
-                
-                <label for="option35">Stock Valuation</label>
-                <input type="checkbox" name="selected_options" value="stockvaluation" id="option35" style="float: right;"><br>
-
-                <label for="option36">Sales Summary Report</label>
-                <input type="checkbox" name="selected_options" value="salessummaryreport" id="option36" style="float: right;"><br>
-            </div><br>
-            <div class="col-md-2">
-                <h2 style="text-align: center;">ACCOUNTING</h2>
-                <label for="option37">Chart of Accounts</label>
-                <input type="checkbox" name="selected_options" value="chartofaccounts" id="option37" style="float: right;"><br>
-                
-                <label for="option38">Manual Journal</label>
-                <input type="checkbox" name="selected_options" value="manualjournal" id="option38" style="float: right;"><br>
-                
-                <label for="option39">Reconcile</label>
-                <input type="checkbox" name="selected_options" value="reconcile" id="option39" style="float: right;"><br>
-            </div><br>
-            <div class="col-md-2">
-                <h2 style="text-align: center;">PAYROLL</h2>
-                <label for="option40">Employee</label>
-                <input type="checkbox" name="selected_options" value="employee" id="option40" style="float: right;"><br>
-                
-                <label for="option41">Employee Loan</label>
-                <input type="checkbox" name="selected_options" value="employeeloan" id="option41" style="float: right;"><br>
+                        <label for="option1">Vendor</label>
+                        <input type="checkbox" name="selected_options" value="vendor" id="option1" style="float: right;"><br>
+                        
+                        <label for="option2">Purchase Order</label>
+                        <input type="checkbox" name="selected_options" value="purchaseorder" id="option2" style="float: right;"><br>
+                        
+                        <label for="option3">Bill</label>
+                        <input type="checkbox" name="selected_options" value="bill" id="option3" style="float: right;"><br>
+                        
+                        <label for="option4">Expense</label>
+                        <input type="checkbox" name="selected_options" value="expense" id="option4" style="float: right;"><br>
+                        
+                        <label for="option5">Payment</label>
+                        <input type="checkbox" name="selected_options" value="payment" id="option5" style="float: right;"><br>
+                        
+                        <label for="option6">Debit Note</label>
+                        <input type="checkbox" name="selected_options" value="debitnote" id="option6" style="float: right;"><br>
+                        
+                        <label for="option7">Recurring Bill</label>
+                        <input type="checkbox" name="selected_options" value="recurringbill" id="option7" style="float: right;"><br>
+                    </div><br>
+                    <div class="col-md-3 ml-5" style="background-color:#162532;">
+                        <h3 style="text-align: center; padding-top: 1vh;">CASH & BANK</h3>
+                        <hr>
+                        <label for="option8">Offline Banking</label>
+                        <input type="checkbox" name="selected_options" value="Offlinebanking" id="option8" style="float: right;"><br>
+                        
+                        <label for="option9">Bank Reconcilation</label>
+                        <input type="checkbox" name="selected_options" value="bankreconcilation" id="option9" style="float: right;"><br>
+                        
+                        <label for="option10">Bank Holders</label>
+                        <input type="checkbox" name="selected_options" value="bankholders" id="option10" style="float: right;"><br>
+        
+                        <label for="option11">Cash In Hand</label>
+                        <input type="checkbox" name="selected_options" value="cashinhands" id="option11" style="float: right;"><br>
+        
+                        <label for="option12">Cheques</label>
+                        <input type="checkbox" name="selected_options" value="cheques" id="option12" style="float: right;"><br>
+        
+                        <label for="option13">Loan Account</label>
+                        <input type="checkbox" name="selected_options" value="loanaccount" id="option13" style="float: right;"><br>
+                    </div><br>
+                    <div class="col-md-3 ml-5" style="background-color:#162532;">
+                        <h3 style="text-align: center; padding-top: 1vh;">SALES</h3>
+                        <hr>
+                        <label for="option14">Customers</label>
+                        <input type="checkbox" name="selected_options" value="customers" id="option14" style="float: right;"><br>
+                        
+                        <label for="option15">Estimate</label>
+                        <input type="checkbox" name="selected_options" value="estimate" id="option15" style="float: right;"><br>
+                        
+                        <label for="option16">Sales Order</label>
+                        <input type="checkbox" name="selected_options" value="salesorder" id="option16" style="float: right;"><br>
+        
+                        <label for="option17">Invoices</label>
+                        <input type="checkbox" name="selected_options" value="invoices" id="option17" style="float: right;"><br>
+                        
+                        <label for="option18">Credit Note</label>
+                        <input type="checkbox" name="selected_options" value="creditnote" id="option18" style="float: right;"><br>
+                        
+                        <label for="option19">Payments Received</label>
+                        <input type="checkbox" name="selected_options" value="paymentsreceived" id="option19" style="float: right;"><br>
+                        
+                        <label for="option20">Retainer Invoices</label>
+                        <input type="checkbox" name="selected_options" value="retainerinvoices" id="option20" style="float: right;"><br>
+                        
+                        <label for="option21">Delivery Challan</label>
+                        <input type="checkbox" name="selected_options" value="deliverychallan" id="option21" style="float: right;"><br>
+                        
+                        <label for="option22">Reccuring Invoices</label>
+                        <input type="checkbox" name="selected_options" value="reccuringinvoices" id="option22" style="float: right;"><br>
+                    </div><br>
+                </div><br><br>
+        
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2 " style="background-color:#162532;">
+                        <h3 style="text-align: center; padding-top: 1vh;">REPORTS</h3>
+                        <hr>
+                        <label for="option23">Transaction Reports</label>
+                        <input type="checkbox" name="selected_options" value="transactonreport" id="option23" style="float: right;"><br>
+                        
+                        <label for="option24">Party</label>
+                        <input type="checkbox" name="selected_options" value="party" id="option24" style="float: right;"><br>
+                        
+                        <label for="option25">GST Reports</label>
+                        <input type="checkbox" name="selected_options" value="gstreports" id="option25" style="float: right;"><br>
+                        
+                        <label for="option26">Profit & Loss</label>
+                        <input type="checkbox" name="selected_options" value="profitandloss" id="option26" style="float: right;"><br>
+                        
+                        <label for="option27">Balance Sheet</label>
+                        <input type="checkbox" name="selected_options" value="balancesheet" id="option27" style="float: right;"><br>
+                        
+                        <label for="option28">Trial Balance</label>
+                        <input type="checkbox" name="selected_options" value="trialbalance" id="option28" style="float: right;"><br>
+                        
+                        <label for="option29">Accounts Receivables</label>
+                        <input type="checkbox" name="selected_options" value="accountsreceivables" id="option29" style="float: right;"><br>
+                        
+                        <label for="option30">Accounts Payables</label>
+                        <input type="checkbox" name="selected_options" value="accountspayables" id="option30" style="float: right;"><br>
+                        
+                        <label for="option31">Stock Summary</label>
+                        <input type="checkbox" name="selected_options" value="stocksummary" id="option31" style="float: right;"><br>
+                        
+                        <label for="option32">Stock Valuation</label>
+                        <input type="checkbox" name="selected_options" value="stockvaluation" id="option32" style="float: right;"><br>
+        
+                        <label for="option33">Sales Summary Report</label>
+                        <input type="checkbox" name="selected_options" value="salessummaryreport" id="option33" style="float: right;"><br>
+                    </div><br>
+                    <div class="col-md-2" style="background-color:#162532; margin-left: 5vw;">
+                        <h3 style="text-align: center; padding-top: 1vh;">ITEM</h3>
+                        <hr>
+                        <label for="option34">Items</label>
+                        <input type="checkbox" name="selected_options" value="items" id="option34" style="float: right;"><br>
+                        
+                        <label for="option35">Price Lists</label>
+                        <input type="checkbox" name="selected_options" value="pricelist" id="option35" style="float: right;"><br>
+                        
+                        <label for="option36">Stock Adjustments</label>
+                        <input type="checkbox" name="selected_options" value="stockadjustment" id="option36" style="float: right;"><br>
+                    </div><br>
+                    <div class="col-md-2" style="background-color:#162532; margin-left: 9vh;">
+                        <h3 style="text-align: center; padding-top: 1vh;">ACCOUNTING</h3>
+                        <hr>
+                        <label for="option37">Chart of Accounts</label>
+                        <input type="checkbox" name="selected_options" value="chartofaccounts" id="option37" style="float: right;"><br>
+                        
+                        <label for="option38">Manual Journal</label>
+                        <input type="checkbox" name="selected_options" value="manualjournal" id="option38" style="float: right;"><br>
+                        
+                        <label for="option39">Reconcile</label>
+                        <input type="checkbox" name="selected_options" value="reconcile" id="option39" style="float: right;"><br>
+                    </div><br>
+                    <div class="col-md-2" style="background-color:#162532; margin-left: 9vh;">
+                        <h3 style="text-align: center; padding-top: 1vh;">PAYROLL</h3>
+                        <hr>
+                        <label for="option40">Employee</label>
+                        <input type="checkbox" name="selected_options" value="employee" id="option40" style="float: right;"><br>
+                        
+                        <label for="option41">Employee Loan</label>
+                        <input type="checkbox" name="selected_options" value="employeeloan" id="option41" style="float: right;"><br>
+                    </div>
+                </div>
             </div>
+            <input type="submit" value="Update Options" id="update">
         </div>
-        
-        <!-- Add more options as needed -->
-        
-        <input type="submit" value="Update Options">
-    </form>
+    </form><br>
 
     <script>
         // Function to save checkbox state in local storage
@@ -170,7 +197,7 @@
         }
       
         // Function to load checkbox state from local storage
-        function loadCheckboxState(checkboxId) {
+        function    loadCheckboxState(checkboxId) {
           const isChecked = localStorage.getItem(checkboxId);
           if (isChecked === "true") {
             document.getElementById(checkboxId).checked = true;
@@ -186,14 +213,47 @@
       
         // Load checkbox states when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-          loadCheckboxState('option1');
-          loadCheckboxState('option2');
-          loadCheckboxState('option3');
-        });
-      
-        // Redirect to the second page
-        document.getElementById('redirectButton').addEventListener('click', function() {
-          window.location.href = 'second_page.html';
+            loadCheckboxState('option1');
+            loadCheckboxState('option2');
+            loadCheckboxState('option3');
+            loadCheckboxState('option4');
+            loadCheckboxState('option5');
+            loadCheckboxState('option6');
+            loadCheckboxState('option7');
+            loadCheckboxState('option8');
+            loadCheckboxState('option9');
+            loadCheckboxState('option10');
+            loadCheckboxState('option11');
+            loadCheckboxState('option12');
+            loadCheckboxState('option13');
+            loadCheckboxState('option14');
+            loadCheckboxState('option15');
+            loadCheckboxState('option16');
+            loadCheckboxState('option17');
+            loadCheckboxState('option18');
+            loadCheckboxState('option19');
+            loadCheckboxState('option20');
+            loadCheckboxState('option21');
+            loadCheckboxState('option22');
+            loadCheckboxState('option23');
+            loadCheckboxState('option24');
+            loadCheckboxState('option25');
+            loadCheckboxState('option26');
+            loadCheckboxState('option27');
+            loadCheckboxState('option28');
+            loadCheckboxState('option29');
+            loadCheckboxState('option30');
+            loadCheckboxState('option31');
+            loadCheckboxState('option32');
+            loadCheckboxState('option33');
+            loadCheckboxState('option34');
+            loadCheckboxState('option35');
+            loadCheckboxState('option36');
+            loadCheckboxState('option37');
+            loadCheckboxState('option38');
+            loadCheckboxState('option39');
+            loadCheckboxState('option40');
+            loadCheckboxState('option41');
         });
       </script>
 
