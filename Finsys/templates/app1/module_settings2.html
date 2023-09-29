@@ -1,231 +1,318 @@
 {% extends 'app1/base.html' %}
+
 {% block body %}
+    {% load static %}
+
 
     <style>
-        #update{
-            width: 25vh;
-            margin-right: auto;
-            margin-left: auto;
-            margin-bottom: 5vh;
-            margin-top: 2vh;
-            background-color: #2a4964;
-            color: white;
-            font-size: large;
-            height: 7vh;
-            border-radius: 5vh;
-            border-color: #1b87dd;
+        .tr{
+            cursor: pointer;
         }
+
+        @media print{
+        body{
+            visibility: hidden;
+        }
+
+        #printtable{
+            visibility: visible;
+            width: auto;
+            height: auto;
+            margin-top: -600px;
+            margin-left: -100px;
+        }
+    }
+
     </style>
 
-    
-    <form method="post" action="{% url 'hide_options' %}">
-        {% csrf_token %}
-        <br>
-
-        <div class="card radius-15 h-20" >
-            <div class="row">
-                <div class="col-md-12">
-                    <center><h1 class="mt-3">CUSTOMIZE PAGE</h1></center>
-                    <hr style="width:95%; color:white;">
+    <div class="page-content">
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center><h2 class="mb-0">{{ cmp1.cname }}</h2></center><br>
+                    <center><label style="font-size: 20px;">SALES SUMMARY REPORT</label></center>
+                    <center><p id="hdate"></p></center>
                 </div>
+                <hr/>
             </div>
         </div>
+        
+
 
         <div class="card radius-15">
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-3" style="background-color:#162532;">
-                        <h3 style="text-align: center; padding-top: 1vh;">PURCHASE</h3>
-                        <hr>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="Between">From</label> &nbsp;
+                            <input type="date" name="fromdate" id="fromdate">   &nbsp; 
+                            <label for="To">To</label>  &nbsp;
+                            <input type="date" name="todate" id="todate">  &nbsp;
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
+                            style="margin-top: 8px; background-color: #2f516f;color: white;">
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+                            <a  id="myBtn" class="btn btn-outline-info text-grey"
+                                onclick="graphdiv()">Graph</a>
+                        </div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+                            <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_pdf"
+                               >PDF</a>
+                        </div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+                            <a href="" id="printBtn" class="btn btn-outline-info text-grey btn_print"
+                                onclick="printtable()">Print</a>
+                        </div>
+                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
+        
+                            <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Excel</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="card radius-15 p-5" id="graph_div" style="display: none;">
+            <div class="card-body">
+                <div class="row" >
+                    <button id="drawbutton"  style="width: 100px; height: 50px;" onclick="addDataPoint()"></button>
+                </div>
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+        <div id="demo"><p></p></div>
 
-                        <label for="option19">Vendor</label>
-                        <input type="checkbox" name="selected_options" value="vendor" id="option19" style="float: right;"><br>
-                        
-                        <label for="option20">Purchase Order</label>
-                        <input type="checkbox" name="selected_options" value="purchaseorder" id="option20" style="float: right;"><br>
-                        
-                        <label for="option21">Bill</label>
-                        <input type="checkbox" name="selected_options" value="bill" id="option21" style="float: right;"><br>
-                        
-                        <label for="option22">Expense</label>
-                        <input type="checkbox" name="selected_options" value="expense" id="option22" style="float: right;"><br>
-                        
-                        <label for="option23">Payment</label>
-                        <input type="checkbox" name="selected_options" value="payment" id="option23" style="float: right;"><br>
-                        
-                        <label for="option24">Debit Note</label>
-                        <input type="checkbox" name="selected_options" value="debitnote" id="option24" style="float: right;"><br>
-                        
-                        <label for="option25">Recurring Bill</label>
-                        <input type="checkbox" name="selected_options" value="recurringbill" id="option25" style="float: right;"><br>
-                    </div><br>
-                    <div class="col-md-3 ml-5" style="background-color:#162532;">
-                        <h3 style="text-align: center; padding-top: 1vh;">CASH & BANK</h3>
-                        <hr>
-                        <label for="option4">Offline Banking</label>
-                        <input type="checkbox" name="selected_options" value="Offlinebanking" id="option4" style="float: right;"><br>
-                        
-                        <label for="option5">Bank Reconcilation</label>
-                        <input type="checkbox" name="selected_options" value="bankreconcilation" id="option5" style="float: right;"><br>
-                        
-                        <label for="option6">Bank Holders</label>
-                        <input type="checkbox" name="selected_options" value="bankholders" id="option6" style="float: right;"><br>
-        
-                        <label for="option7">Cash In Hand</label>
-                        <input type="checkbox" name="selected_options" value="cashinhands" id="option7" style="float: right;"><br>
-        
-                        <label for="option8">Cheques</label>
-                        <input type="checkbox" name="selected_options" value="cheques" id="option8" style="float: right;"><br>
-        
-                        <label for="option9">Loan Account</label>
-                        <input type="checkbox" name="selected_options" value="loanaccount" id="option9" style="float: right;"><br>
-                    </div><br>
-                    <div class="col-md-3 ml-5" style="background-color:#162532;">
-                        <h3 style="text-align: center; padding-top: 1vh;">SALES</h3>
-                        <hr>
-                        <label for="option10">Customers</label>
-                        <input type="checkbox" name="selected_options" value="customers" id="option10" style="float: right;"><br>
-                        
-                        <label for="option11">Estimate</label>
-                        <input type="checkbox" name="selected_options" value="estimate" id="option11" style="float: right;"><br>
-                        
-                        <label for="option12">Sales Order</label>
-                        <input type="checkbox" name="selected_options" value="salesorder" id="option12" style="float: right;"><br>
-        
-                        <label for="option13">Invoices</label>
-                        <input type="checkbox" name="selected_options" value="invoices" id="option13" style="float: right;"><br>
-                        
-                        <label for="option14">Credit Note</label>
-                        <input type="checkbox" name="selected_options" value="creditnote" id="option14" style="float: right;"><br>
-                        
-                        <label for="option15">Payments Received</label>
-                        <input type="checkbox" name="selected_options" value="paymentsreceived" id="option15" style="float: right;"><br>
-                        
-                        <label for="option16">Retainer Invoices</label>
-                        <input type="checkbox" name="selected_options" value="retainerinvoices" id="option16" style="float: right;"><br>
-                        
-                        <label for="option17">Delivery Challan</label>
-                        <input type="checkbox" name="selected_options" value="deliverychallan" id="option17" style="float: right;"><br>
-                        
-                        <label for="option18">Reccuring Invoices</label>
-                        <input type="checkbox" name="selected_options" value="reccuringinvoices" id="option18" style="float: right;"><br>
-                    </div><br>
-                </div><br><br>
-                <div id="demo"><p></p></div>
+        <div class="card radius-15 p-5">
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2 " style="background-color:#162532;">
-                        <h3 style="text-align: center; padding-top: 1vh;">REPORTS</h3>
-                        <hr>
-                        <label for="option26">Transaction Reports</label>
-                        <input type="checkbox" name="selected_options" value="transactonreport" id="option26" style="float: right;"><br>
-                        
-                        <label for="option27">Party</label>
-                        <input type="checkbox" name="selected_options" value="party" id="option27" style="float: right;"><br>
-                        
-                        <label for="option28">GST Reports</label>
-                        <input type="checkbox" name="selected_options" value="gstreports" id="option28" style="float: right;"><br>
-                        
-                        <label for="option29">Profit & Loss</label>
-                        <input type="checkbox" name="selected_options" value="profitandloss" id="option29" style="float: right;"><br>
-                        
-                        <label for="option30">Balance Sheet</label>
-                        <input type="checkbox" name="selected_options" value="balancesheet" id="option30" style="float: right;"><br>
-                        
-                        <label for="option31">Trial Balance</label>
-                        <input type="checkbox" name="selected_options" value="trialbalance" id="option31" style="float: right;"><br>
-                        
-                        <label for="option32">Accounts Receivables</label>
-                        <input type="checkbox" name="selected_options" value="accountsreceivables" id="option32" style="float: right;"><br>
-                        
-                        <label for="option33">Accounts Payables</label>
-                        <input type="checkbox" name="selected_options" value="accountspayables" id="option33" style="float: right;"><br>
-                        
-                        <label for="option34">Stock Summary</label>
-                        <input type="checkbox" name="selected_options" value="stocksummary" id="option34" style="float: right;"><br>
-                        
-                        <label for="option35">Stock Valuation</label>
-                        <input type="checkbox" name="selected_options" value="stockvaluation" id="option35" style="float: right;"><br>
-        
-                        <label for="option36">Sales Summary Report</label>
-                        <input type="checkbox" name="selected_options" value="salessummaryreport" id="option36" style="float: right;"><br>
-                    </div><br>
-                    <div class="col-md-2" style="background-color:#162532; margin-left: 5vw;">
-                        <h3 style="text-align: center; padding-top: 1vh;">ITEM</h3>
-                        <hr>
-                        <label for="option1">Items</label>
-                        <input type="checkbox" name="selected_options" value="items" id="option1" style="float: right;"><br>
-                        
-                        <label for="option2">Price Lists</label>
-                        <input type="checkbox" name="selected_options" value="pricelist" id="option2" style="float: right;"><br>
-                        
-                        <label for="option3">Stock Adjustments</label>
-                        <input type="checkbox" name="selected_options" value="stockadjustment" id="option3" style="float: right;"><br>
-                    </div><br>
-                    <div class="col-md-2" style="background-color:#162532; margin-left: 9vh;">
-                        <h3 style="text-align: center; padding-top: 1vh;">ACCOUNTING</h3>
-                        <hr>
-                        <label for="option37">Chart of Accounts</label>
-                        <input type="checkbox" name="selected_options" value="chartofaccounts" id="option37" style="float: right;"><br>
-                        
-                        <label for="option38">Manual Journal</label>
-                        <input type="checkbox" name="selected_options" value="manualjournal" id="option38" style="float: right;"><br>
-                        
-                        <label for="option39">Reconcile</label>
-                        <input type="checkbox" name="selected_options" value="reconcile" id="option39" style="float: right;"><br>
-                    </div><br>
-                    <div class="col-md-2" style="background-color:#162532; margin-left: 9vh;">
-                        <h3 style="text-align: center; padding-top: 1vh;">PAYROLL</h3>
-                        <hr>
-                        <label for="option40">Employee</label>
-                        <input type="checkbox" name="selected_options" value="employee" id="option40" style="float: right;"><br>
-                        
-                        <label for="option41">Employee Loan</label>
-                        <input type="checkbox" name="selected_options" value="employeeloan" id="option41" style="float: right;"><br>
+                    <div class="col-md-12" id="printtable">
+                        <div class="rectangle"
+                             style="background-color: white;width: 1100px;height:1500px;border: 3px white;padding: 50px;margin: 20px">
+                            <div class="rectangle"
+                                 style="background-image: linear-gradient(dodgerblue, black); width: 1000px; height: 200px; margin-top: 20px;">
+                                <div class="img-container"
+                                     style="width: 140px; height: 140px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); border-radius: 50%; background-color: white; transform: translate(23%, 90%);">
+                                    <img src="{{ cmp1.cimg.url }}"
+                                         style="width: 140px; height: 140px; border-radius: 50%;">
+                                </div>
+                                <h2 style="margin-left: 200px;">{{ cmp1.cname }}</h2>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 100px;">
+                                <p style="text-align: right;color: black; display: none;" id="datediv">
+                                    <span style="font-weight: bold;" >From Date : <span id="from"></span> </span><br> 
+                                    <span style="font-weight: bold;" >To Date : <span id="to"></span></span>
+                                  </p>
+                                <table class="table table-hover " id="saletable">
+                                    <thead>
+                                        <tr>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                DATE
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                INVOICE NUMBER
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                PARTY
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                TRANSACTION 
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                PAYMENT TYPE
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                TOTAL AMOUNT
+                                            </th>
+                                            <th class="center font-weight-dark border-dark" style="color: black;">
+                                                BALANCE
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tb">
+                                        {% for i in inv %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ i.invoicedate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ i.invoiceno }}</a></td>
+                                                <td class="center text-dark">{{ i.customername }}</td>  
+                                                <td class="center text-dark">Inventory</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{i.grandtotal}}</td>       
+                                                <td class="center text-dark">{{i.baldue}}</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                        {% for c in cnote %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ c.creditdate  | date:'Y-m-d' }}</td> 
+                                                <td class="center text-dark">{{ c.credit_no }}</a></td>
+                                                <td class="center text-dark">{{ c.customer }}</td>  
+                                                <td class="center text-dark">Credit Note</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{c.grandtotal}}</td>       
+                                                <td class="center text-dark">0</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                        {% for r in rinv %}
+                                            <tr class="tr">
+                                                <td class="center text-dark">{{ r.startdate}}</td> 
+                                                <td class="center text-dark">{{ r.recinvoiceno }}</a></td>
+                                                <td class="center text-dark">{{ r.customername }}</td>  
+                                                <td class="center text-dark">Reccuring Invoice</td>         
+                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
+                                                <td class="center text-dark">{{r.grandtotal}}</td>       
+                                                <td class="center text-dark">{{r.baldue}}</td>       
+                                            </tr></a>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Update Options" id="update">
         </div>
-    </form><br>
+    </div>
+
+
 
     <script>
-        // Function to save checkbox state in local storage
-        function saveCheckboxState(checkboxId, isChecked) {
-          localStorage.setItem(checkboxId, isChecked);
-        }
-      
-        // Function to load checkbox state from local storage
-        function loadCheckboxState(checkboxId) {
-          const isChecked = localStorage.getItem(checkboxId);
-          if (isChecked === "true") {
-            document.getElementById(checkboxId).checked = true;
-          }
-        }
-      
-        // Add event listeners for checkbox changes
-        document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
-          checkbox.addEventListener('change', function() {
-            saveCheckboxState(this.id, this.checked);
-            document.getElementById("demo").innerHTML = this.checked
-            if(this.checked == 1){
-                document.getElementById(this.value).style.display = "none"
-            }else{
-                document.getElementById(this.value).style.display = "block"
+
+        $(document).ready(function() {
+            var $rows = $('.table tbody tr');
+            $('#search').keyup(function() {
+                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                $rows.show().filter(function() {
+                    console.log($rows.show())
+    
+                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                    console.log(text)
+                    return !~text.indexOf(val);
+                }).hide();
+            });
+        });
+    </script>
+
+
+<script>
+    function ApplyDateFilter() { 
+
+    var fromDate = document.getElementById('fromdate').value;
+    var toDate = document.getElementById('todate').value;
+    document.getElementById("datediv").style.display = "block";
+    document.getElementById("from").innerHTML = fromDate;
+    document.getElementById("to").innerHTML = toDate;
+    document.getElementById("hdate").innerHTML = fromDate +" to " + toDate;
+    table = document.getElementById("saletable");
+    tr = table.getElementsByTagName("tr");
+     
+    for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+
+            // Loop through all table cells (columns) in each row
+            for (j = 0; j < td.length; j++) {
+               
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    var check = new Date(txtValue)
+                    var from = new Date(fromDate);
+                    var to = new Date(toDate);
+                    if(check >= from && check <= to){
+                        rowVisible = true;
+                        break;
+                    }
+                }
             }
-          });
-        });
-      
-        // Load checkbox states when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-          loadCheckboxState('option1');
-          loadCheckboxState('option2');
-          loadCheckboxState('option3');
-        });
-      
 
-      </script>
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+}
+ 
+</script>
 
+<script>
+    const fromDateInput = document.getElementById("fromdate");
+    const toDateInput = document.getElementById("todate"); 
+    fromDateInput.addEventListener("change", ApplyDateFilter);
+    toDateInput.addEventListener("change", ApplyDateFilter);
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // JavaScript code to fetch data and create the line chart
+
+    // Function to extract data from the table
+
+
+    const ctx = document.getElementById('salesChart').getContext('2d');
+
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Data',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+
+
+    function addDataPoint() {
+        const tableData = extractDataFromTable();
+        const dates = tableData.map(item => item.date);
+        const sales = tableData.map(item => item.sales);
+        
+        document.getElementById("demo").innerHTML = sales
+        myChart.data.labels = dates;
+        myChart.data.datasets[0].data = sales;
+        // Redraw the chart
+        myChart.update();
+    }
+
+    function graphdiv(){
+        $('#graph_div').toggle();
+        
+}
+
+
+    function extractDataFromTable() {
+        const table = document.getElementById('tb');
+        const rows = table.getElementsByTagName('tr');
+        
+        const data = [];
+        
+        for (let i = 0; i < rows.length; i++) {
+            if (window.getComputedStyle(rows[i]).display !== 'none') {
+                const cells = rows[i].getElementsByTagName('td');
+                const date = cells[0].textContent;
+                const sales = parseInt(cells[5].textContent);
+                data.push({ date, sales });
+            }
+        }
+        
+        return data;
+    }
+</script>
+
+  
 
 {% endblock %}

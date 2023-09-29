@@ -118,66 +118,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for trans in sales %}
+                        {% for trans in recpt %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>{{ trans.saledate  | date:'Y-m-d'}}</td>
                             <td>Sales</td>
-                            <td>{{ trans.customer }}</td>
-                            <td>{{ trans.amtcredit }}</td>
-                            <td>0</td>
+                            <td>{{ trans.salename }}</td>
+                            <td>{{ trans.saaletotal }}</td>
+                            <td>{{ trans.salesubtotal }}</td>
                             <td>0</td>
                             <td>0</td>
                         </tr>
                         {% endfor %}
 
-                        {% for trans in purchase %}
+                        {% for trans in chq %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.paymentdate | date:'Y-m-d' }}</td>
-                            <td>Purchase</td>
-                            <td>{{ trans.vendor }}</td>
-                            <td>{{ trans.paymentamount }}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-
-                        </tr>
-                        {% endfor %}
-
-                        {% for trans in estimates %}
-                        <tr class="table-row " data-href="">
-                            <td>{{ trans.estimatedate | date:'Y-m-d' }}</td>
-                            <td>Estimate</td>
-                            <td>{{ trans.customer }}</td>
-                            <td>{{ trans.estimatetotal }}</td>
+                            <td>{{ trans.paydate  | date:'Y-m-d'}}</td>
+                            <td>Cheque</td>
+                            <td>{{ trans.payee }}</td>
+                            <td>{{ trans.grandtotal }}</td>
                             <td>{{ trans.subtotal }}</td>
                             <td>0</td>
                             <td>0</td>
-
-                        </tr>
-                        {% endfor %}
-
-                        {% for trans in deliverychallan %}
-                        <tr class="table-row " data-href="">
-                            <td>{{ trans.challan_date | date:'Y-m-d' }}</td>
-                            <td>Delivery Challan</td>
-                            <td>{{ trans.customer }}</td>
-                            <td>{{ trans.grand }}</td>
-                            <td>{{ trans.subtotal }}</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        {% endfor %}
-
-                        {% for trans in retainerinvoices %}
-                        <tr class="table-row " data-href="">
-                            <td>{{ trans.invoice_date | date:'Y-m-d'}}</td>
-                            <td>Retainer Invoice</td>
-                            <td>{{ trans.customer }}</td>
-                            <td>{{ trans.total_amount }}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-
                         </tr>
                         {% endfor %}
 
@@ -193,51 +154,72 @@
                         </tr>
                         {% endfor %}
 
-                        {% for trans in bill %}
+                        {% for trans in bill_data %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.date | date:'Y-m-d'}}</td>
-                            <td>Bill</td>
-                            <td>{{ trans.contact_name }}</td>
-                            <td>{{ trans.grand_total }}</td>
-                            <td>{{ trans.sub_total }}</td>
+                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>Bills</td>
+                            <td>{{ trans.payee }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
                             <td>0</td>
                             <td>0</td>
-
                         </tr>
                         {% endfor %}
 
-                        {% for trans in manualjournal %}
+                        {% for trans in supl %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.date | date:'Y-m-d' }}</td>
-                            <td>Manual Journal</td>
-                            <td></td>
-                            <td>{{ trans.total_cre }}</td>
+                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>Supplier Credit</td>
+                            <td>{{ trans.supplier }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
                             <td>0</td>
                             <td>0</td>
-                            <td>0</td>
-
                         </tr>
                         {% endfor %}
 
-                        {% for trans in creditnote %}
+                        {% for trans in crd %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.creditdate | date:'Y-m-d' }}</td>
-                            <td>Credit Note</td>
+                            <td>{{ trans.creditdate  | date:'Y-m-d'}}</td>
+                            <td>Credit</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.grndtot }}</td>
+                            <td>{{ trans.subtot }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in exp %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>Expense</td>
+                            <td>{{ trans.payee }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in delychr %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.delayedchargedate  | date:'Y-m-d'}}</td>
+                            <td>Delayed Charge</td>
                             <td>{{ trans.customer }}</td>
                             <td>{{ trans.grandtotal }}</td>
                             <td>{{ trans.subtotal }}</td>
                             <td>0</td>
                             <td>0</td>
-
                         </tr>
                         {% endfor %}
 
-                        {% for trans in debitnote %}
+                        {% for trans in estimates %}
                         <tr class="table-row " data-href="">
-                            <td>{{ trans.debitdate | date:'Y-m-d' }}</td>
-                            <td>Debit Note</td>
-                            <td>{{ trans.vendor }}</td>
-                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.estimatedate | date:'Y-m-d' }}</td>
+                            <td>Estimate</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.estimatetotal }}</td>
                             <td>{{ trans.subtotal }}</td>
                             <td>0</td>
                             <td>0</td>
@@ -257,6 +239,66 @@
 
                         </tr>
                         {% endfor %}
+                        
+                        {% for trans in sales %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
+                            <td>Sales</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.amtcredit }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in cust_st %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.Date  | date:'Y-m-d'}}</td>
+                            <td>Customer Statement</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.Balance }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in itm %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.itmdate  | date:'Y-m-d'}}</td>
+                            <td>Item</td>
+                            <td>{{ trans.name }}</td>
+                            <td>{{ trans.amount }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in manualjournal %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date | date:'Y-m-d' }}</td>
+                            <td>Manual Journal</td>
+                            <td></td>
+                            <td>{{ trans.total_cre }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% for trans in expenses %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.date | date:'Y-m-d'}}</td>
+                            <td>Expenses</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>{{ trans.amount }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
 
                         {% for trans in purchaseorders %}
                         <tr class="table-row " data-href="">
@@ -267,20 +309,102 @@
                             <td>{{ trans.sub_total }}</td>
                             <td>0</td>
                             <td>0</td>
-
                         </tr>
                         {% endfor %}
 
-                        {% for trans in expenses %}
+                        {% for trans in bill %}
                         <tr class="table-row " data-href="">
                             <td>{{ trans.date | date:'Y-m-d'}}</td>
-                            <td>Expenses</td>
-                            <td>{{ trans.vendor }}</td>
-                            <td>{{ trans.amount }}</td>
+                            <td>Bill</td>
+                            <td>{{ trans.contact_name }}</td>
+                            <td>{{ trans.grand_total }}</td>
+                            <td>{{ trans.sub_total }}</td>
                             <td>0</td>
                             <td>0</td>
-                            <td>0</td>
+                        </tr>
+                        {% endfor %}
 
+                        {% for trans in purchase %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.paymentdate | date:'Y-m-d' }}</td>
+                            <td>Purchase</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>{{ trans.paymentamount }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in debitnote %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.debitdate | date:'Y-m-d' }}</td>
+                            <td>Debit Note</td>
+                            <td>{{ trans.vendor }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in creditnote %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.creditdate | date:'Y-m-d' }}</td>
+                            <td>Credit Note</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in retainerinvoices %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.invoice_date | date:'Y-m-d'}}</td>
+                            <td>Retainer Invoice</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.total_amount }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in deliverychallan %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.challan_date | date:'Y-m-d' }}</td>
+                            <td>Delivery Challan</td>
+                            <td>{{ trans.customer }}</td>
+                            <td>{{ trans.grand }}</td>
+                            <td>{{ trans.subtotal }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in recinv %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.startdate | date:'Y-m-d' }}</td>
+                            <td>Reccuring Invoice</td>
+                            <td>{{ trans.customername }}</td>
+                            <td>{{ trans.grandtotal }}</td>
+                            <td>{{ trans.subtotal }}</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        {% endfor %}
+
+                        {% for trans in recbill %}
+                        <tr class="table-row " data-href="">
+                            <td>{{ trans.start_date | date:'Y-m-d' }}</td>
+                            <td>Reccuring Bill</td>
+                            <td>{{ trans.customer_name }}</td>
+                            <td>{{ trans.grand_total }}</td>
+                            <td>{{ trans.sub_total }}</td>
+                            <td>0</td>
+                            <td>0</td>
                         </tr>
                         {% endfor %}
                     </tbody>

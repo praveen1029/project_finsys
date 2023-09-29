@@ -222,7 +222,9 @@
     }
 
     function drawgraph(){
-        clearCanvas();
+        const canvas = document.getElementById('salesChart')
+        const context = canvas.getContext('2d'); 
+        context.clearRect(0, 0, canvas.width, canvas.height);
         const ctx = document.getElementById('salesChart').getContext('2d');
         const tableData = extractDataFromTable();
         const dates = tableData.map(item => item.date);
