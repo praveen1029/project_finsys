@@ -42560,12 +42560,11 @@ def daybook(request):
     estimates = estimate.objects.filter(cid=cmp1.cid).all()
     salesorders = salesorder.objects.filter(cid=cmp1.cid).all()
     sales = payment.objects.filter(cid=cmp1.cid).all()
-    cust_st = cust_statment.objects.filter(cid=cmp1.cid).all()
     itm = itemtable.objects.filter(cid=cmp1.cid).all()
     manualjournal = mjournal.objects.filter(cid=cmp1.cid).all()
-    expenses = purchase_expense.objects.filter(cid=cmp1.cid).all()
     purchaseorders = purchaseorder.objects.filter(cid=cmp1.cid).all()
     bill = purchasebill.objects.filter(cid=cmp1.cid).all()
+    expenses = purchase_expense.objects.filter(cid=cmp1.cid).all()
     purchase = purchasepayment.objects.filter(cid=cmp1.cid).all()
     debitnote = purchasedebit.objects.filter(cid=cmp1.cid).all()
     creditnote = salescreditnote.objects.filter(cid=cmp1.cid).all()
@@ -42586,12 +42585,11 @@ def daybook(request):
         'estimates':estimates,
         'salesorders':salesorders,
         'sales':sales,
-        'cust_st':cust_st,
         'itm':itm,
         'manualjournal':manualjournal,
-        'expenses':expenses,
         'purchaseorders':purchaseorders,
         'bill':bill,
+        'expenses':expenses,
         'purchase':purchase,
         'debitnote':debitnote,
         'creditnote':creditnote,
@@ -42601,7 +42599,6 @@ def daybook(request):
         'recbill':recbill,        
      }
     return render(request, 'app1/daybook.html', context)
-
 
 @login_required(login_url='regcomp')
 def purchase(request):
@@ -44347,4 +44344,39 @@ def module_settings(request):
     return render(request,"app1/module_settings.html",context)
 
 
+import json
+from django.core.serializers import serialize
+from django.db.models.query import QuerySet
+from django.http import HttpResponse
 
+class DjangoJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, QuerySet):
+            return serialize('json', obj)
+        if hasattr(obj, 'isoformat'):
+            return obj.isoformat()
+        return super().default(obj)
+
+def backup_sales(request):
+    if request.method == 'POST':
+        selected_date = request.POST.get('selected_date')
+
+        if selected_date:
+            # Fetch sales data for the selected date
+            sales_data = list(itemtable.objects.filter(itmdate=selected_date).values())
+            sales = list(invoice.objects.filter(invoicedate=selected_date).values())
+            for item in sales_data:
+                item['itmdate'] = item['itmdate'].strftime('%Y-%m-%d %H:%M:%S')
+            for item in sales:
+                item['invoicedate'] = item['invoicedate'].strftime('%Y-%m-%d %H:%M:%S')
+            print(selected_date)
+            print(sales_data)
+            filename = f"sales_backup_{selected_date}.json"
+
+            with open(filename, 'w') as backup_file:
+                json.dump(sales_data, backup_file)
+                json.dump(sales, backup_file)
+
+        return JsonResponse({'message': f'Sales data backup successful as {filename}'})
+        
+    return JsonResponse({'error': 'Invalid request'})

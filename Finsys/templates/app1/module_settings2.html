@@ -1,318 +1,55 @@
-{% extends 'app1/base.html' %}
-
-{% block body %}
-    {% load static %}
-
-
-    <style>
-        .tr{
-            cursor: pointer;
-        }
-
-        @media print{
-        body{
-            visibility: hidden;
-        }
-
-        #printtable{
-            visibility: visible;
-            width: auto;
-            height: auto;
-            margin-top: -600px;
-            margin-left: -100px;
-        }
-    }
-
-    </style>
-
-    <div class="page-content">
-        <div class="card radius-15">
-            <div class="card-body">
-                <div class="card-title">
-                    <center><h2 class="mb-0">{{ cmp1.cname }}</h2></center><br>
-                    <center><label style="font-size: 20px;">SALES SUMMARY REPORT</label></center>
-                    <center><p id="hdate"></p></center>
-                </div>
-                <hr/>
-            </div>
-        </div>
-        
-
-
-        <div class="card radius-15">
-            <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label for="Between">From</label> &nbsp;
-                            <input type="date" name="fromdate" id="fromdate">   &nbsp; 
-                            <label for="To">To</label>  &nbsp;
-                            <input type="date" name="todate" id="todate">  &nbsp;
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <input type="text" id="search" placeholder="Search..." class="form-control" autocomplete="off" 
-                            style="margin-top: 8px; background-color: #2f516f;color: white;">
-                        </div>
-                        <div class="col-md-4"></div>
-                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-                            <a  id="myBtn" class="btn btn-outline-info text-grey"
-                                onclick="graphdiv()">Graph</a>
-                        </div>
-                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-                            <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_pdf"
-                               >PDF</a>
-                        </div>
-                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-                            <a href="" id="printBtn" class="btn btn-outline-info text-grey btn_print"
-                                onclick="printtable()">Print</a>
-                        </div>
-                        <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-        
-                            <a class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')">Excel</a>
-                        </div>
-                    </div>
-            </div>
-        </div>
-        <div class="card radius-15 p-5" id="graph_div" style="display: none;">
-            <div class="card-body">
-                <div class="row" >
-                    <button id="drawbutton"  style="width: 100px; height: 50px;" onclick="addDataPoint()"></button>
-                </div>
-                <canvas id="salesChart"></canvas>
-            </div>
-        </div>
-        <div id="demo"><p></p></div>
-
-        <div class="card radius-15 p-5">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12" id="printtable">
-                        <div class="rectangle"
-                             style="background-color: white;width: 1100px;height:1500px;border: 3px white;padding: 50px;margin: 20px">
-                            <div class="rectangle"
-                                 style="background-image: linear-gradient(dodgerblue, black); width: 1000px; height: 200px; margin-top: 20px;">
-                                <div class="img-container"
-                                     style="width: 140px; height: 140px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); border-radius: 50%; background-color: white; transform: translate(23%, 90%);">
-                                    <img src="{{ cmp1.cimg.url }}"
-                                         style="width: 140px; height: 140px; border-radius: 50%;">
-                                </div>
-                                <h2 style="margin-left: 200px;">{{ cmp1.cname }}</h2>
-                            </div>
-                            <div class="table-responsive" style="margin-top: 100px;">
-                                <p style="text-align: right;color: black; display: none;" id="datediv">
-                                    <span style="font-weight: bold;" >From Date : <span id="from"></span> </span><br> 
-                                    <span style="font-weight: bold;" >To Date : <span id="to"></span></span>
-                                  </p>
-                                <table class="table table-hover " id="saletable">
-                                    <thead>
-                                        <tr>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                DATE
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                INVOICE NUMBER
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                PARTY
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                TRANSACTION 
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                PAYMENT TYPE
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                TOTAL AMOUNT
-                                            </th>
-                                            <th class="center font-weight-dark border-dark" style="color: black;">
-                                                BALANCE
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tb">
-                                        {% for i in inv %}
-                                            <tr class="tr">
-                                                <td class="center text-dark">{{ i.invoicedate  | date:'Y-m-d' }}</td> 
-                                                <td class="center text-dark">{{ i.invoiceno }}</a></td>
-                                                <td class="center text-dark">{{ i.customername }}</td>  
-                                                <td class="center text-dark">Inventory</td>         
-                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
-                                                <td class="center text-dark">{{i.grandtotal}}</td>       
-                                                <td class="center text-dark">{{i.baldue}}</td>       
-                                            </tr></a>
-                                        {% endfor %}
-                                        {% for c in cnote %}
-                                            <tr class="tr">
-                                                <td class="center text-dark">{{ c.creditdate  | date:'Y-m-d' }}</td> 
-                                                <td class="center text-dark">{{ c.credit_no }}</a></td>
-                                                <td class="center text-dark">{{ c.customer }}</td>  
-                                                <td class="center text-dark">Credit Note</td>         
-                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
-                                                <td class="center text-dark">{{c.grandtotal}}</td>       
-                                                <td class="center text-dark">0</td>       
-                                            </tr></a>
-                                        {% endfor %}
-                                        {% for r in rinv %}
-                                            <tr class="tr">
-                                                <td class="center text-dark">{{ r.startdate}}</td> 
-                                                <td class="center text-dark">{{ r.recinvoiceno }}</a></td>
-                                                <td class="center text-dark">{{ r.customername }}</td>  
-                                                <td class="center text-dark">Reccuring Invoice</td>         
-                                                <td class="center text-dark">{{ cmp1.paid }}</td>         
-                                                <td class="center text-dark">{{r.grandtotal}}</td>       
-                                                <td class="center text-dark">{{r.baldue}}</td>       
-                                            </tr></a>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Table</title>
+</head>
+<body>
+    <label for="datePicker">Select Date:</label>
+    <input type="date" id="datePicker" onchange="filterTable()">
+    
+    <table id="salesTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2023-05-15</td>
+                <td>100</td>
+            </tr>
+            <tr>
+                <td>2023-05-16</td>
+                <td>150</td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
 
     <script>
+        function filterTable() {
+            // Get the selected date from the date picker
+            const selectedDate = document.getElementById('datePicker').value;
 
-        $(document).ready(function() {
-            var $rows = $('.table tbody tr');
-            $('#search').keyup(function() {
-                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-                $rows.show().filter(function() {
-                    console.log($rows.show())
-    
-                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                    console.log(text)
-                    return !~text.indexOf(val);
-                }).hide();
-            });
-        });
+            // Get the table and table rows
+            const table = document.getElementById('salesTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            // Loop through the rows and hide/show based on the selected date
+            for (let i = 0; i < rows.length; i++) {
+                const dateCell = rows[i].getElementsByTagName('td')[0]; // Assuming the date is in the first cell
+                const rowDate = dateCell.textContent;
+
+                if (rowDate === selectedDate) {
+                    rows[i].style.display = 'table-row';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
     </script>
-
-
-<script>
-    function ApplyDateFilter() { 
-
-    var fromDate = document.getElementById('fromdate').value;
-    var toDate = document.getElementById('todate').value;
-    document.getElementById("datediv").style.display = "block";
-    document.getElementById("from").innerHTML = fromDate;
-    document.getElementById("to").innerHTML = toDate;
-    document.getElementById("hdate").innerHTML = fromDate +" to " + toDate;
-    table = document.getElementById("saletable");
-    tr = table.getElementsByTagName("tr");
-     
-    for (i = 1; i < tr.length; i++) {
-            let rowVisible = false;
-            td = tr[i].getElementsByTagName("td");
-
-            // Loop through all table cells (columns) in each row
-            for (j = 0; j < td.length; j++) {
-               
-                if (td[j]) {
-                    txtValue = td[j].textContent || td[j].innerText;
-                    var check = new Date(txtValue)
-                    var from = new Date(fromDate);
-                    var to = new Date(toDate);
-                    if(check >= from && check <= to){
-                        rowVisible = true;
-                        break;
-                    }
-                }
-            }
-
-            // Show/hide the row based on the search results
-            tr[i].style.display = rowVisible ? "" : "none";
-        }
-}
- 
-</script>
-
-<script>
-    const fromDateInput = document.getElementById("fromdate");
-    const toDateInput = document.getElementById("todate"); 
-    fromDateInput.addEventListener("change", ApplyDateFilter);
-    toDateInput.addEventListener("change", ApplyDateFilter);
-</script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // JavaScript code to fetch data and create the line chart
-
-    // Function to extract data from the table
-
-
-    const ctx = document.getElementById('salesChart').getContext('2d');
-
-    const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Data',
-                data: [],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-    
-
-
-    function addDataPoint() {
-        const tableData = extractDataFromTable();
-        const dates = tableData.map(item => item.date);
-        const sales = tableData.map(item => item.sales);
-        
-        document.getElementById("demo").innerHTML = sales
-        myChart.data.labels = dates;
-        myChart.data.datasets[0].data = sales;
-        // Redraw the chart
-        myChart.update();
-    }
-
-    function graphdiv(){
-        $('#graph_div').toggle();
-        
-}
-
-
-    function extractDataFromTable() {
-        const table = document.getElementById('tb');
-        const rows = table.getElementsByTagName('tr');
-        
-        const data = [];
-        
-        for (let i = 0; i < rows.length; i++) {
-            if (window.getComputedStyle(rows[i]).display !== 'none') {
-                const cells = rows[i].getElementsByTagName('td');
-                const date = cells[0].textContent;
-                const sales = parseInt(cells[5].textContent);
-                data.push({ date, sales });
-            }
-        }
-        
-        return data;
-    }
-</script>
-
-  
-
-{% endblock %}
+</body>
+</html>

@@ -1143,4 +1143,5 @@ urlpatterns = [
     path('hide_options/',views.hide_options, name='hide_options'),
     path('module_settings1/',views.module_settings1, name='module_settings1'),
     path('module_settings2/',views.module_settings2, name='module_settings2'),
+    path('backup/', views.backup_sales, name='backup_sales'),
 ]
