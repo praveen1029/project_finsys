@@ -44344,39 +44344,117 @@ def module_settings(request):
     return render(request,"app1/module_settings.html",context)
 
 
-import json
-from django.core.serializers import serialize
-from django.db.models.query import QuerySet
+import pandas as pd
 from django.http import HttpResponse
+from django.core import serializers
+from io import BytesIO, TextIOWrapper
+import zipfile
 
-class DjangoJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, QuerySet):
-            return serialize('json', obj)
-        if hasattr(obj, 'isoformat'):
-            return obj.isoformat()
-        return super().default(obj)
 
-def backup_sales(request):
+def backup_sales1(request):
     if request.method == 'POST':
         selected_date = request.POST.get('selected_date')
+        cmp1 = company.objects.get(id=request.session['uid'])
 
         if selected_date:
             # Fetch sales data for the selected date
-            sales_data = list(itemtable.objects.filter(itmdate=selected_date).values())
-            sales = list(invoice.objects.filter(invoicedate=selected_date).values())
-            for item in sales_data:
-                item['itmdate'] = item['itmdate'].strftime('%Y-%m-%d %H:%M:%S')
+            
+            cmp = list(company.objects.get(id=request.session['uid']).values())
+
+            cust = list(customer.objects.filter(cid=cmp1,date=selected_date).values())
+            for item in cust:
+                item['date'] = item['date'].strftime('%Y-%m-%d %H:%M:%S')
+
+            suppl = list(supplier.objects.filter(cid=cmp1).values())
+
+            advpay = list(advancepayment.objects.filter(cid=cmp1,paymentdate=selected_date).values())
+
+            paydwncrd = list(paydowncreditcard.objects.filter(cid=cmp1,dateofpayment=selected_date).values())
+
+            slrc = list(salesrecpts.objects.filter(cid=cmp1,dateofpayment=selected_date).values())
+
+            timeat = list(timeact.objects.filter(cid=cmp1,timdate=selected_date).values())
+
+            timeatsale = list(timeactsale.objects.filter(cid=cmp1,timdatesale=selected_date).values())
+
+            cheq = list(Cheqs.objects.filter(cid=cmp1,paydate=selected_date).values())
+
+            sales = list(invoice.objects.filter(cid=cmp1,invoicedate=selected_date).values())
             for item in sales:
                 item['invoicedate'] = item['invoicedate'].strftime('%Y-%m-%d %H:%M:%S')
-            print(selected_date)
-            print(sales_data)
-            filename = f"sales_backup_{selected_date}.json"
 
-            with open(filename, 'w') as backup_file:
-                json.dump(sales_data, backup_file)
-                json.dump(sales, backup_file)
+            invitm = list(invoice_item.objects.filter(cid=cmp1).values())
 
-        return JsonResponse({'message': f'Sales data backup successful as {filename}'})
+            bill = list(bills.objects.filter(cid=cmp1,paymdate=selected_date).values())
+
+            paydwncrd = list(bills.objects.filter(cid=cmp1,paymdate=selected_date).values())
+            for item in advpay:
+                item['dateofpayment'] = item['dateofpayment'].strftime('%Y-%m-%d %H:%M:%S')
+                
+
+
         
+    return JsonResponse({'error': 'Invalid request'})
+
+
+def backup_sales(request):
+    if request.method == 'POST':
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        cmp1 = company.objects.get(id=request.session['uid'])
+        
+        if from_date and to_date:
+            # Fetch sales data for the selected date
+
+
+
+
+
+            salescrdnote_data = serializers.serialize('json', salescreditnote.objects.filter(cid=cmp1,creditdate__range=[from_date, to_date]))
+            item_data = serializers.serialize('json', itemtable.objects.filter(cid=cmp1,itmdate__range=[from_date, to_date]))
+            invoice_data = serializers.serialize('json', invoice.objects.filter(cid=cmp1,invoicedate__range=[from_date, to_date]))
+
+                # Create a zip file containing the CSV data
+            zip_buffer = BytesIO()
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                with zipf.open('backup.json', 'w') as json_file:
+
+
+
+
+                    json_file.write(salescrdnote_data.encode('utf-8'))
+                    json_file.write(item_data.encode('utf-8'))
+                    json_file.write(invoice_data.encode('utf-8'))
+
+                # Convert JSON to CSV and add to the ZIP file
+                csv_buffer = BytesIO()
+
+
+
+
+                salescrdnote_df = pd.read_json(salescrdnote_data)
+                item_df = pd.read_json(item_data)
+                incvoice_df = pd.read_json(invoice_data)
+
+
+
+
+                
+                salescrdnote_df.to_csv(csv_buffer, index=False)
+                item_df.to_csv(csv_buffer, index=False)    
+                invoice_df.to_csv(csv_buffer, index=False)   
+
+                with zipf.open('backup.csv', 'w') as csv_file:
+                    csv_file.write(csv_buffer.getvalue())
+
+            # Prepare the response with the zipped data
+            zip_buffer.seek(0)
+            response = HttpResponse(zip_buffer.read(), content_type='application/zip')
+            response['Content-Disposition'] = f'attachment; filename=backup.zip'
+
+ 
+
+        # Step 4: Offer the Download
+        return response
+                
     return JsonResponse({'error': 'Invalid request'})
