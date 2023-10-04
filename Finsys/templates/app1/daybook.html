@@ -60,6 +60,12 @@
         
     }
 
+    @media print{
+        body{
+            color: black !important; 
+        }
+    }
+
 </style>
 
 
@@ -72,24 +78,23 @@
                 </center>
                 <hr>
                 <div class="row">
-                    <div class="col-md-1">
-                        <label > Select Date</label>
-                        <input type="date" name="fromdate" id="fromdate">
+                    <div class="col-md-1 mt-3">
+                        <input type="date" name="fromdate" id="fromdate" style="height: 5vh; border: solid; border-color: #7690da;">
                     </div>
-                    <div class="col-md-4 ml-5 mt-2">
+                    <div class="col-md-4 mt-2 mr-5 ml-5" >
                         <input type="text" id="searchInput" placeholder="Search..." class="form-control" autocomplete="off" 
                         style="margin-top: 8px; background-color: #2f516f;color: white;">
                     </div> 
                     
                     <div class="col-md-3"></div>
                         
-                    <div class="btn-group col-md-1 mt-3 ml-5" style="float: right; height:5vh;">
-                        <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_print"
+                    <div class="btn-group col-md-1 mt-3 " style="float: right; height:5vh;">
+                        <a id="myBtn" class="btn btn-outline-info text-grey btn_print"
                             role="button">PDF</a>
     
                     </div>
                     <div class="btn-group col-md-1 mt-3 ml-1" style="float: right; height:5vh;">
-                        <a href=""  class="btn btn-outline-info text-grey"
+                        <a href="" class="btn btn-outline-info text-grey"
                             role="button" onclick="printtable()">Print</a>
     
                     </div>
@@ -111,11 +116,13 @@
     <div class="card radius-15">
         <div class="card-body">
             <div class="container-fluid" id="daybookdiv">
-                <div id="demo"><p></p></div>
-                <table class="table table-responsive-md mt-4" id="daybooktable" style="background-color: #243e54;">
+                <div id="printdate" style="display: none;"><br>
+                    <h1 style="color: black;">Date : <span id="printdatep"></span></h1>
+                </div>
+                <table class="table table-responsive-md mt-4" id="daybooktable" >
                     <thead style="text-align: center;">
-                        <tr>
-                            <th>DATE</th>
+                        <tr id="headings">
+                            <th class="heading">DATE</th>
                             <th>REFERENCE NUMBER</th>
                             <th>PARTY NAME</th>
                             <th>TYPE</th>
@@ -127,11 +134,11 @@
                     </thead>
                     <tbody style="text-align: center;">
                         {% for trans in recpt %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.saledate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.saleno }}</td>
                             <td>{{ trans.salename }}</td>
-                            <td>Sales</td>
+                            <td>Sales Receipt</td>
                             <td>{{ trans.saaletotal }}</td>
                             <td>{{ trans.salesubtotal }}</td>
                             <td>0</td>
@@ -140,7 +147,7 @@
                         {% endfor %}
 
                         {% for trans in chq %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paydate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.chequeno }}</td>
                             <td>{{ trans.payee }}</td>
@@ -153,7 +160,7 @@
                         {% endfor %}
 
                         {% for trans in invoices %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.invoicedate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.invoiceno }}</td>
                             <td>{{ trans.customername }}</td>
@@ -166,7 +173,7 @@
                         {% endfor %}
 
                         {% for trans in bill_data %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.refno }}</td>
                             <td>{{ trans.payee }}</td>
@@ -179,7 +186,7 @@
                         {% endfor %}
 
                         {% for trans in supl %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.refno }}</td>
                             <td>{{ trans.supplier }}</td>
@@ -192,7 +199,7 @@
                         {% endfor %}
 
                         {% for trans in crd %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.creditdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.creditno }}</td>
                             <td>{{ trans.customer }}</td>
@@ -205,7 +212,7 @@
                         {% endfor %}
 
                         {% for trans in exp %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.refno }}</td>
                             <td>{{ trans.payee }}</td>
@@ -218,7 +225,7 @@
                         {% endfor %}
 
                         {% for trans in delychr %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.delayedchargedate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.delayedchargeno }}</td>
                             <td>{{ trans.customer }}</td>
@@ -231,7 +238,7 @@
                         {% endfor %}
 
                         {% for trans in estimates %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.estimatedate | date:'Y-m-d' }}</td>
                             <td>{{ trans.estimateno }}</td>
                             <td>{{ trans.customer }}</td>
@@ -245,7 +252,7 @@
                         {% endfor %}
 
                         {% for trans in salesorders %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.saledate | date:'Y-m-d' }}</td>
                             <td>{{ trans.saleno }}</td>
                             <td>{{ trans.salename }}</td>
@@ -259,11 +266,11 @@
                         {% endfor %}
                         
                         {% for trans in sales %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paymdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.refno }}</td>
                             <td>{{ trans.customer }}</td>
-                            <td>Sales</td>
+                            <td>Payment</td>
                             <td>{{ trans.amtcredit }}</td>
                             <td>0</td>
                             <td>0</td>
@@ -272,7 +279,7 @@
                         {% endfor %}
 
                         {% for trans in itm %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.itmdate  | date:'Y-m-d'}}</td>
                             <td>{{ trans.hsn }}</td>
                             <td>{{ trans.name }}</td>
@@ -285,7 +292,7 @@
                         {% endfor %}
 
                         {% for trans in manualjournal %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.date | date:'Y-m-d' }}</td>
                             <td>{{ trans.ref_no }}</td>
                             <td></td>
@@ -298,7 +305,7 @@
                         {% endfor %}
                         
                         {% for trans in purchaseorders %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.date | date:'Y-m-d' }}</td>
                             <td>{{ trans.puchaseorder_no }}</td>
                             <td>{{ trans.vendor_name }}</td>
@@ -311,7 +318,7 @@
                         {% endfor %}
                         
                         {% for trans in bill %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.date | date:'Y-m-d'}}</td>
                             <td>{{ trans.bill_no }}</td>
                             <td>{{ trans.contact_name }}</td>
@@ -324,7 +331,7 @@
                         {% endfor %}
                         
                         {% for trans in expenses %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.date | date:'Y-m-d'}}</td>
                             <td>{{ trans.expense_no }}</td>
                             <td>{{ trans.vendor }}</td>
@@ -337,11 +344,11 @@
                         {% endfor %}
 
                         {% for trans in purchase %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.paymentdate | date:'Y-m-d' }}</td>
                             <td>{{ trans.reference }}</td>
                             <td>{{ trans.vendor }}</td>
-                            <td>Purchase</td>
+                            <td>Purchase Payment</td>
                             <td>{{ trans.paymentamount }}</td>
                             <td>0</td>
                             <td>0</td>
@@ -350,7 +357,7 @@
                         {% endfor %}
 
                         {% for trans in debitnote %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.debitdate | date:'Y-m-d' }}</td>
                             <td>{{ trans.billno }}</td>
                             <td>{{ trans.vendor }}</td>
@@ -363,7 +370,7 @@
                         {% endfor %}
 
                         {% for trans in creditnote %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.creditdate | date:'Y-m-d' }}</td>
                             <td>{{ trans.billno }}</td>
                             <td>{{ trans.customer }}</td>
@@ -376,7 +383,7 @@
                         {% endfor %}
 
                         {% for trans in retainerinvoices %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.invoice_date | date:'Y-m-d'}}</td>
                             <td>{{ trans.invoice_number }}</td>
                             <td>{{ trans.customer }}</td>
@@ -389,7 +396,7 @@
                         {% endfor %}
 
                         {% for trans in deliverychallan %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.challan_date | date:'Y-m-d' }}</td>
                             <td>{{ trans.chal_no }}</td>
                             <td>{{ trans.customer }}</td>
@@ -402,7 +409,7 @@
                         {% endfor %}
 
                         {% for trans in recinv %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.startdate | date:'Y-m-d' }}</td>
                             <td>{{ trans.recinvoiceno }}</td>
                             <td>{{ trans.customername }}</td>
@@ -415,7 +422,7 @@
                         {% endfor %}
 
                         {% for trans in recbill %}
-                        <tr class="table-row " data-href="">
+                        <tr class="table-row ">
                             <td>{{ trans.start_date | date:'Y-m-d' }}</td>
                             <td>{{ trans.billno }}</td>
                             <td>{{ trans.customer_name }}</td>
@@ -439,7 +446,8 @@
 
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
-<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+<script type="text/javascript">
+function ExportToExcel(type, fn, dl) {
         var elt = document.getElementById('daybooktable');
         var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
         return dl ?
@@ -521,11 +529,26 @@
 
 <script>
     function printtable(){
+        const table = document.getElementById('daybooktable');
+        const heads = table.querySelectorAll('thead th');
+        const cells = table.querySelectorAll('tbody td');
+        const fromdate = document.getElementById("fromdate").value
+        if(fromdate !=""){
+            document.getElementById("printdate").style.display = "block";
+            document.getElementById("printdatep").innerHTML = fromdate;
+        }
+        heads.forEach(head => {
+                head.style.color = 'black'; // Change text color to red
+            });
+        cells.forEach(cell => {
+                cell.style.color = 'black'; // Change text color to red
+            });
         var printContents = document.getElementById("daybookdiv").innerHTML;
         var originalContents = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();
         document.body.innerHTML = originalContents;
+
     }
 </script>
 

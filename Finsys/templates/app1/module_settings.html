@@ -17,10 +17,9 @@
         }
     </style>
 
+
     
-    <form method="post" action="{% url 'hide_options' %}">
-        {% csrf_token %}
-        <br>
+
 
         <div class="card radius-15 h-20" >
             <div class="row">
@@ -29,8 +28,25 @@
                     <hr style="width:95%; color:white;">
                 </div>
             </div>
+            <form method="post" action="{% url 'backup_view' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-4 ml-5 mb-2">
+                        <label for="date">From</label> 
+                        <input type="date" id="fromdate" name="from_date" required>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label for="date">To</label>
+                        <input type="date" id="todate" name="to_date" required>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-1 mb-3">
+                        <button class="btn btn-outline-info text-grey" id="backup-button" type="submit">Backup</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
+        <form method="post" action="{% url 'hide_options' %}">
+            {% csrf_token %}
+            <br>
         <div class="card radius-15">
             <div class="card-body">
                 <div class="row">
@@ -186,7 +202,7 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" value="Update Options" id="update">
+            <input type="submit" value="Update Options" id="update" onclick="saveSelection()">
         </div>
     </form><br>
 
@@ -256,6 +272,141 @@
             loadCheckboxState('option41');
         });
       </script>
+
+<script>
+    function saveSelection() {
+        const selectedCheckboxes = [];
+
+        // Check each checkbox and store the selected values
+        if (document.getElementById('option1').checked) {
+            selectedCheckboxes.push(document.getElementById('option1').value);
+        }
+        if (document.getElementById('option2').checked) {
+            selectedCheckboxes.push(document.getElementById('option2').value);
+        }
+        if (document.getElementById('option3').checked) {
+            selectedCheckboxes.push(document.getElementById('option3').value);
+        }
+        if (document.getElementById('option4').checked) {
+            selectedCheckboxes.push(document.getElementById('option4').value);
+        }
+        if (document.getElementById('option5').checked) {
+            selectedCheckboxes.push(document.getElementById('option5').value);
+        }
+        if (document.getElementById('option6').checked) {
+            selectedCheckboxes.push(document.getElementById('option6').value);
+        }
+        if (document.getElementById('option7').checked) {
+            selectedCheckboxes.push(document.getElementById('option7').value);
+        }
+        if (document.getElementById('option8').checked) {
+            selectedCheckboxes.push(document.getElementById('option8').value);
+        }
+        if (document.getElementById('option9').checked) {
+            selectedCheckboxes.push(document.getElementById('option9').value);
+        }
+        if (document.getElementById('option10').checked) {
+            selectedCheckboxes.push(document.getElementById('option10').value);
+        }
+        if (document.getElementById('option11').checked) {
+            selectedCheckboxes.push(document.getElementById('option11').value);
+        }
+        if (document.getElementById('option12').checked) {
+            selectedCheckboxes.push(document.getElementById('option12').value);
+        }
+        if (document.getElementById('option13').checked) {
+            selectedCheckboxes.push(document.getElementById('option13').value);
+        }
+        if (document.getElementById('option14').checked) {
+            selectedCheckboxes.push(document.getElementById('option14').value);
+        }
+        if (document.getElementById('option15').checked) {
+            selectedCheckboxes.push(document.getElementById('option15').value);
+        }
+        if (document.getElementById('option16').checked) {
+            selectedCheckboxes.push(document.getElementById('option16').value);
+        }
+        if (document.getElementById('option17').checked) {
+            selectedCheckboxes.push(document.getElementById('option17').value);
+        }
+        if (document.getElementById('option18').checked) {
+            selectedCheckboxes.push(document.getElementById('option18').value);
+        }
+        if (document.getElementById('option19').checked) {
+            selectedCheckboxes.push(document.getElementById('option19').value);
+        }
+        if (document.getElementById('option20').checked) {
+            selectedCheckboxes.push(document.getElementById('option20').value);
+        }
+        if (document.getElementById('option21').checked) {
+            selectedCheckboxes.push(document.getElementById('option21').value);
+        }
+        if (document.getElementById('option22').checked) {
+            selectedCheckboxes.push(document.getElementById('option22').value);
+        }
+        if (document.getElementById('option23').checked) {
+            selectedCheckboxes.push(document.getElementById('option23').value);
+        }
+        if (document.getElementById('option24').checked) {
+            selectedCheckboxes.push(document.getElementById('option24').value);
+        }
+        if (document.getElementById('option25').checked) {
+            selectedCheckboxes.push(document.getElementById('option25').value);
+        }
+        if (document.getElementById('option26').checked) {
+            selectedCheckboxes.push(document.getElementById('option26').value);
+        }
+        if (document.getElementById('option27').checked) {
+            selectedCheckboxes.push(document.getElementById('option27').value);
+        }
+        if (document.getElementById('option28').checked) {
+            selectedCheckboxes.push(document.getElementById('option28').value);
+        }
+        if (document.getElementById('option29').checked) {
+            selectedCheckboxes.push(document.getElementById('option29').value);
+        }
+        if (document.getElementById('option30').checked) {
+            selectedCheckboxes.push(document.getElementById('option30').value);
+        }
+        if (document.getElementById('option31').checked) {
+            selectedCheckboxes.push(document.getElementById('option31').value);
+        }
+        if (document.getElementById('option32').checked) {
+            selectedCheckboxes.push(document.getElementById('option32').value);
+        }
+        if (document.getElementById('option33').checked) {
+            selectedCheckboxes.push(document.getElementById('option33').value);
+        }
+        if (document.getElementById('option34').checked) {
+            selectedCheckboxes.push(document.getElementById('option34').value);
+        }
+        if (document.getElementById('option35').checked) {
+            selectedCheckboxes.push(document.getElementById('option35').value);
+        }
+        if (document.getElementById('option36').checked) {
+            selectedCheckboxes.push(document.getElementById('option36').value);
+        }
+        if (document.getElementById('option37').checked) {
+            selectedCheckboxes.push(document.getElementById('option37').value);
+        }
+        if (document.getElementById('option38').checked) {
+            selectedCheckboxes.push(document.getElementById('option38').value);
+        }
+        if (document.getElementById('option39').checked) {
+            selectedCheckboxes.push(document.getElementById('option39').value);
+        }
+        if (document.getElementById('option40').checked) {
+            selectedCheckboxes.push(document.getElementById('option40').value);
+        }
+        if (document.getElementById('option41').checked) {
+            selectedCheckboxes.push(document.getElementById('option41').value);
+        }
+        
+        // Store the selected values (you can use localStorage or send to the server)
+        localStorage.setItem('selectedCheckboxes', JSON.stringify(selectedCheckboxes));
+
+        }
+</script>
 
 
 {% endblock %}

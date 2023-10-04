@@ -122,7 +122,7 @@
                                                 <td class="center text-dark">{{ i.invoicedate  | date:'Y-m-d' }}</td> 
                                                 <td class="center text-dark">{{ i.invoiceno }}</a></td>
                                                 <td class="center text-dark">{{ i.customername }}</td>  
-                                                <td class="center text-dark">Inventory</td>         
+                                                <td class="center text-dark">Invoice</td>         
                                                 <td class="center text-dark">{{ cmp1.paid }}</td>         
                                                 <td class="center text-dark">{{i.grandtotal}}</td>       
                                                 <td class="center text-dark">{{i.baldue}}</td>       
@@ -189,7 +189,19 @@
     function addDataPoint() {
         const tableData = extractDataFromTable();
         const dates = tableData.map(item => item.date);
-        const sales = tableData.map(item => item.sales);        
+        const sales = tableData.map(item => item.sales); 
+
+        var fromDate = document.getElementById('fromdate').value;   
+        var toDate = document.getElementById('todate').value;
+        if(dates[0] != fromDate){
+          dates.unshift(fromDate)
+          sales.unshift(null)
+        }
+        if(dates[dates.length - 1] != toDate){
+          dates.push(toDate)
+          sales.push(null)
+        }
+
         myChart.data.labels = dates;
         myChart.data.datasets[0].data = sales;
         // Redraw the chart
@@ -281,12 +293,14 @@
     const toDateInput = document.getElementById("todate"); 
     fromDateInput.addEventListener("change", ApplyDateFilter);
     toDateInput.addEventListener("change", ApplyDateFilter);
+    fromDateInput.addEventListener("change", addDataPoint);
     toDateInput.addEventListener("change", addDataPoint);
 </script>
 
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 
-<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+<script type="text/javascript">
+function ExportToExcel(type, fn, dl) {
     var elt = document.getElementById('saletable');
     var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
     return dl ?

@@ -44343,61 +44343,17 @@ def module_settings(request):
     context = {'selected_options': json.dumps(selected_options)}
     return render(request,"app1/module_settings.html",context)
 
+def base_view(request):
+    return render(request,"app1/base.html")
+
 
 import pandas as pd
 from django.http import HttpResponse
 from django.core import serializers
-from io import BytesIO, TextIOWrapper
+from io import BytesIO
 import zipfile
 
-
-def backup_sales1(request):
-    if request.method == 'POST':
-        selected_date = request.POST.get('selected_date')
-        cmp1 = company.objects.get(id=request.session['uid'])
-
-        if selected_date:
-            # Fetch sales data for the selected date
-            
-            cmp = list(company.objects.get(id=request.session['uid']).values())
-
-            cust = list(customer.objects.filter(cid=cmp1,date=selected_date).values())
-            for item in cust:
-                item['date'] = item['date'].strftime('%Y-%m-%d %H:%M:%S')
-
-            suppl = list(supplier.objects.filter(cid=cmp1).values())
-
-            advpay = list(advancepayment.objects.filter(cid=cmp1,paymentdate=selected_date).values())
-
-            paydwncrd = list(paydowncreditcard.objects.filter(cid=cmp1,dateofpayment=selected_date).values())
-
-            slrc = list(salesrecpts.objects.filter(cid=cmp1,dateofpayment=selected_date).values())
-
-            timeat = list(timeact.objects.filter(cid=cmp1,timdate=selected_date).values())
-
-            timeatsale = list(timeactsale.objects.filter(cid=cmp1,timdatesale=selected_date).values())
-
-            cheq = list(Cheqs.objects.filter(cid=cmp1,paydate=selected_date).values())
-
-            sales = list(invoice.objects.filter(cid=cmp1,invoicedate=selected_date).values())
-            for item in sales:
-                item['invoicedate'] = item['invoicedate'].strftime('%Y-%m-%d %H:%M:%S')
-
-            invitm = list(invoice_item.objects.filter(cid=cmp1).values())
-
-            bill = list(bills.objects.filter(cid=cmp1,paymdate=selected_date).values())
-
-            paydwncrd = list(bills.objects.filter(cid=cmp1,paymdate=selected_date).values())
-            for item in advpay:
-                item['dateofpayment'] = item['dateofpayment'].strftime('%Y-%m-%d %H:%M:%S')
-                
-
-
-        
-    return JsonResponse({'error': 'Invalid request'})
-
-
-def backup_sales(request):
+def backup_view(request):
     if request.method == 'POST':
         from_date = request.POST.get('from_date')
         to_date = request.POST.get('to_date')
@@ -44405,52 +44361,315 @@ def backup_sales(request):
         
         if from_date and to_date:
             # Fetch sales data for the selected date
-
-
-
-
-
-            salescrdnote_data = serializers.serialize('json', salescreditnote.objects.filter(cid=cmp1,creditdate__range=[from_date, to_date]))
-            item_data = serializers.serialize('json', itemtable.objects.filter(cid=cmp1,itmdate__range=[from_date, to_date]))
+            user_data = serializers.serialize('json',User.objects.filter(id=request.user.id))
+            cmp_data = serializers.serialize('json', company.objects.filter(id=request.session['uid']))
+            cust_data = serializers.serialize('json', customer.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            suppl_data = serializers.serialize('json', supplier.objects.filter(cid=cmp1))
+            advpay_data = serializers.serialize('json', advancepayment.objects.filter(cid=cmp1,paymentdate__range=[from_date, to_date]))
+            paydwncrd_data = serializers.serialize('json', paydowncreditcard.objects.filter(cid=cmp1,dateofpayment__range=[from_date, to_date]))
+            slrc_data = serializers.serialize('json', salesrecpts.objects.filter(cid=cmp1,saledate__range=[from_date, to_date]))
+            timeat_data = serializers.serialize('json', timeact.objects.filter(cid=cmp1,timdate__range=[from_date, to_date]))
+            timeatsale_data = serializers.serialize('json', timeactsale.objects.filter(cid=cmp1,timdatesale__range=[from_date, to_date]))
+            cheq_data = serializers.serialize('json', Cheqs.objects.filter(cid=cmp1,paydate__range=[from_date, to_date]))
             invoice_data = serializers.serialize('json', invoice.objects.filter(cid=cmp1,invoicedate__range=[from_date, to_date]))
+            invitm_data = serializers.serialize('json', invoice_item.objects.filter(cid=cmp1))
+            bill_data = serializers.serialize('json', bills.objects.filter(cid=cmp1,paymdate__range=[from_date, to_date]))
+            suplcr_data = serializers.serialize('json', suplrcredit.objects.filter(cid=cmp1,paymdate__range=[from_date, to_date]))
+            cr_data = serializers.serialize('json', credit.objects.filter(cid=cmp1,creditdate__range=[from_date, to_date]))
+            expn_data = serializers.serialize('json', expences.objects.filter(cid=cmp1,paymdate__range=[from_date, to_date]))
+            dlych_data = serializers.serialize('json', delayedcharge.objects.filter(cid=cmp1,delayedchargedate__range=[from_date, to_date]))
+            srv_data = serializers.serialize('json', service.objects.filter(cid=cmp1))
+            ninv_data = serializers.serialize('json', noninventory.objects.filter(cid=cmp1))
+            bun_data = serializers.serialize('json', bundle.objects.filter(cid=cmp1))
+            inv_data = serializers.serialize('json', inventory.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            acctype_data = serializers.serialize('json', accountype.objects.filter(cid=cmp1))
+            bnkstm_data = serializers.serialize('json', bankstatement.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            accs_data = serializers.serialize('json', accounts.objects.filter(cid=cmp1))
+            accs1_data = serializers.serialize('json', accounts1.objects.filter(cid=cmp1))
+            expacc_data = serializers.serialize('json', expenseaccount.objects.filter(cid=cmp1,enddate__range=[from_date, to_date]))
+            emp_data = serializers.serialize('json', employee.objects.filter(cid=cmp1))
+            payslip_data = serializers.serialize('json', payslip.objects.filter(cid=cmp1,paydate__range=[from_date, to_date]))
+            recon_data = serializers.serialize('json', recon1.objects.filter(cid=cmp1,endingdate__range=[from_date, to_date]))
+            recpay_data = serializers.serialize('json', recordpay.objects.filter(cid=cmp1,paymentdate__range=[from_date, to_date]))
+            est_data = serializers.serialize('json', estimate.objects.filter(cid=cmp1,estimatedate__range=[from_date, to_date]))
+            empitm_data = serializers.serialize('json', estimate_item.objects.filter(cid=cmp1))
+            salord_data = serializers.serialize('json', salesorder.objects.filter(cid=cmp1,saledate__range=[from_date, to_date]))
+            salitm_data = serializers.serialize('json', sales_item.objects.filter(cid=cmp1))
+            pay_data = serializers.serialize('json', payment.objects.filter(cid=cmp1,paymdate__range=[from_date, to_date]))
+            payitm_data = serializers.serialize('json', paymentitems.objects.filter(cid=cmp1,invdate__range=[from_date, to_date]))
+            custst_data = serializers.serialize('json', cust_statment.objects.filter(cid=cmp1,Date__range=[from_date, to_date]))
+            item_data = serializers.serialize('json', itemtable.objects.filter(cid=cmp1,itmdate__range=[from_date, to_date]))
+            mjour_data = serializers.serialize('json', mjournal.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            curr_data = serializers.serialize('json', currencies.objects.filter(cid=cmp1))
+            stkrea_data = serializers.serialize('json', stockreason.objects.filter(cid=cmp1))
+            stkadj_data = serializers.serialize('json', stockadjust.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            etran_data = serializers.serialize('json', etransporter.objects.filter(cid=cmp1))
+            ewayinv_data = serializers.serialize('json', ewayinv.objects.filter(cid=cmp1))
+            ven_data = serializers.serialize('json', vendor.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            purord_data = serializers.serialize('json', purchaseorder.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            purorditm_data = serializers.serialize('json', purchaseorder_item.objects.filter(cid=cmp1))
+            purbill_data = serializers.serialize('json', purchasebill.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            purbillitm_data = serializers.serialize('json', purchasebill_item.objects.filter(cid=cmp1))
+            purexpn_data = serializers.serialize('json', purchase_expense.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            purpay_data = serializers.serialize('json', purchasepayment.objects.filter(cid=cmp1,paymentdate__range=[from_date, to_date]))
+            purpay1_data = serializers.serialize('json', purchasepayment1.objects.filter(cid=cmp1,billdate__range=[from_date, to_date]))
+            purdeb_data = serializers.serialize('json', purchasedebit.objects.filter(cid=cmp1,debitdate__range=[from_date, to_date]))
+            purdeb1_data = serializers.serialize('json', purchasedebit1.objects.filter(cid=cmp1))
+            itmstk_data = serializers.serialize('json', itemstock.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            vndstat_data = serializers.serialize('json', vendor_statment.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            proloss_data = serializers.serialize('json', profit_loss.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            balsheet_data = serializers.serialize('json', balance_sheet.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            itmsstk_data = serializers.serialize('json', item_stock.objects.filter(cid=cmp1))
+            bankpay_data = serializers.serialize('json', banking_payment.objects.filter(cid=cmp1,date__range=[from_date, to_date]))
+            salescrdnote_data = serializers.serialize('json', salescreditnote.objects.filter(cid=cmp1,creditdate__range=[from_date, to_date]))
+            retinv_data = serializers.serialize('json', RetainerInvoices.objects.filter(cid=cmp1,invoice_date__range=[from_date, to_date]))
+            reccexp_data = serializers.serialize('json', recurring_expense.objects.filter(cid=cmp1,start_date__range=[from_date, to_date]))
+            challan_data = serializers.serialize('json', challan.objects.filter(cid=cmp1,challan_date__range=[from_date, to_date]))
+            challanitm_data = serializers.serialize('json', challanitem.objects.filter(cid=cmp1))
+            prclit_data = serializers.serialize('json', Pricelist.objects.filter(cid=cmp1))
+            payrollemp_data = serializers.serialize('json', payrollemployee.objects.filter(cid=cmp1,joindate__range=[from_date, to_date]))
+            bnktran_data = serializers.serialize('json', bank_transactions.objects.filter(cid=cmp1,adj_date__range=[from_date, to_date]))
+            reccinv_data = serializers.serialize('json', recinvoice.objects.filter(cid=cmp1,startdate__range=[from_date, to_date]))
+            reccinvitm_data = serializers.serialize('json', recinvoice_item.objects.filter(cid=cmp1))
+            emplyloan_data = serializers.serialize('json', EmployeeLoan.objects.filter(company=cmp1,LoanDate__range=[from_date, to_date]))
+            reccbill_data = serializers.serialize('json', recurring_bill.objects.filter(cid=cmp1,start_date__range=[from_date, to_date]))
+            reccbillitm_data = serializers.serialize('json', recurringbill_item.objects.filter(cid=cmp1))
 
                 # Create a zip file containing the CSV data
             zip_buffer = BytesIO()
             with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                with zipf.open('backup.json', 'w') as json_file:
-
-
-
-
-                    json_file.write(salescrdnote_data.encode('utf-8'))
-                    json_file.write(item_data.encode('utf-8'))
+                with zipf.open(f'backup_{date.today()}.json', 'w') as json_file:
+                    json_file.write(user_data.encode('utf-8'))
+                    json_file.write(cmp_data.encode('utf-8'))
+                    json_file.write(cust_data.encode('utf-8'))
+                    json_file.write(suppl_data.encode('utf-8'))
+                    json_file.write(advpay_data.encode('utf-8'))
+                    json_file.write(paydwncrd_data.encode('utf-8'))
+                    json_file.write(slrc_data.encode('utf-8'))
+                    json_file.write(timeat_data.encode('utf-8'))
+                    json_file.write(timeatsale_data.encode('utf-8'))
+                    json_file.write(cheq_data.encode('utf-8'))
                     json_file.write(invoice_data.encode('utf-8'))
+                    json_file.write(invitm_data.encode('utf-8'))
+                    json_file.write(bill_data.encode('utf-8'))
+                    json_file.write(suplcr_data.encode('utf-8'))
+                    json_file.write(cr_data.encode('utf-8'))
+                    json_file.write(expn_data.encode('utf-8'))
+                    json_file.write(dlych_data.encode('utf-8'))
+                    json_file.write(srv_data.encode('utf-8'))
+                    json_file.write(ninv_data.encode('utf-8'))
+                    json_file.write(bun_data.encode('utf-8'))
+                    json_file.write(inv_data.encode('utf-8'))
+                    json_file.write(acctype_data.encode('utf-8'))
+                    json_file.write(bnkstm_data.encode('utf-8'))
+                    json_file.write(accs_data.encode('utf-8'))
+                    json_file.write(accs1_data.encode('utf-8'))
+                    json_file.write(expacc_data.encode('utf-8'))
+                    json_file.write(emp_data.encode('utf-8'))
+                    json_file.write(payslip_data.encode('utf-8'))
+                    json_file.write(recon_data.encode('utf-8'))
+                    json_file.write(recpay_data.encode('utf-8'))
+                    json_file.write(est_data.encode('utf-8'))
+                    json_file.write(empitm_data.encode('utf-8'))
+                    json_file.write(salord_data.encode('utf-8'))
+                    json_file.write(salitm_data.encode('utf-8'))
+                    json_file.write(pay_data.encode('utf-8'))
+                    json_file.write(payitm_data.encode('utf-8'))
+                    json_file.write(custst_data.encode('utf-8'))
+                    json_file.write(item_data.encode('utf-8'))
+                    json_file.write(mjour_data.encode('utf-8'))
+                    json_file.write(curr_data.encode('utf-8'))
+                    json_file.write(stkrea_data.encode('utf-8'))
+                    json_file.write(stkadj_data.encode('utf-8'))
+                    json_file.write(etran_data.encode('utf-8'))
+                    json_file.write(ewayinv_data.encode('utf-8'))
+                    json_file.write(ven_data.encode('utf-8'))
+                    json_file.write(purord_data.encode('utf-8'))
+                    json_file.write(purorditm_data.encode('utf-8'))
+                    json_file.write(purbill_data.encode('utf-8'))
+                    json_file.write(purbillitm_data.encode('utf-8'))
+                    json_file.write(purexpn_data.encode('utf-8'))
+                    json_file.write(purpay_data.encode('utf-8'))
+                    json_file.write(purpay1_data.encode('utf-8'))
+                    json_file.write(purdeb_data.encode('utf-8'))
+                    json_file.write(purdeb1_data.encode('utf-8'))
+                    json_file.write(itmstk_data.encode('utf-8'))
+                    json_file.write(vndstat_data.encode('utf-8'))
+                    json_file.write(proloss_data.encode('utf-8'))
+                    json_file.write(balsheet_data.encode('utf-8'))
+                    json_file.write(itmsstk_data.encode('utf-8'))
+                    json_file.write(bankpay_data.encode('utf-8'))
+                    json_file.write(salescrdnote_data.encode('utf-8'))
+                    json_file.write(retinv_data.encode('utf-8'))
+                    json_file.write(reccexp_data.encode('utf-8'))
+                    json_file.write(challan_data.encode('utf-8'))
+                    json_file.write(challanitm_data.encode('utf-8'))
+                    json_file.write(prclit_data.encode('utf-8'))
+                    json_file.write(payrollemp_data.encode('utf-8'))
+                    json_file.write(bnktran_data.encode('utf-8'))
+                    json_file.write(reccinv_data.encode('utf-8'))
+                    json_file.write(reccinvitm_data.encode('utf-8'))
+                    json_file.write(emplyloan_data.encode('utf-8'))
+                    json_file.write(reccbill_data.encode('utf-8'))
+                    json_file.write(reccbillitm_data.encode('utf-8'))
 
                 # Convert JSON to CSV and add to the ZIP file
                 csv_buffer = BytesIO()
-
-
-
-
-                salescrdnote_df = pd.read_json(salescrdnote_data)
+                user_df = pd.read_json(user_data)
+                cmp_df = pd.read_json(cmp_data)
+                cust_df = pd.read_json(cust_data)
+                suppl_df = pd.read_json(suppl_data)
+                advpay_df = pd.read_json(advpay_data)
+                paydwncrd_df = pd.read_json(paydwncrd_data)
+                slrc_df = pd.read_json(slrc_data)
+                timeat_df = pd.read_json(timeat_data)
+                timeatsale_df = pd.read_json(timeatsale_data)
+                cheq_df = pd.read_json(cheq_data)
+                invoice_df = pd.read_json(invoice_data)
+                invitm_df = pd.read_json(invitm_data)
+                bill_df = pd.read_json(bill_data)
+                suplcr_df = pd.read_json(suplcr_data)
+                cr_df = pd.read_json(cr_data)
+                expn_df = pd.read_json(expn_data)
+                dlych_df = pd.read_json(dlych_data)
+                srv_df = pd.read_json(srv_data)
+                ninv_df = pd.read_json(ninv_data)
+                bun_df = pd.read_json(bun_data)
+                inv_df = pd.read_json(inv_data)
+                acctype_df = pd.read_json(acctype_data)
+                bnkstm_df = pd.read_json(bnkstm_data)
+                accs_df = pd.read_json(accs_data)
+                accs1_df = pd.read_json(accs1_data)
+                expacc_df = pd.read_json(expacc_data)
+                emp_df = pd.read_json(emp_data)
+                payslip_df = pd.read_json(payslip_data)
+                recon_df = pd.read_json(recon_data)
+                recpay_df = pd.read_json(recpay_data)
+                est_df = pd.read_json(est_data)
+                empitm_df = pd.read_json(empitm_data)
+                salord_df = pd.read_json(salord_data)
+                salitm_df = pd.read_json(salitm_data)
+                pay_df = pd.read_json(pay_data)
+                payitm_df = pd.read_json(payitm_data)
+                custst_df = pd.read_json(custst_data)
                 item_df = pd.read_json(item_data)
-                incvoice_df = pd.read_json(invoice_data)
+                mjour_df = pd.read_json(mjour_data)
+                curr_df = pd.read_json(curr_data)
+                stkrea_df = pd.read_json(stkrea_data)
+                stkadj_df = pd.read_json(stkadj_data)
+                etran_df = pd.read_json(etran_data)
+                ewayinv_df = pd.read_json(ewayinv_data)
+                ven_df = pd.read_json(ven_data)
+                purord_df = pd.read_json(purord_data)
+                purorditm_df = pd.read_json(purorditm_data)
+                purbill_df = pd.read_json(purbill_data)
+                purbillitm_df = pd.read_json(purbillitm_data)
+                purexpn_df = pd.read_json(purexpn_data)
+                purpay_df = pd.read_json(purpay_data)
+                purpay1_df = pd.read_json(purpay1_data)
+                purdeb_df = pd.read_json(purdeb_data)
+                purdeb1_df = pd.read_json(purdeb1_data)
+                itmstk_df = pd.read_json(itmstk_data)
+                vndstat_df = pd.read_json(vndstat_data)
+                proloss_df = pd.read_json(proloss_data)
+                balsheet_df = pd.read_json(balsheet_data)
+                itmsstk_df = pd.read_json(itmsstk_data)
+                bankpay_df = pd.read_json(bankpay_data)
+                salescrdnote_df = pd.read_json(salescrdnote_data)
+                retinv_df = pd.read_json(retinv_data)
+                reccexp_df = pd.read_json(reccexp_data)
+                challan_df = pd.read_json(challan_data)
+                challanitm_df = pd.read_json(challanitm_data)
+                prclit_df = pd.read_json(prclit_data)
+                payrollemp_df = pd.read_json(payrollemp_data)
+                bnktran_df = pd.read_json(bnktran_data)
+                reccinv_df = pd.read_json(reccinv_data)
+                reccinvitm_df = pd.read_json(reccinvitm_data)
+                emplyloan_df = pd.read_json(emplyloan_data)
+                reccbill_df = pd.read_json(reccbill_data)
+                reccbillitm_df = pd.read_json(reccbillitm_data)
 
-
-
-
-                
-                salescrdnote_df.to_csv(csv_buffer, index=False)
-                item_df.to_csv(csv_buffer, index=False)    
+                user_df.to_csv(csv_buffer, index=False)
+                cmp_df.to_csv(csv_buffer, index=False)
+                cust_df.to_csv(csv_buffer, index=False)
+                suppl_df.to_csv(csv_buffer, index=False)
+                advpay_df.to_csv(csv_buffer, index=False)
+                paydwncrd_df.to_csv(csv_buffer, index=False)
+                slrc_df.to_csv(csv_buffer, index=False)
+                timeat_df.to_csv(csv_buffer, index=False)
+                timeatsale_df.to_csv(csv_buffer, index=False)
+                cheq_df.to_csv(csv_buffer, index=False)
                 invoice_df.to_csv(csv_buffer, index=False)   
+                invitm_df.to_csv(csv_buffer, index=False)
+                bill_df.to_csv(csv_buffer, index=False)
+                suplcr_df.to_csv(csv_buffer, index=False)
+                cr_df.to_csv(csv_buffer, index=False)
+                expn_df.to_csv(csv_buffer, index=False)
+                dlych_df.to_csv(csv_buffer, index=False)
+                srv_df.to_csv(csv_buffer, index=False)
+                ninv_df.to_csv(csv_buffer, index=False)
+                bun_df.to_csv(csv_buffer, index=False)
+                inv_df.to_csv(csv_buffer, index=False)
+                acctype_df.to_csv(csv_buffer, index=False)
+                bnkstm_df.to_csv(csv_buffer, index=False)
+                accs_df.to_csv(csv_buffer, index=False)
+                accs1_df.to_csv(csv_buffer, index=False)
+                expacc_df.to_csv(csv_buffer, index=False)
+                emp_df.to_csv(csv_buffer, index=False)
+                payslip_df.to_csv(csv_buffer, index=False)
+                recon_df.to_csv(csv_buffer, index=False)
+                recpay_df.to_csv(csv_buffer, index=False)
+                est_df.to_csv(csv_buffer, index=False)
+                empitm_df.to_csv(csv_buffer, index=False)
+                salord_df.to_csv(csv_buffer, index=False)
+                salitm_df.to_csv(csv_buffer, index=False)
+                pay_df.to_csv(csv_buffer, index=False)
+                payitm_df.to_csv(csv_buffer, index=False)
+                custst_df.to_csv(csv_buffer, index=False)
+                item_df.to_csv(csv_buffer, index=False)    
+                mjour_df.to_csv(csv_buffer, index=False)
+                curr_df.to_csv(csv_buffer, index=False)
+                stkrea_df.to_csv(csv_buffer, index=False)
+                stkadj_df.to_csv(csv_buffer, index=False)
+                etran_df.to_csv(csv_buffer, index=False)
+                ewayinv_df.to_csv(csv_buffer, index=False)
+                ven_df.to_csv(csv_buffer, index=False)
+                purord_df.to_csv(csv_buffer, index=False)
+                purorditm_df.to_csv(csv_buffer, index=False)
+                purbill_df.to_csv(csv_buffer, index=False)
+                purbillitm_df.to_csv(csv_buffer, index=False)
+                purexpn_df.to_csv(csv_buffer, index=False)
+                purpay_df.to_csv(csv_buffer, index=False)
+                purpay1_df.to_csv(csv_buffer, index=False)
+                purdeb_df.to_csv(csv_buffer, index=False)
+                purdeb1_df.to_csv(csv_buffer, index=False)
+                itmstk_df.to_csv(csv_buffer, index=False)
+                vndstat_df.to_csv(csv_buffer, index=False)
+                proloss_df.to_csv(csv_buffer, index=False)
+                balsheet_df.to_csv(csv_buffer, index=False)
+                itmsstk_df.to_csv(csv_buffer, index=False)
+                bankpay_df.to_csv(csv_buffer, index=False)
+                salescrdnote_df.to_csv(csv_buffer, index=False)
+                retinv_df.to_csv(csv_buffer, index=False)
+                reccexp_df.to_csv(csv_buffer, index=False)
+                challan_df.to_csv(csv_buffer, index=False)
+                challanitm_df.to_csv(csv_buffer, index=False)
+                prclit_df.to_csv(csv_buffer, index=False)
+                payrollemp_df.to_csv(csv_buffer, index=False)
+                bnktran_df.to_csv(csv_buffer, index=False)
+                reccinv_df.to_csv(csv_buffer, index=False)
+                reccinvitm_df.to_csv(csv_buffer, index=False)
+                emplyloan_df.to_csv(csv_buffer, index=False)
+                reccbill_df.to_csv(csv_buffer, index=False)
+                reccbillitm_df.to_csv(csv_buffer, index=False)
 
-                with zipf.open('backup.csv', 'w') as csv_file:
+                with zipf.open(f'backup_{date.today()}.csv', 'w') as csv_file:
                     csv_file.write(csv_buffer.getvalue())
 
             # Prepare the response with the zipped data
             zip_buffer.seek(0)
             response = HttpResponse(zip_buffer.read(), content_type='application/zip')
-            response['Content-Disposition'] = f'attachment; filename=backup.zip'
+            response['Content-Disposition'] = f'attachment; filename=backup_{date.today()}.zip'
 
  
 

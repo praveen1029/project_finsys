@@ -183,8 +183,7 @@
                   <li><a href="{% url 'gocoa' %}" style="display: block; padding: 8px 16px; text-decoration: none">Chart
                       of Accounts</a></li>
                   <li><a href="{% url 'module_settings'%}" style="display: block; padding: 8px 16px; text-decoration: none">
-                    Module Settings</a></li>
-
+                        Module Settings</a></li>
                 </ul>
               </div>
             </ul>
@@ -377,19 +376,19 @@
                 <!-- <li><a href="{% url 'gosalesrecords' %}"><i class="bx bx-right-arrow-alt"></i>Sales
                     Records</a>
                 </li> -->
-                <li><a href="{% url 'goinvoices' %}"><i class="bx bx-right-arrow-alt"></i>Invoices</a>
+                <li id="invoices"><a href="{% url 'goinvoices' %}"><i class="bx bx-right-arrow-alt"></i>Invoices</a>
                 </li>
             </li>
-            <li>
+            <li id="creditnote">
               <a href="{% url 'credit_note' %}"><i class="bx bx-right-arrow-alt"></i>Credit Note</a>
             </li>
-            <li><a href="{% url 'gopayment_received' %}"><i class="bx bx-right-arrow-alt"></i>Payments Received</a>
+            <li id="paymentsreceived"><a href="{% url 'gopayment_received' %}"><i class="bx bx-right-arrow-alt"></i>Payments Received</a>
             </li>
-            <li><a href="{% url 'retainer_invoices_list' %}"><i class="bx bx-right-arrow-alt"></i>Retainer Invoices</a>
+            <li id="retainerinvoices"><a href="{% url 'retainer_invoices_list' %}"><i class="bx bx-right-arrow-alt"></i>Retainer Invoices</a>
             </li>
-            <li><a href="{% url 'delivery_challan' %}"><i class="bx bx-right-arrow-alt"></i> Delivery Challan</a>
+            <li id="deliverychallan"><a href="{% url 'delivery_challan' %}"><i class="bx bx-right-arrow-alt"></i> Delivery Challan</a>
             </li>
-            <li><a href="{% url 'gorecinvoices' %}"><i class="bx bx-right-arrow-alt"></i> Reccuring Invoices</a>
+            <li id="reccuringinvoices"><a href="{% url 'gorecinvoices' %}"><i class="bx bx-right-arrow-alt"></i> Reccuring Invoices</a>
             </li>
             <!-- <li><a href="{% url 'gopands' %}"><i class="bx bx-right-arrow-alt"></i>Product and
                     Services</a> -->
@@ -403,19 +402,19 @@
               <div class="menu-title">Purchase</div>
             </a>
             <ul class="submenu">
-              <li><a href="{% url 'govendor' %}"><i class="bx bx-right-arrow-alt"></i>Vendor</a>
+              <li id="vendor"><a href="{% url 'govendor' %}"><i class="bx bx-right-arrow-alt"></i>Vendor</a>
               </li>
-              <li><a href="{% url 'gopurchaseorder' %}"><i class="bx bx-right-arrow-alt"></i>Purchase Order</a>
+              <li id="purchaseorder"><a href="{% url 'gopurchaseorder' %}"><i class="bx bx-right-arrow-alt"></i>Purchase Order</a>
               </li>
-              <li><a href="{% url 'gobilling' %}"><i class="bx bx-right-arrow-alt"></i>Bill</a>
+              <li id="bill"><a href="{% url 'gobilling' %}"><i class="bx bx-right-arrow-alt"></i>Bill</a>
               </li>
-              <li><a href="{% url 'goexpenses' %}"><i class="bx bx-right-arrow-alt"></i>Expense</a>
+              <li id="expense"><a href="{% url 'goexpenses' %}"><i class="bx bx-right-arrow-alt"></i>Expense</a>
               </li>
-              <li><a href="{% url 'gopurchasepymnt' %}"><i class="bx bx-right-arrow-alt"></i>Payment</a>
+              <li id="payment"><a href="{% url 'gopurchasepymnt' %}"><i class="bx bx-right-arrow-alt"></i>Payment</a>
               </li>
-              <li><a href="{% url 'gopurchasedebit' %}"><i class="bx bx-right-arrow-alt"></i>Debit Note</a>
+              <li id="debitnote"><a href="{% url 'gopurchasedebit' %}"><i class="bx bx-right-arrow-alt"></i>Debit Note</a>
               </li>
-              <li><a href="{% url 'recurringbill_home' %}"><i class="bx bx-right-arrow-alt"></i>Recurring Bill</a>
+              <li id="recurringbill"><a href="{% url 'recurringbill_home' %}"><i class="bx bx-right-arrow-alt"></i>Recurring Bill</a>
               </li>
             </ul>
           </li>
@@ -469,11 +468,15 @@
               <div class="menu-title">Reports</div>
             </a>
             <ul class="submenu">
-              <li>
+              <li id="transactonreport">
                 <a><i class="bx bx-right-arrow-alt"></i>Transaction Reports</a>
                 <ul class="px-4">
-                  <li><a href="{% url 'sales' %}"><i class="bx bx-right-arrow-alt"></i>Sales
+                  <li><a><i class="bx bx-right-arrow-alt"></i>Sales
                     </a>
+                    <ul class="px-4">
+                      <li><a href=""><i class="bx bx-right-arrow-alt"></i>Sales by Customer</a></li>
+                      <li><a href=""><i class="bx bx-right-arrow-alt"></i>Sales By Item</a></li>
+                    </ul>
                   </li>
                   <li><a href="{% url 'purchase' %}"><i class="bx bx-right-arrow-alt"></i>Purchase
                     </a>
@@ -485,10 +488,9 @@
                   <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
                   <li><a href="{% url 'cashflow' %}"><i class="bx bx-right-arrow-alt"></i>Cash Flow</a></li>
                   <li><a href="{% url 'daybook' %}"><i class="bx bx-right-arrow-alt"></i>Day Book</a></li>
-
                 </ul>
               </li>
-              <li>
+              <li id="party">
                 <a><i class="bx bx-right-arrow-alt"></i>Party </a>
                 <ul class="px-4">
                   <li><a href="{% url 'party_stmt' %}">Party Statements</a></li>
@@ -496,7 +498,7 @@
                 
                 </ul>
               </li>
-              <li>
+              <li id="gstreports">
                 <a><i class="bx bx-right-arrow-alt"></i>GST Reports</a>
                 <ul class="px-4">
                   <li><a href="{% url 'gstrr1' %}">GSTR-1</a></li>
@@ -506,16 +508,16 @@
                   <li><a href="{% url 'sale_summary_byHSN' %}"></i>Sale Summary by HSN</a></li>
                 </ul>
               </li>
-              <li><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
-              <li><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
-              <li><a href="{% url 'trial_balance' %}"><i class="bx bx-right-arrow-alt"></i>Trial Balance</a></li>
-              <li><a href="{% url 'accreceivables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Receivables</a>
+              <li id="profitandloss"><a href="{% url 'profitandloss' %}"><i class="bx bx-right-arrow-alt"></i>Profit and Loss</a></li>
+              <li id="balancesheet"><a href="{% url 'balancesheet1' %}"><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a></li>
+              <li id="trialbalance"><a href="{% url 'trial_balance' %}"><i class="bx bx-right-arrow-alt"></i>Trial Balance</a></li>
+              <li id="accountsreceivables"><a href="{% url 'accreceivables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Receivables</a>
               </li>
-              <li><a href="{% url 'accpayables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Payables</a></li>
+              <li id="accountspayables"><a href="{% url 'accpayables' %}"><i class="bx bx-right-arrow-alt"></i>Accounts Payables</a></li>
 
-              <li><a href="{% url 'stocksummary' %}"><i class="bx bx-right-arrow-alt"></i>Stock Summary </a></li>
-              <li><a href="{% url 'stockvaluation' %}"><i class="bx bx-right-arrow-alt"></i>Stock Valuation</a></li>
-              <li><a href="{% url 'salessummaryreport' %}"><i class="bx bx-right-arrow-alt"></i>Sales Summary Report</a></li>
+              <li id="stocksummary"><a href="{% url 'stocksummary' %}"><i class="bx bx-right-arrow-alt"></i>Stock Summary </a></li>
+              <li id="stockvaluation"><a href="{% url 'stockvaluation' %}"><i class="bx bx-right-arrow-alt"></i>Stock Valuation</a></li>
+              <li id="salessummaryreport"><a href="{% url 'salessummaryreport' %}"><i class="bx bx-right-arrow-alt"></i>Sales Summary Report</a></li>
             </ul>
           </li>
           <!-- <li>
@@ -544,13 +546,13 @@
               <div class="menu-title">Accounting</div>
             </a>
             <ul class="submenu">
-              <li><a href="{% url 'gocoa' %}"><i class="bx bx-right-arrow-alt"></i>Chart of
+              <li id="chartofaccounts"><a href="{% url 'gocoa' %}"><i class="bx bx-right-arrow-alt"></i>Chart of
                   Accounts</a>
               </li>
-              <li><a href="{% url 'gomjoural' %}"><i class="bx bx-right-arrow-alt"></i>Manual Journal
+              <li id="manualjournal"><a href="{% url 'gomjoural' %}"><i class="bx bx-right-arrow-alt"></i>Manual Journal
                 </a>
               </li>
-              <li><a href="{% url 'gorecon' %}"><i class="bx bx-right-arrow-alt"></i>Reconcile</a>
+              <li id="reconcile"><a href="{% url 'gorecon' %}"><i class="bx bx-right-arrow-alt"></i>Reconcile</a>
               </li>
             </ul>
           </li>
@@ -565,8 +567,8 @@
               <div class="menu-title">Payroll</div>
             </a>
             <ul class="submenu">
-              <li><a href="{% url 'listpayrollemployee' %}"><i class="bx bx-right-arrow-alt"></i>Employee</a> </li>
-              <li><a href="{% url 'employeeloanpage' %}"><i class="bx bx-right-arrow-alt"></i>Employee Loan</a> </li>
+              <li id="employee"><a href="{% url 'listpayrollemployee' %}"><i class="bx bx-right-arrow-alt"></i>Employee</a> </li>
+              <li id="employeeloan"><a href="{% url 'employeeloanpage' %}"><i class="bx bx-right-arrow-alt"></i>Employee Loan</a> </li>
             </ul>
           </li>
           </ul>
@@ -653,12 +655,12 @@
         </div>
       </div>
     </div>
-  </div>
 
+  </div>
 
   <script>
     // Get the list from the context passed by the view
-    const selected_options = JSON.parse('{{ selected_options|safe }}');
+    const selected_options = JSON.parse(localStorage.getItem('selectedCheckboxes'));
 
     function disableOptions() {
       selected_options.forEach(function (id) {
