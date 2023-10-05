@@ -8,6 +8,23 @@
         .tr{
             cursor: pointer;
         }
+        
+    @media print{
+        body{
+            visibility: hidden !important; /* hide everything in body when in print mode*/
+        }
+
+        .printContainer {
+            visibility: visible !important; /* Override the rule above to only show the printables*/
+            position: absolute;
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin-left: 2vh;
+        } 
+    }
     </style>
 
     <div class="page-content">
@@ -48,11 +65,11 @@
                                 onclick="graphdiv()">Graph</a>
                         </div>
                         <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-                            <a href="" id="myBtn" class="btn btn-outline-info text-grey btn_pdf"
+                            <a id="myBtn" class="btn btn-outline-info text-grey btn_pdf"
                                 role="button">PDF</a>
                         </div>
                         <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
-                            <a href="" id="printBtn" class="btn btn-outline-info text-grey btn_print"
+                            <a id="printBtn" class="btn btn-outline-info text-grey btn_print"
                                 role="button" onclick="printtable()">Print</a>
                         </div>
                         <div class="btn-group col-md-1 mt-2" style="float: right; height:5vh;">
@@ -73,7 +90,7 @@
         <div class="card radius-15 p-5" id="sales_div">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12" id="printtable">
+                    <div class="col-md-12" id="saletable">
                         <div class="rectangle"
                              style="background-color: white;width: 1100px;border: 3px white;padding: 50px;margin: 20px">
                             <div class="rectangle"
@@ -333,11 +350,15 @@ function ExportToExcel(type, fn, dl) {
 
 <script>
     function printtable(){
-        var printContents = document.getElementById("printtable").innerHTML;
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
+        var printContents = document.getElementById("saletable").innerHTML;
+
+        var $printerDiv = $('<div class="printContainer"></div>'); // create the div that will contain the stuff to be printed
+        $printerDiv.html(printContents); // add the content to be printed
+        $('body').append($printerDiv).addClass("printingContent"); // add the div to body, and make the body aware of printing (we apply a set of css styles to the body to hide its contents)
+
+        window.print(); // call print
+        $printerDiv.remove(); // remove the div
+        $('body').removeClass("printingContent");
     }
 </script>
   

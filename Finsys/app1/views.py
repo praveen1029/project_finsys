@@ -42549,54 +42549,62 @@ def cashflow(request):
 @login_required(login_url='regcomp')
 def daybook(request):
     cmp1 = company.objects.get(id=request.session["uid"])
-    recpt = salesrecpts.objects.filter(cid=cmp1.cid).all()
-    chq = Cheqs.objects.filter(cid=cmp1.cid).all()
-    invoices = invoice.objects.filter(cid=cmp1.cid).all()
-    bill_data = bills.objects.filter(cid=cmp1.cid).all()
-    supl = suplrcredit.objects.filter(cid=cmp1.cid).all()
-    crd = credit.objects.filter(cid=cmp1.cid).all()
-    exp = expences.objects.filter(cid=cmp1.cid).all()
-    delychr = delayedcharge.objects.filter(cid=cmp1.cid).all()
+    prclist = Pricelist.objects.filter(cid=cmp1.cid).all()
+    stkadj = stockadjust.objects.filter(cid=cmp1.cid).all()
+    bnktran = bank_transactions.objects.filter(cid=cmp1.cid).all()
+    cust = customer.objects.filter(cid=cmp1.cid).all()
     estimates = estimate.objects.filter(cid=cmp1.cid).all()
     salesorders = salesorder.objects.filter(cid=cmp1.cid).all()
-    sales = payment.objects.filter(cid=cmp1.cid).all()
-    itm = itemtable.objects.filter(cid=cmp1.cid).all()
-    manualjournal = mjournal.objects.filter(cid=cmp1.cid).all()
-    purchaseorders = purchaseorder.objects.filter(cid=cmp1.cid).all()
-    bill = purchasebill.objects.filter(cid=cmp1.cid).all()
-    expenses = purchase_expense.objects.filter(cid=cmp1.cid).all()
-    purchase = purchasepayment.objects.filter(cid=cmp1.cid).all()
-    debitnote = purchasedebit.objects.filter(cid=cmp1.cid).all()
+    invoices = invoice.objects.filter(cid=cmp1.cid).all()
     creditnote = salescreditnote.objects.filter(cid=cmp1.cid).all()
+    sales = payment.objects.filter(cid=cmp1.cid).all()
     retainerinvoices = RetainerInvoices.objects.filter(cid=cmp1.cid).all()
     deliverychallan = challan.objects.filter(cid=cmp1.cid).all()
     recinv = recinvoice.objects.filter(cid=cmp1.cid).all()
+    ven = vendor.objects.filter(cid=cmp1.cid).all()
+    purchaseorders = purchaseorder.objects.filter(cid=cmp1.cid).all()
+    bill_data = bills.objects.filter(cid=cmp1.cid).all()
+    exp = expences.objects.filter(cid=cmp1.cid).all()
+    debitnote = purchasedebit.objects.filter(cid=cmp1.cid).all()
     recbill = recurring_bill.objects.filter(cid=cmp1.cid).all()    
+    manualjournal = mjournal.objects.filter(cid=cmp1.cid).all()
+    payrollemp = payrollemployee.objects.filter(cid=cmp1.cid).all()
+    payslp = payslip.objects.filter(cid=cmp1.cid).all()
+    recpt = salesrecpts.objects.filter(cid=cmp1.cid).all()
+    supl = suplrcredit.objects.filter(cid=cmp1.cid).all()
+    crd = credit.objects.filter(cid=cmp1.cid).all()
+
+    # delychr = delayedcharge.objects.filter(cid=cmp1.cid).all()
+    # itm = itemtable.objects.filter(cid=cmp1.cid).all()
+    # bill = purchasebill.objects.filter(cid=cmp1.cid).all()
+    # expenses = purchase_expense.objects.filter(cid=cmp1.cid).all()
+    # purchase = purchasepayment.objects.filter(cid=cmp1.cid).all()
     context={
         'cmp1':cmp1,
-        'recpt':recpt,
-        'chq':chq,
-        'invoices':invoices,
-        'bill_data':bill_data,
-        'supl':supl,
-        'crd':crd,
-        'exp':exp,
-        'delychr':delychr,
+        'prclist':prclist,
+        'stkadj':stkadj,
+        'bnktran':bnktran,
+        'cust':cust,
         'estimates':estimates,
         'salesorders':salesorders,
-        'sales':sales,
-        'itm':itm,
-        'manualjournal':manualjournal,
-        'purchaseorders':purchaseorders,
-        'bill':bill,
-        'expenses':expenses,
-        'purchase':purchase,
-        'debitnote':debitnote,
+        'invoices':invoices,
         'creditnote':creditnote,
+        'sales':sales,
         'retainerinvoices':retainerinvoices,
         'deliverychallan':deliverychallan,
         'recinv':recinv,
+        'ven':ven,
+        'purchaseorders':purchaseorders,
+        'bill_data':bill_data,
+        'exp':exp,
+        'debitnote':debitnote,
         'recbill':recbill,        
+        'manualjournal':manualjournal,        
+        'payrollemp':payrollemp,        
+        'payslp':payslp,
+        'recpt':recpt,
+        'supl':supl,
+        'crd':crd,
      }
     return render(request, 'app1/daybook.html', context)
 

@@ -3,41 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Table Content Color</title>
+    <title>Print Table</title>
 </head>
 <body>
     <h1>Your Web Page Content</h1>
 
-    <table id="myTable">
+    <table id="tableToPrint">
+        <!-- Your table content here -->
         <thead>
-            <tr>
-                <th>Header 1</th>
-                <th>Header 2</th>
-                <!-- Add more headers as needed -->
-            </tr>
+            <th>A</th>
+            <th>B</th>
         </thead>
         <tbody>
             <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <!-- Add more rows as needed -->
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
             </tr>
         </tbody>
     </table>
 
-    <button onclick="changeTextColor()">Change Text Color</button>
+    <button onclick="printTable()">Print Table</button>
 
     <script>
-        function changeTextColor() {
-            // Get the table element
-            const table = document.getElementById('myTable');
+        function printTable() {
+            // Hide elements you don't want to print using CSS
+            const elementsToHide = document.querySelectorAll('body > *:not(#tableToPrint)');
+            elementsToHide.forEach(element => {
+                element.style.display = 'none';
+            });
 
-            // Get all the table cells (td elements) in the table body
-            const cells = table.querySelectorAll('tbody td');
+            // Trigger the print dialog
+            window.print();
 
-            // Loop through the cells and change their text color
-            cells.forEach(cell => {
-                cell.style.color = 'red'; // Change text color to red
+            // Restore the visibility of hidden elements
+            elementsToHide.forEach(element => {
+                element.style.display = 'block';
             });
         }
     </script>
